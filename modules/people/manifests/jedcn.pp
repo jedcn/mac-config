@@ -5,4 +5,12 @@ class people::jedcn {
   package { 'tree':
     ensure => installed,
   }
+
+  package { 'emacs':
+    ensure => present,
+    install_options => [
+      '--cocoa',
+      '--srgb'
+    ],
+  }
 }
