@@ -13,4 +13,9 @@ class people::jedcn {
       '--srgb'
     ],
   }
+
+  file { [ '/p', '/p/init', '/p/src', '/p/dist' ]:
+    ensure => directory,
+    mode   => 0644,
+  }
 }
