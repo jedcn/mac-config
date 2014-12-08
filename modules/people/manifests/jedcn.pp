@@ -23,20 +23,20 @@ class people::jedcn {
     ],
   }
 
-  $my_init_dir = '/p/init'
+  $my_init_src = '/opt/init-src'
 
-  file { [ '/p', '/p/init', '/p/src', '/p/dist' ]:
+  file { $my_init_src:
     ensure => directory,
     mode   => 0644,
   }
 
-  repository { "${my_init_dir}/dot-org-files":
+  repository { "${my_init_src}/dot-org-files":
     source  => 'jedcn/dot-org-files',
-    require => File['/p/init']
+    require => File[$my_init_src]
   }
 
-  repository { "${my_init_dir}/emacs-setup":
+  repository { "${my_init_src}/emacs-setup":
     source  => 'jedcn/emacs-setup',
-    require => File['/p/init']
+    require => File[$my_init_src]
   }
 }
