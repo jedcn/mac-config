@@ -6,6 +6,10 @@ class people::jedcn {
     ensure => installed,
   }
 
+  package { 'ag':
+    ensure => present,
+  }
+
   package { 'emacs':
     ensure => present,
     install_options => [
