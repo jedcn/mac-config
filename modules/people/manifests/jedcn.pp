@@ -14,8 +14,20 @@ class people::jedcn {
     ],
   }
 
+  $my_init_dir = '/p/init'
+
   file { [ '/p', '/p/init', '/p/src', '/p/dist' ]:
     ensure => directory,
     mode   => 0644,
+  }
+
+  repository { "${my_init_dir}/dot-org-files":
+    source  => 'jedcn/dot-org-files',
+    require => File['/p/init']
+  }
+
+  repository { "${my_init_dir}/emacs-setup":
+    source  => 'jedcn/emacs-setup',
+    require => File['/p/init']
   }
 }
