@@ -2,6 +2,12 @@ class people::jedcn {
   include chrome
   include chrome::canary
 
+  # automatically hide the doc
+  include osx::dock::autohide
+
+  # ensures the dock only contains apps that are running
+  include osx::dock::clear_dock
+
   package { 'tree':
     ensure => installed,
   }
