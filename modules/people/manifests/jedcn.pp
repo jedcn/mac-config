@@ -10,6 +10,11 @@ class people::jedcn {
     ensure => present,
   }
 
+  package { 'cask':
+    ensure => present,
+    require => Package['emacs'],
+  }
+
   package { 'emacs':
     ensure => present,
     install_options => [
