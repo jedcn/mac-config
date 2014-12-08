@@ -8,6 +8,24 @@ class people::jedcn {
   # ensures the dock only contains apps that are running
   include osx::dock::clear_dock
 
+  # enables zoom by scrolling while holding Control. Need to
+  # logout/login.
+  include osx::universal_access::ctrl_mod_zoom
+
+  # enables zoom using the scroll wheel
+  include osx::universal_access::enable_scrollwheel_zoom
+
+  # Set the default value (35)
+  class { 'osx::global::key_repeat_delay':
+    delay => 10
+  }
+
+  # the amount of time (in ms) before key repeat 'presses' (default
+  # value (0)). Need to logout/login.
+  include osx::global::key_repeat_rate
+
+  include osx::keyboard::capslock_to_control
+
   package { 'tree':
     ensure => installed,
   }
