@@ -64,6 +64,11 @@ class people::jedcn {
     require => File[$my_init_src]
   }
 
+  repository { "${my_init_src}/z":
+    source  => 'rupa/z',
+    require => File[$my_init_src]
+  }
+
   ########################################
   # ZSH
   ########################################
