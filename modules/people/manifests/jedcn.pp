@@ -103,4 +103,22 @@ class people::jedcn {
     target  => "${my_init_src}/oh-my-zsh",
     require => Repository["${my_init_src}/oh-my-zsh"],
   }
+
+
+  ########################################
+  # Slate
+  ########################################
+  #
+  # I needed to manually launch Slate and allow it access to control
+  # my "accessibility devices." I just followed prompts on my first
+  # launch.
+  include slate
+
+  file { "/Users/${luser}/.slate":
+    ensure  => link,
+    mode    => '0644',
+    target  => "${my_init_src}/dot-org-files/home/.slate",
+    require => Repository["${my_init_src}/dot-org-files"],
+  }
+
 }
