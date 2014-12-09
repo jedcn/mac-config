@@ -126,4 +126,10 @@ class people::jedcn {
     require => Repository["${my_init_src}/dot-org-files"],
   }
 
+  ########################################
+  # Git
+  ########################################
+  git::config::global { 'core.editor':
+    value  => '/opt/boxen/homebrew/bin/emacsclient'
+  }
 }
