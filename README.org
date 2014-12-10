@@ -1,0 +1,44 @@
+* My Boxen
+
+  This is how I setup my personal boxen.
+
+  I start with a single puppet file: =jedcn.pp=.
+
+** jedcn.pp
+
+   This file declares =people::jedcn=. This knows how to include
+   everything, but doesn't know anything on its own.
+
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn.pp :padline no
+     class people::jedcn {
+       include people::jedcn::applications
+       include people::jedcn::git
+       include people::jedcn::homebrew
+       include people::jedcn::links
+       include people::jedcn::osx_config
+       include people::jedcn::repositories
+     }
+   #+END_SRC
+
+** applications.pp
+
+   This file declares =people::jedcn::applications=.
+
+   This pulls in the non-homebrew applications that I use.
+
+*** Browsers
+
+    I use the standard browsers, and I use Slate for Window
+    Management.
+
+    I found that I had to manually launch slate and allow it access
+    to control my accessibility devices. This was a matter of
+    following prompts.
+
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp :padline no
+      class people::jedcn::applications {
+        include chrome
+        include chrome::canary
+        include slate
+      }
+    #+END_SRC
