@@ -17,7 +17,7 @@
   Once complete, you'll have:
 
   1. Applications installed (such as Chrome, Firefox)
-  2. Homebrew utilities istalled
+  2. Homebrew utilities installed
   3. Dotfiles cloned and linked
   4. Git configured
   5. OSX configured (bind capslock to control, auto-hide the dock,
