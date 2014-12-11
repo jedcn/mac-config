@@ -1,44 +1,308 @@
 * My Boxen
 
-  This is how I setup my personal boxen.
+  This is my configuration for setting up MacOS machines that I work
+  on.
 
-  I start with a single puppet file: =jedcn.pp=.
+  It is based in [[http://boxen.github.com][boxen]] which was created by [[https://github.com][Github]]. The configuration
+  is based in [[http://puppetlabs.com][puppet]].
 
-** jedcn.pp
+  This repository is a fork of [[https://github.com/boxen/our-boxen][boxen/our-boxen]], and has been renamed
+  to "my-boxen" because it's just for me.
 
-   This file declares =people::jedcn=. This knows how to include
-   everything, but doesn't know anything on its own.
+** Overview
 
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn.pp :padline no
-     class people::jedcn {
-       include people::jedcn::applications
-       include people::jedcn::git
-       include people::jedcn::homebrew
-       include people::jedcn::links
-       include people::jedcn::osx_config
-       include people::jedcn::repositories
-     }
-   #+END_SRC
+  The point of this system is that you can reduce the setup time for a
+  new MacOS machine to ~30 minutes and running a few commands.
 
-** applications.pp
+  Once complete, you'll have:
 
-   This file declares =people::jedcn::applications=.
+  1. Applications installed (such as Chrome, Firefox)
+  2. Homebrew utilities istalled
+  3. Dotfiles cloned and linked
+  4. Git configured
+  5. OSX configured (bind capslock to control, auto-hide the dock,
+     screen zoom, fast key repeat, etc)
+  6. Ruby and Node installations
 
-   This pulls in the non-homebrew applications that I use.
+  This works for me, and enables me to have things "just the way I
+  want them" without having to maintain a list of instructions so that
+  I can remember how they got that way.
 
-*** Browsers
+  As a caveat, I am new to boxen: I don't know how this will play out
+  over the months and years to come.
 
-    I use the standard browsers, and I use Slate for Window
-    Management.
+  I have created a Resources section at the bottom of this document
+  that details websites, articles, and repositories I read through
+  while getting this going.
 
-    I found that I had to manually launch slate and allow it access
-    to control my accessibility devices. This was a matter of
-    following prompts.
+** Commands
 
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp :padline no
-      class people::jedcn::applications {
-        include chrome
-        include chrome::canary
-        include slate
+   The commands you'd run on a fresh Mac are:
+
+#+BEGIN_SRC sh
+  xcode-select --install
+  sudo mkdir -p /opt/boxen
+  sudo chown ${USER}:staff /opt/boxen
+  git clone https://github.com/jedcn/my-boxen /opt/boxen/repo
+  /opt/boxen/repo/script/boxen
+#+END_SRC
+
+   These commands:
+
+   1. Install xcode (which gets you a compiler: gcc)
+   2. Clone my-boxen configuration to /opt/boxen/repo
+   3. Invoke boxen which reads my-boxen configuration and sets up the
+      machine.
+
+** Files
+
+   Whenever you run =boxen= the configuration from certain files is
+   applied. These files are all puppet files. An explanation and
+   manifest follows.
+
+*** jedcn.pp
+
+    I start with a single puppet file: =jedcn.pp=.
+
+    This file declares =people::jedcn=. This knows how to include
+    everything, but doesn't know anything on its own.
+
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn.pp :padline no
+      class people::jedcn {
+        include people::jedcn::applications
+        include people::jedcn::git
+        include people::jedcn::homebrew
+        include people::jedcn::links
+        include people::jedcn::osx_config
+        include people::jedcn::repositories
       }
     #+END_SRC
+
+*** applications.pp
+
+    This file declares =people::jedcn::applications=.
+
+    This pulls in the non-homebrew applications that I use.
+
+**** Browsers
+
+     I use the standard browsers, and I use Slate for Window
+     Management.
+
+     I found that I had to manually launch slate and allow it access
+     to control my accessibility devices. This was a matter of
+     following prompts.
+
+     #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp :padline no
+       class people::jedcn::applications {
+         include chrome
+         include chrome::canary
+         include slate
+       }
+     #+END_SRC
+
+*** git.pp
+
+    This file declares =people::jedcn::git=.
+
+    This class calls out my git configuration.
+
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/git.pp :padline no
+      class people::jedcn::git {
+        git::config::global { 'core.editor':
+          value  => '/opt/boxen/homebrew/bin/emacsclient'
+        }
+      }
+    #+END_SRC
+
+*** homebrew.pp
+
+    This file declares =people::jedcn::homebrew=.
+
+    This class calls out all of the package I install from [[http://brew.sh][homebrew]].
+
+    Homebrew is the standard package provider for puppetry within
+    boxen.
+
+    The majority of packages are simple, standard installs. It's like
+    you typed =brew install ag=, for example.
+
+    I install emacs with options certain options that I learned of in a
+    post titled [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/][Color Themes: Redux]] in [[ttp://emacsredux.com][Emacs Redux]].
+
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/homebrew.pp :padline no
+      class people::jedcn::homebrew {
+        $homebrew_packages = [
+                              'ag',
+                              'tmux',
+                              'tree',
+                              'wget',
+                              'zsh',
+                              ]
+
+        package { $homebrew_packages: }
+
+        package { 'cask':
+          ensure  => present,
+          require => Package['emacs'],
+        }
+
+        package { 'emacs':
+          ensure          => present,
+          install_options => [
+            '--cocoa',
+            '--srgb'
+          ],
+        }
+      }
+    #+END_SRC
+*** links.pp
+
+    This file declares =people::jedcn::links=.
+
+    This class creates symbolic links to various dotfiles.
+
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/links.pp :padline no
+      class people::jedcn::links {
+
+        $my_init_src = '/opt/init-src'
+
+        file { "/Users/${luser}/.zshrc":
+          ensure  => link,
+          mode    => '0644',
+          target  => "${my_init_src}/dot-org-files/home/.zshrc",
+          require => Repository["${my_init_src}/dot-org-files"],
+        }
+
+        file { "/Users/${luser}/.oh-my-zsh":
+          ensure  => link,
+          target  => "${my_init_src}/oh-my-zsh",
+          require => Repository["${my_init_src}/oh-my-zsh"],
+        }
+
+        file { "/Users/${luser}/.slate":
+          ensure  => link,
+          mode    => '0644',
+          target  => "${my_init_src}/dot-org-files/home/.slate",
+          require => Repository["${my_init_src}/dot-org-files"],
+        }
+      }
+    #+END_SRC
+
+*** osx_config.pp
+
+    This file declares =people::jedcn::osx_config=.
+
+    This class sets my OSX configuration.
+
+    Without boxen, these would be set by hand tweaking panels
+    underneath System Preferences and editing various files.
+
+    The following is achieved:
+
+    1. zsh, installed via homebrew, is set as my default shell.
+    2. The dock is configured to automatically hide.
+    3. The dock is configured to only contain apps that are running.
+    4. Holding CTRL and scrolling on trackpad will now magnify the
+       screen.
+    5. The speed at which keys "repeat" when they are pressed is
+       significantly increased.
+    6. The capslock key is configured to act like control.
+
+    I found it very helpful to review [[https://github.com/boxen/puppet-osx][the main README of the
+    puppet-osx]] project to understand these settings.
+
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/osx_config.pp :padline no
+      class people::jedcn::osx_config {
+
+        # ZSH
+        osx_chsh { $::luser:
+          shell   => '/opt/boxen/homebrew/bin/zsh',
+          require => Package['zsh'],
+        }
+
+        file_line { 'add zsh to /etc/shells':
+          path    => '/etc/shells',
+          line    => "${boxen::config::homebrewdir}/bin/zsh",
+          require => Package['zsh'],
+        }
+
+        # Dock Settings
+        include osx::dock::autohide
+        include osx::dock::clear_dock
+
+        # Screen Zoom
+        include osx::universal_access::ctrl_mod_zoom
+        include osx::universal_access::enable_scrollwheel_zoom
+
+        # Key Repeat
+        class { 'osx::global::key_repeat_delay':
+          delay => 10
+        }
+        include osx::global::key_repeat_rate
+
+        # Capslock becomes Control
+        include osx::keyboard::capslock_to_control
+      }
+    #+END_SRC
+
+*** repositories.pp
+
+    This file declares =people::jedcn::repositories=.
+
+    This class causes a directory to come into existence and several
+    repositories to be cloned underneath that directory.
+
+    The repositories involved are concerned with system scripts,
+    configuration, and dotfiles.
+
+    These repositories are necessary for bootstrapping. They lay down
+    a solid foundation for work to begin upon.
+
+    I will keep non-system repositories at another location, and I do
+    not expect to manage them with boxen.
+
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/repositories.pp :padline no
+      class people::jedcn::repositories {
+
+        $my_init_src = '/opt/init-src'
+
+        file { $my_init_src:
+          ensure => directory,
+          mode   => 0644,
+        }
+
+        repository { "${my_init_src}/dot-org-files":
+          source  => 'jedcn/dot-org-files',
+          require => File[$my_init_src]
+        }
+
+        repository { "${my_init_src}/emacs-setup":
+          source  => 'jedcn/emacs-setup',
+          require => File[$my_init_src]
+        }
+
+        repository { "${my_init_src}/z":
+          source  => 'rupa/z',
+          require => File[$my_init_src]
+        }
+
+        repository { "${my_init_src}/oh-my-zsh":
+          source  => 'robbyrussell/oh-my-zsh',
+          require => File[$my_init_src]
+        }
+      }
+
+    #+END_SRC
+** Resources
+
+   My main resource was Gary Larizza's article called "[[http://garylarizza.com/blog/2013/02/15/puppet-plus-github-equals-laptop-love/][Puppet + Github
+   = Laptop <3]]" and [[https://github.com/glarizza/my-boxen/][glarizza/my-boxen]].
+
+   Other resources included:
+
+   + The official boxen homepage: https://boxen.github.com
+   + [[https://github.com/boxen/our-boxen][boxen/our-boxen]]
+   + Visiting https://github.com/boxen/ and then filtering through all
+     of the puppet-* projects.
+   + http://jjasghar.github.io/blog/2014/01/01/customizing-boxen/

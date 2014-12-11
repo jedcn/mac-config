@@ -1,6 +1,6 @@
 class people::jedcn::osx_config {
 
-  # Change the default shell to the zsh version above.
+  # ZSH
   osx_chsh { $::luser:
     shell   => '/opt/boxen/homebrew/bin/zsh',
     require => Package['zsh'],
@@ -12,27 +12,20 @@ class people::jedcn::osx_config {
     require => Package['zsh'],
   }
 
-  # Automatically hide the doc
+  # Dock Settings
   include osx::dock::autohide
-
-  # ensures the dock only contains apps that are running
   include osx::dock::clear_dock
 
-  # Enables zoom by scrolling while holding Control. Need to
-  # logout/login.
+  # Screen Zoom
   include osx::universal_access::ctrl_mod_zoom
-
-  # Enables zoom using the scroll wheel
   include osx::universal_access::enable_scrollwheel_zoom
 
-  # Set the default value (35)
+  # Key Repeat
   class { 'osx::global::key_repeat_delay':
     delay => 10
   }
-
-  # The amount of time (in ms) before key repeat 'presses' (default
-  # value (0)). Need to logout/login.
   include osx::global::key_repeat_rate
 
+  # Capslock becomes Control
   include osx::keyboard::capslock_to_control
 }
