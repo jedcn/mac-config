@@ -28,4 +28,14 @@ class people::jedcn::osx_config {
 
   # Capslock becomes Control
   include osx::keyboard::capslock_to_control
+
+  # Hot Corners
+  osx::dock::hot_corner { 'Show the desktop':
+    position => 'Bottom Right',
+    action => 'Desktop'
+  }
+  osx::dock::hot_corner { 'Put Display to Sleep':
+    position => 'Bottom Left',
+    action => 'Put Display to Sleep'
+  }
 }
