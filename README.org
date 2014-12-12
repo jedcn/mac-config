@@ -93,6 +93,14 @@
      to control my accessibility devices. This was a matter of
      following prompts.
 
+     I tried getting onepassword here (with [[https://github.com/boxen/puppet-onepassword][puppet-onepassword]]), but I
+     couldn't figure out the licensing. Specifically, after a boxen
+     run it was in trial mode and looking for a license file. As far
+     as I remember, I didn't have a license file because I originally
+     bought 1Password through the AppStore. When I went through the
+     AppStore, things worked just fine and so here's where I've ended
+     up.
+
      #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp :padline no
        class people::jedcn::applications {
          include chrome
