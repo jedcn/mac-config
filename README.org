@@ -262,6 +262,11 @@
           position => 'Bottom Left',
           action => 'Put Display to Sleep'
         }
+
+        # Recovery Message
+        $recovery_owner = "This computer belongs to Jed Northridge."
+        $recovery_contact = "If found, please contact jedcn@jedcn.com or 305-985-3326."
+        osx::recovery_message { "${recovery_owner} ${recovery_contact}": }
       }
     #+END_SRC
 
