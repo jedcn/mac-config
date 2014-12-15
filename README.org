@@ -37,22 +37,30 @@
 
 ** Commands
 
-   The commands you'd run on a fresh Mac are:
+*** New Machine
 
-#+BEGIN_SRC sh
-  xcode-select --install
-  sudo mkdir -p /opt/boxen
-  sudo chown ${USER}:staff /opt/boxen
-  git clone https://github.com/jedcn/my-boxen /opt/boxen/repo
-  /opt/boxen/repo/script/boxen
-#+END_SRC
+    The commands you'd run on a fresh Mac are:
 
-   These commands:
+    #+BEGIN_SRC sh
+      xcode-select --install
+      sudo mkdir -p /opt/boxen
+      sudo chown ${USER}:staff /opt/boxen
+      git clone https://github.com/jedcn/my-boxen /opt/boxen/repo
+      /opt/boxen/repo/script/boxen
+    #+END_SRC
 
-   1. Install xcode (which gets you a compiler: gcc)
-   2. Clone my-boxen configuration to /opt/boxen/repo
-   3. Invoke boxen which reads my-boxen configuration and sets up the
-      machine.
+    These commands:
+
+    1. Install xcode (which gets you a compiler: gcc)
+    2. Clone my-boxen configuration to /opt/boxen/repo
+    3. Invoke boxen which reads my-boxen configuration and sets up the
+       machine.
+
+*** Existing Machine
+
+    If you've already setup your Mac, you can change your boxen
+    configuration and run =boxen= to see those changes realized. This
+    can be completed in as short as 10 seconds.
 
 ** Files
 
