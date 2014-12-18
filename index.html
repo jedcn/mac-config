@@ -1,66 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
-<title>My Boxen</title>
-<!-- 2014-12-14 Sun 21:58 -->
-<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Jed Northridge" />
-<link rel="stylesheet" type="text/css" href="css/bootswatch.min.css" />
-<link rel="stylesheet" type="text/css" href="css/slate/bootstrap.css" />
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>My Boxen</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-Copyright (C) 2012-2013 Free Software Foundation, Inc.
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <style>
+            body {
+                padding-top: 50px;
+                padding-bottom: 20px;
+            }
+        </style>
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/main.css">
 
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
 
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
+    <div class="container">
 
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
-</head>
-<body class="container">
-<div id="content">
-<h1 class="title">My Boxen</h1>
-<div id="table-of-contents">
+      <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
@@ -171,7 +140,7 @@ The commands you'd run on a fresh Mac are:
 
 <pre class="src src-sh">xcode-select --install
 sudo mkdir -p /opt/boxen
-sudo chown ${<span style="color: #ff8700;">USER</span>}:staff /opt/boxen
+sudo chown ${USER}:staff /opt/boxen
 git clone https://github.com/jedcn/my-boxen /opt/boxen/repo
 /opt/boxen/repo/script/boxen
 </pre>
@@ -229,13 +198,13 @@ everything, but doesn't know anything on its own.
 
 <div class="org-src-container">
 
-<pre class="src src-puppet"><span style="color: #00af00;">class</span> <span style="color: #5fafd7;">people::jedcn</span> {
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">people::jedcn::applications</span>
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">people::jedcn::git</span>
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">people::jedcn::homebrew</span>
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">people::jedcn::links</span>
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">people::jedcn::osx_config</span>
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">people::jedcn::repositories</span>
+<pre class="src src-puppet">class people::jedcn {
+  include people::jedcn::applications
+  include people::jedcn::git
+  include people::jedcn::homebrew
+  include people::jedcn::links
+  include people::jedcn::osx_config
+  include people::jedcn::repositories
 }
 </pre>
 </div>
@@ -278,11 +247,11 @@ up.
 
 <div class="org-src-container">
 
-<pre class="src src-puppet"><span style="color: #00af00;">class</span> <span style="color: #5fafd7;">people::jedcn::applications</span> {
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">chrome</span>
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">chrome::canary</span>
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">firefox</span>
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">slate</span>
+<pre class="src src-puppet">class people::jedcn::applications {
+  include chrome
+  include chrome::canary
+  include firefox
+  include slate
 }
 </pre>
 </div>
@@ -303,9 +272,9 @@ This class calls out my git configuration.
 
 <div class="org-src-container">
 
-<pre class="src src-puppet"><span style="color: #00af00;">class</span> <span style="color: #5fafd7;">people::jedcn::git</span> {
-  <span style="color: #5fafd7;">git::config::global</span> { <span style="color: #ff1f8b;">'core.editor'</span>:
-    value  =&gt; <span style="color: #ff1f8b;">'/opt/boxen/homebrew/bin/emacsclient'</span>
+<pre class="src src-puppet">class people::jedcn::git {
+  git::config::global { 'core.editor':
+    value  =&gt; '/opt/boxen/homebrew/bin/emacsclient'
   }
 }
 </pre>
@@ -341,27 +310,27 @@ post titled <a href="http://emacsredux.com/blog/2013/08/21/color-themes-redux/">
 
 <div class="org-src-container">
 
-<pre class="src src-puppet"><span style="color: #00af00;">class</span> <span style="color: #5fafd7;">people::jedcn::homebrew</span> {
-  <span style="color: #ff8700;">$homebrew_packages</span> = [
-                        <span style="color: #ff1f8b;">'ag'</span>,
-                        <span style="color: #ff1f8b;">'tmux'</span>,
-                        <span style="color: #ff1f8b;">'tree'</span>,
-                        <span style="color: #ff1f8b;">'wget'</span>,
-                        <span style="color: #ff1f8b;">'zsh'</span>,
-                        ]
+<pre class="src src-puppet">class people::jedcn::homebrew {
+  $homebrew_packages = [
+			'ag',
+			'tmux',
+			'tree',
+			'wget',
+			'zsh',
+			]
 
-  <span style="color: #5fafd7;">package</span> { <span style="color: #ff8700;">$homebrew_packages</span>: }
+  package { $homebrew_packages: }
 
-  <span style="color: #5fafd7;">package</span> { <span style="color: #ff1f8b;">'cask'</span>:
-    <span style="color: #9a08ff;">ensure</span>  =&gt; present,
-    <span style="color: #9a08ff;">require</span> =&gt; <span style="color: #5fafd7;">Package</span>[<span style="color: #ff1f8b;">'emacs'</span>],
+  package { 'cask':
+    ensure  =&gt; present,
+    require =&gt; Package['emacs'],
   }
 
-  <span style="color: #5fafd7;">package</span> { <span style="color: #ff1f8b;">'emacs'</span>:
-    <span style="color: #9a08ff;">ensure</span>          =&gt; present,
+  package { 'emacs':
+    ensure          =&gt; present,
     install_options =&gt; [
-      <span style="color: #ff1f8b;">'--cocoa'</span>,
-      <span style="color: #ff1f8b;">'--srgb'</span>
+      '--cocoa',
+      '--srgb'
     ],
   }
 }
@@ -382,28 +351,28 @@ This class creates symbolic links to various dotfiles.
 
 <div class="org-src-container">
 
-<pre class="src src-puppet"><span style="color: #00af00;">class</span> <span style="color: #5fafd7;">people::jedcn::links</span> {
+<pre class="src src-puppet">class people::jedcn::links {
 
-  <span style="color: #ff8700;">$my_init_src</span> = <span style="color: #ff1f8b;">'/opt/init-src'</span>
+  $my_init_src = '/opt/init-src'
 
-  <span style="color: #5fafd7;">file</span> { <span style="color: #ff1f8b;">"/Users/</span><span style="color: #ff8700;">${luser}</span><span style="color: #ff1f8b;">/.zshrc"</span>:
-    <span style="color: #9a08ff;">ensure</span>  =&gt; link,
-    mode    =&gt; <span style="color: #ff1f8b;">'0644'</span>,
-    target  =&gt; <span style="color: #ff1f8b;">"</span><span style="color: #ff8700;">${my_init_src}</span><span style="color: #ff1f8b;">/dot-org-files/home/.zshrc"</span>,
-    <span style="color: #9a08ff;">require</span> =&gt; <span style="color: #5fafd7;">Repository</span>[<span style="color: #ff1f8b;">"</span><span style="color: #ff8700;">${my_init_src}</span><span style="color: #ff1f8b;">/dot-org-files"</span>],
+  file { "/Users/${luser}/.zshrc":
+    ensure  =&gt; link,
+    mode    =&gt; '0644',
+    target  =&gt; "${my_init_src}/dot-org-files/home/.zshrc",
+    require =&gt; Repository["${my_init_src}/dot-org-files"],
   }
 
-  <span style="color: #5fafd7;">file</span> { <span style="color: #ff1f8b;">"/Users/</span><span style="color: #ff8700;">${luser}</span><span style="color: #ff1f8b;">/.oh-my-zsh"</span>:
-    <span style="color: #9a08ff;">ensure</span>  =&gt; link,
-    target  =&gt; <span style="color: #ff1f8b;">"</span><span style="color: #ff8700;">${my_init_src}</span><span style="color: #ff1f8b;">/oh-my-zsh"</span>,
-    <span style="color: #9a08ff;">require</span> =&gt; <span style="color: #5fafd7;">Repository</span>[<span style="color: #ff1f8b;">"</span><span style="color: #ff8700;">${my_init_src}</span><span style="color: #ff1f8b;">/oh-my-zsh"</span>],
+  file { "/Users/${luser}/.oh-my-zsh":
+    ensure  =&gt; link,
+    target  =&gt; "${my_init_src}/oh-my-zsh",
+    require =&gt; Repository["${my_init_src}/oh-my-zsh"],
   }
 
-  <span style="color: #5fafd7;">file</span> { <span style="color: #ff1f8b;">"/Users/</span><span style="color: #ff8700;">${luser}</span><span style="color: #ff1f8b;">/.slate"</span>:
-    <span style="color: #9a08ff;">ensure</span>  =&gt; link,
-    mode    =&gt; <span style="color: #ff1f8b;">'0644'</span>,
-    target  =&gt; <span style="color: #ff1f8b;">"</span><span style="color: #ff8700;">${my_init_src}</span><span style="color: #ff1f8b;">/dot-org-files/home/.slate"</span>,
-    <span style="color: #9a08ff;">require</span> =&gt; <span style="color: #5fafd7;">Repository</span>[<span style="color: #ff1f8b;">"</span><span style="color: #ff8700;">${my_init_src}</span><span style="color: #ff1f8b;">/dot-org-files"</span>],
+  file { "/Users/${luser}/.slate":
+    ensure  =&gt; link,
+    mode    =&gt; '0644',
+    target  =&gt; "${my_init_src}/dot-org-files/home/.slate",
+    require =&gt; Repository["${my_init_src}/dot-org-files"],
   }
 }
 </pre>
@@ -455,51 +424,51 @@ puppet-osx</a> project to understand these settings.
 
 <div class="org-src-container">
 
-<pre class="src src-puppet"><span style="color: #00af00;">class</span> <span style="color: #5fafd7;">people::jedcn::osx_config</span> {
+<pre class="src src-puppet">class people::jedcn::osx_config {
 
-  <span style="color: #b2b2b2; font-style: italic;"># </span><span style="color: #b2b2b2; font-style: italic;">ZSH</span>
-  <span style="color: #5fafd7;">osx_chsh</span> { <span style="color: #ff8700;">$::luser</span>:
-    shell   =&gt; <span style="color: #ff1f8b;">'/opt/boxen/homebrew/bin/zsh'</span>,
-    <span style="color: #9a08ff;">require</span> =&gt; <span style="color: #5fafd7;">Package</span>[<span style="color: #ff1f8b;">'zsh'</span>],
+  # ZSH
+  osx_chsh { $::luser:
+    shell   =&gt; '/opt/boxen/homebrew/bin/zsh',
+    require =&gt; Package['zsh'],
   }
 
-  <span style="color: #5fafd7;">file_line</span> { <span style="color: #ff1f8b;">'add zsh to /etc/shells'</span>:
-    path    =&gt; <span style="color: #ff1f8b;">'/etc/shells'</span>,
-    line    =&gt; <span style="color: #ff1f8b;">"</span><span style="color: #ff8700;">${boxen::config::homebrewdir}</span><span style="color: #ff1f8b;">/bin/zsh"</span>,
-    <span style="color: #9a08ff;">require</span> =&gt; <span style="color: #5fafd7;">Package</span>[<span style="color: #ff1f8b;">'zsh'</span>],
+  file_line { 'add zsh to /etc/shells':
+    path    =&gt; '/etc/shells',
+    line    =&gt; "${boxen::config::homebrewdir}/bin/zsh",
+    require =&gt; Package['zsh'],
   }
 
-  <span style="color: #b2b2b2; font-style: italic;"># </span><span style="color: #b2b2b2; font-style: italic;">Dock Settings</span>
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">osx::dock::autohide</span>
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">osx::dock::clear_dock</span>
+  # Dock Settings
+  include osx::dock::autohide
+  include osx::dock::clear_dock
 
-  <span style="color: #b2b2b2; font-style: italic;"># </span><span style="color: #b2b2b2; font-style: italic;">Screen Zoom</span>
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">osx::universal_access::ctrl_mod_zoom</span>
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">osx::universal_access::enable_scrollwheel_zoom</span>
+  # Screen Zoom
+  include osx::universal_access::ctrl_mod_zoom
+  include osx::universal_access::enable_scrollwheel_zoom
 
-  <span style="color: #b2b2b2; font-style: italic;"># </span><span style="color: #b2b2b2; font-style: italic;">Key Repeat</span>
-  <span style="color: #00af00;">class</span> { <span style="color: #ff1f8b;">'osx::global::key_repeat_delay'</span>:
+  # Key Repeat
+  class { 'osx::global::key_repeat_delay':
     delay =&gt; 10
   }
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">osx::global::key_repeat_rate</span>
+  include osx::global::key_repeat_rate
 
-  <span style="color: #b2b2b2; font-style: italic;"># </span><span style="color: #b2b2b2; font-style: italic;">Capslock becomes Control</span>
-  <span style="color: #9a08ff;">include</span> <span style="color: #5fafd7;">osx::keyboard::capslock_to_control</span>
+  # Capslock becomes Control
+  include osx::keyboard::capslock_to_control
 
-  <span style="color: #b2b2b2; font-style: italic;"># </span><span style="color: #b2b2b2; font-style: italic;">Hot Corners</span>
-  <span style="color: #5fafd7;">osx::dock::hot_corner</span> { <span style="color: #ff1f8b;">'Show the desktop'</span>:
-    position =&gt; <span style="color: #ff1f8b;">'Bottom Right'</span>,
-    action =&gt; <span style="color: #ff1f8b;">'Desktop'</span>
+  # Hot Corners
+  osx::dock::hot_corner { 'Show the desktop':
+    position =&gt; 'Bottom Right',
+    action =&gt; 'Desktop'
   }
-  <span style="color: #5fafd7;">osx::dock::hot_corner</span> { <span style="color: #ff1f8b;">'Put Display to Sleep'</span>:
-    position =&gt; <span style="color: #ff1f8b;">'Bottom Left'</span>,
-    action =&gt; <span style="color: #ff1f8b;">'Put Display to Sleep'</span>
+  osx::dock::hot_corner { 'Put Display to Sleep':
+    position =&gt; 'Bottom Left',
+    action =&gt; 'Put Display to Sleep'
   }
 
-  <span style="color: #b2b2b2; font-style: italic;"># </span><span style="color: #b2b2b2; font-style: italic;">Recovery Message</span>
-  <span style="color: #ff8700;">$recovery_owner</span> = <span style="color: #ff1f8b;">"This computer belongs to Jed Northridge."</span>
-  <span style="color: #ff8700;">$recovery_contact</span> = <span style="color: #ff1f8b;">"If found, please contact jedcn@jedcn.com or 305-985-3326."</span>
-  <span style="color: #5fafd7;">osx::recovery_message</span> { <span style="color: #ff1f8b;">"</span><span style="color: #ff8700;">${recovery_owner}</span><span style="color: #ff1f8b;"> </span><span style="color: #ff8700;">${recovery_contact}</span><span style="color: #ff1f8b;">"</span>: }
+  # Recovery Message
+  $recovery_owner = "This computer belongs to Jed Northridge."
+  $recovery_contact = "If found, please contact jedcn@jedcn.com or 305-985-3326."
+  osx::recovery_message { "${recovery_owner} ${recovery_contact}": }
 }
 </pre>
 </div>
@@ -535,33 +504,33 @@ not expect to manage them with boxen.
 
 <div class="org-src-container">
 
-<pre class="src src-puppet"><span style="color: #00af00;">class</span> <span style="color: #5fafd7;">people::jedcn::repositories</span> {
+<pre class="src src-puppet">class people::jedcn::repositories {
 
-  <span style="color: #ff8700;">$my_init_src</span> = <span style="color: #ff1f8b;">'/opt/init-src'</span>
+  $my_init_src = '/opt/init-src'
 
-  <span style="color: #5fafd7;">file</span> { <span style="color: #ff8700;">$my_init_src</span>:
-    <span style="color: #9a08ff;">ensure</span> =&gt; directory,
+  file { $my_init_src:
+    ensure =&gt; directory,
     mode   =&gt; 0644,
   }
 
-  <span style="color: #5fafd7;">repository</span> { <span style="color: #ff1f8b;">"</span><span style="color: #ff8700;">${my_init_src}</span><span style="color: #ff1f8b;">/dot-org-files"</span>:
-    source  =&gt; <span style="color: #ff1f8b;">'jedcn/dot-org-files'</span>,
-    <span style="color: #9a08ff;">require</span> =&gt; <span style="color: #5fafd7;">File</span>[<span style="color: #ff8700;">$my_init_src</span>]
+  repository { "${my_init_src}/dot-org-files":
+    source  =&gt; 'jedcn/dot-org-files',
+    require =&gt; File[$my_init_src]
   }
 
-  <span style="color: #5fafd7;">repository</span> { <span style="color: #ff1f8b;">"</span><span style="color: #ff8700;">${my_init_src}</span><span style="color: #ff1f8b;">/emacs-setup"</span>:
-    source  =&gt; <span style="color: #ff1f8b;">'jedcn/emacs-setup'</span>,
-    <span style="color: #9a08ff;">require</span> =&gt; <span style="color: #5fafd7;">File</span>[<span style="color: #ff8700;">$my_init_src</span>]
+  repository { "${my_init_src}/emacs-setup":
+    source  =&gt; 'jedcn/emacs-setup',
+    require =&gt; File[$my_init_src]
   }
 
-  <span style="color: #5fafd7;">repository</span> { <span style="color: #ff1f8b;">"</span><span style="color: #ff8700;">${my_init_src}</span><span style="color: #ff1f8b;">/z"</span>:
-    source  =&gt; <span style="color: #ff1f8b;">'rupa/z'</span>,
-    <span style="color: #9a08ff;">require</span> =&gt; <span style="color: #5fafd7;">File</span>[<span style="color: #ff8700;">$my_init_src</span>]
+  repository { "${my_init_src}/z":
+    source  =&gt; 'rupa/z',
+    require =&gt; File[$my_init_src]
   }
 
-  <span style="color: #5fafd7;">repository</span> { <span style="color: #ff1f8b;">"</span><span style="color: #ff8700;">${my_init_src}</span><span style="color: #ff1f8b;">/oh-my-zsh"</span>:
-    source  =&gt; <span style="color: #ff1f8b;">'robbyrussell/oh-my-zsh'</span>,
-    <span style="color: #9a08ff;">require</span> =&gt; <span style="color: #5fafd7;">File</span>[<span style="color: #ff8700;">$my_init_src</span>]
+  repository { "${my_init_src}/oh-my-zsh":
+    source  =&gt; 'robbyrussell/oh-my-zsh',
+    require =&gt; File[$my_init_src]
   }
 }
 </pre>
@@ -595,12 +564,13 @@ of the puppet-* projects.
 </div>
 </div>
 </div>
-</div>
-<div id="postamble" class="status">
-<p class="author">Author: Jed Northridge</p>
-<p class="date">Created: 2014-12-14 Sun 21:58</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
-<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
-</div>
-</body>
+
+
+      <hr>
+
+      <footer>
+        <p>:)</p>
+      </footer>
+    </div> <!-- /container -->
+    </body>
 </html>
