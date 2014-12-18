@@ -19,8 +19,10 @@
         </style>
         <link rel="stylesheet" href="css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/prism.css">
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script src="js/vendor/prism.js"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -143,7 +145,7 @@ sudo mkdir -p /opt/boxen
 sudo chown ${USER}:staff /opt/boxen
 git clone https://github.com/jedcn/my-boxen /opt/boxen/repo
 /opt/boxen/repo/script/boxen
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -198,7 +200,8 @@ everything, but doesn't know anything on its own.
 
 <div class="org-src-container">
 
-<pre class="src src-puppet">class people::jedcn {
+<pre>
+<code class='language-ruby'>class people::jedcn {
   include people::jedcn::applications
   include people::jedcn::git
   include people::jedcn::homebrew
@@ -206,7 +209,7 @@ everything, but doesn't know anything on its own.
   include people::jedcn::osx_config
   include people::jedcn::repositories
 }
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
@@ -247,13 +250,14 @@ up.
 
 <div class="org-src-container">
 
-<pre class="src src-puppet">class people::jedcn::applications {
+<pre>
+<code class='language-ruby'>class people::jedcn::applications {
   include chrome
   include chrome::canary
   include firefox
   include slate
 }
-</pre>
+</code></pre>
 </div>
 </div>
 </li></ol>
@@ -272,12 +276,13 @@ This class calls out my git configuration.
 
 <div class="org-src-container">
 
-<pre class="src src-puppet">class people::jedcn::git {
+<pre>
+<code class='language-ruby'>class people::jedcn::git {
   git::config::global { 'core.editor':
     value  =&gt; '/opt/boxen/homebrew/bin/emacsclient'
   }
 }
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
@@ -310,7 +315,8 @@ post titled <a href="http://emacsredux.com/blog/2013/08/21/color-themes-redux/">
 
 <div class="org-src-container">
 
-<pre class="src src-puppet">class people::jedcn::homebrew {
+<pre>
+<code class='language-ruby'>class people::jedcn::homebrew {
   $homebrew_packages = [
 			'ag',
 			'tmux',
@@ -334,7 +340,7 @@ post titled <a href="http://emacsredux.com/blog/2013/08/21/color-themes-redux/">
     ],
   }
 }
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
@@ -351,7 +357,8 @@ This class creates symbolic links to various dotfiles.
 
 <div class="org-src-container">
 
-<pre class="src src-puppet">class people::jedcn::links {
+<pre>
+<code class='language-ruby'>class people::jedcn::links {
 
   $my_init_src = '/opt/init-src'
 
@@ -375,7 +382,7 @@ This class creates symbolic links to various dotfiles.
     require =&gt; Repository["${my_init_src}/dot-org-files"],
   }
 }
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
@@ -424,7 +431,8 @@ puppet-osx</a> project to understand these settings.
 
 <div class="org-src-container">
 
-<pre class="src src-puppet">class people::jedcn::osx_config {
+<pre>
+<code class='language-ruby'>class people::jedcn::osx_config {
 
   # ZSH
   osx_chsh { $::luser:
@@ -470,7 +478,7 @@ puppet-osx</a> project to understand these settings.
   $recovery_contact = "If found, please contact jedcn@jedcn.com or 305-985-3326."
   osx::recovery_message { "${recovery_owner} ${recovery_contact}": }
 }
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
@@ -504,7 +512,8 @@ not expect to manage them with boxen.
 
 <div class="org-src-container">
 
-<pre class="src src-puppet">class people::jedcn::repositories {
+<pre>
+<code class='language-ruby'>class people::jedcn::repositories {
 
   $my_init_src = '/opt/init-src'
 
@@ -533,7 +542,7 @@ not expect to manage them with boxen.
     require =&gt; File[$my_init_src]
   }
 }
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
