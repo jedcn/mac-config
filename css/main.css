@@ -2,6 +2,11 @@
    Author's custom styles
    ========================================================================== */
 
+/* This is for the non-prism'd code block */
+pre {
+    background: none;
+}
+
 /* This selector is from prismjs' css */
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
