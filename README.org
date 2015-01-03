@@ -1,13 +1,11 @@
-* @jedcn's MacOS Configuration
+* Automating MacOS Configuration
 
   This is my configuration for setting up MacOS machines that I work
-  on.
+  on. It can setup my dotfiles, system settings, and install
+  applications.
 
-  It is based in [[http://boxen.github.com][boxen]] which was created by [[https://github.com][Github]]. The configuration
-  is based in [[http://puppetlabs.com][puppet]].
-
-  This repository is a fork of [[https://github.com/boxen/our-boxen][boxen/our-boxen]], and has been renamed
-  to "my-boxen" because it's just for me.
+  It is based on [[http://boxen.github.com][boxen]] which was created by [[https://github.com][Github]]. Boxen is written
+  in [[http://puppetlabs.com][puppet]].
 
 ** Overview
 
@@ -27,6 +25,9 @@
   This works for me, and enables me to have things "just the way I
   want them" without having to maintain a list of instructions so that
   I can remember how they got that way.
+
+  This repository is a fork of [[https://github.com/boxen/our-boxen][boxen/our-boxen]], and has been renamed
+  to "my-boxen" because it's just for me.
 
   As a caveat, I am new to boxen: I don't know how this will play out
   over the months and years to come.
