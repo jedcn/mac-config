@@ -574,3 +574,15 @@
     tangle_file_using_emacs('README.org')
   end
 #+END_SRC
+
+** Staying up-to-date with boxen/our-boxen
+
+   This repository is a fork of [[https://github.com/boxen/our-boxen][boxen/our-boxen]], and so, while I've
+   done a bunch of customization, I'd like to stay up-to-date with the
+   original repository to get fixes, security patches, etc.
+
+   This is setup by creating a remote named "upstream" that points to
+   [[https://github.com/boxen/our-boxen][boxen/our-boxen]]. Then the master branch from this repo is merged in
+   like regular.
+
+   The directions are here: [[https://help.github.com/articles/syncing-a-fork/][github.com/articles/syncing-a-fork/]].
