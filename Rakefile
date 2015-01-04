@@ -1,4 +1,3 @@
-
 def run(c)
   require 'open3'
   _stdin, stdout, stderr = Open3.popen3(c)

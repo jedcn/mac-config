@@ -341,6 +341,44 @@
      of the puppet-* projects.
    + http://jjasghar.github.io/blog/2014/01/01/customizing-boxen/
 
+** Ruby and Content Extraction
+
+   This single =.org= file can be extracted into many component
+   pieces. This is powered by Emacs and Ruby.
+
+   Some of these pieces are puppetry and some are web files. The two
+   main categories are presently:
+
+   + *.pp extraction (for boxen runs)
+   + HTML extraction (for building a static, descriptive site)
+
+   As far as Ruby is concerned, the main driver is Rake. And so,
+   there's a =Rakefile= and the are supporting =./rakelib/*.rake=
+
+** Rake Basics
+
+   One role played by this file is simple existence: so long as it
+   exists, even if it contains no content, the =rake= command can find
+   a home and understand the location of =./rakelib=.
+
+   Another role is that it defines common functionality for running
+   tasks and a default task.
+
+#+BEGIN_SRC ruby :tangle ./Rakefile :padline no
+  def run(c)
+    require 'open3'
+    _stdin, stdout, stderr = Open3.popen3(c)
+    [ stdout.gets, stderr.gets, $?.to_i ]
+  end
+
+  task :emacs_installed do
+    location = `which emacs`
+    raise 'Unable to find emacs' if location.empty?
+  end
+
+  task default: :tangle
+#+END_SRC
+
 ** Website
 
    This document can be unpacked into distinct puppet files that serve
@@ -547,17 +585,13 @@
     puts stdout
   end
 #+END_SRC
-** Literate Extraction
 
-   This single =.org= file can be extracted into many component
-   pieces. This is powered by Emacs and Ruby.
+** Tangling Puppet
 
-   The Ruby part is invoked via =rake tangle= and the configuration is
-   below.
-
-   In short, emacs is invoked from the command line in "batch"
-   mode. Some small emacs lisp is passed in via the command line, and
-   that emacs lisp works with org-babel to extract files in place.
+   A series of puppet files can be extracted from this document. This
+   works by invoking emacs in batch mode. Some small emacs lisp is
+   passed in via the command line, and that emacs lisp works with
+   org-babel to extract files in place.
 
 #+BEGIN_SRC ruby :tangle ./rakelib/tangle.rake :padline no
   def tangle_file_using_emacs(file)
