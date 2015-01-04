@@ -1,4 +1,4 @@
-* Automating MacOS Configuration
+* MacOS Configuration
 
   This is my configuration for setting up MacOS machines that I work
   on. It can setup my dotfiles, system settings, and install
@@ -327,6 +327,7 @@
       }
 
     #+END_SRC
+
 ** Resources
 
    My main resource was Gary Larizza's article called "[[http://garylarizza.com/blog/2013/02/15/puppet-plus-github-equals-laptop-love/][Puppet + Github
@@ -339,3 +340,237 @@
    + Visiting https://github.com/boxen/ and then filtering through all
      of the puppet-* projects.
    + http://jjasghar.github.io/blog/2014/01/01/customizing-boxen/
+
+** Website
+
+   This document can be unpacked into distinct puppet files that serve
+   as configuration. It can also be unpacked into HTML files and Rake
+   configuration builds and serves as a website.
+
+   Those files are:
+
+*** rakelib/index.html.erb
+
+    This content started as the index.html associated with the
+    Bootstrap version of [[http://html5boilerplate.com/][HTML5BoilerPlate]]. I removed the core content
+    and replaced it with ERB. I also added a link to prism.js and css.
+
+#+BEGIN_SRC html :tangle ./rakelib/index.html.erb :padline no
+  <!DOCTYPE html>
+  <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+  <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+  <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+  <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+      <head>
+          <meta charset="utf-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+          <title>My Boxen</title>
+          <meta name="description" content="">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+
+          <link rel="stylesheet" href="css/bootstrap.min.css">
+          <style>
+              body {
+                  padding-top: 50px;
+                  padding-bottom: 20px;
+              }
+          </style>
+          <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+          <link rel="stylesheet" href="css/prism.css">
+          <link rel="stylesheet" href="css/main.css">
+
+          <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+          <script src="js/vendor/prism.js"></script>
+      </head>
+      <body>
+          <!--[if lt IE 7]>
+              <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+          <![endif]-->
+
+      <div class="container">
+
+        <%= content %>
+
+        <hr>
+
+        <footer>
+          <p>:)</p>
+        </footer>
+      </div> <!-- /container -->
+      </body>
+  </html>
+#+END_SRC
+
+*** rakelib/ghpages.rake
+
+    This file contains Rake-based instructions for building up static
+    web content that serves as a website.
+
+    This static content will be hosted on Github Pages, and so, the
+    following makes it so that the directory =gh-pages/= is created
+    and the contents of that directory are a single branch from this
+    same repository.
+
+    There's also a part that knows about http://www.initializr.com,
+    and how to download a copy of HTML5 Boiler Plate. This comes in a
+    ZIP. These instructions know how to unpack the ZIP and put parts
+    of it in the right places.
+
+    Finally there's a part in here that knows how to extract this
+    =.org= file using emacs into HTML and then insert that HTML into
+    an ERB enhanced template.
+
+#+BEGIN_SRC ruby :tangle ./rakelib/ghpages.rake :padline no
+  require 'rake/clean'
+
+  desc 'Create Github Pages content'
+  task 'build-gh-pages' => [ 'gh-pages',
+                             'gh-pages-supporting-content',
+                             'gh-pages/index.html' ]
+
+  #
+  # Setup ./gh-pages as a git clone with gh-pages checked out.
+  #
+  directory 'gh-pages' do
+    repo = 'https://github.com/jedcn/my-boxen.git'
+    branch = 'gh-pages'
+    dir = branch
+    args = "#{repo} --branch #{branch} --single-branch ./#{dir}"
+    command = "git clone #{args}"
+    stdout, stderr, _status = run(command)
+    puts stderr, stdout
+  end
+
+  #
+  # Extract supporting content from HTML5BoilerPlate
+  #
+  task 'gh-pages-supporting-content' => [ 'gh-pages/favicon.ico',
+                                          'gh-pages/css/bootstrap.min.css',
+                                          'gh-pages/css/bootstrap-theme.min.css',
+                                          'gh-pages/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' ]
+
+  def add_option(url, s)
+    "#{url}&#{s}"
+  end
+
+  CLEAN.include('gh-pages/initializr.zip')
+  CLEAN.include('gh-pages/initializr')
+  file 'gh-pages/initializr' do
+    chdir('gh-pages') do
+      `wget -O initializr.zip 'http://www.initializr.com/builder?boot-hero&jquerymin&h5bp-iecond&h5bp-chromeframe&h5bp-analytics&h5bp-favicon&h5bp-appletouchicons&modernizrrespond&izr-emptyscript&boot-css&boot-scripts'`
+      `unzip initializr.zip`
+    end
+  end
+
+  #
+  # Setup files from HTML5BoilerPlate
+  #
+  def cp_from_initializr(file, dir)
+    dest =
+      if dir
+        "gh-pages/#{dir}"
+      else
+        'gh-pages'
+      end
+    FileUtils.cp("gh-pages/initializr/#{file}", dest, verbose: true)
+  end
+
+  file 'gh-pages/favicon.ico' => 'gh-pages/initializr' do
+    cp_from_initializr('favicon.ico')
+  end
+
+  directory 'gh-pages/css' => 'gh-pages'
+  directory 'gh-pages/js' => 'gh-pages'
+  directory 'gh-pages/js/vendor' => 'gh-pages/js'
+
+  file 'gh-pages/favicon.ico' => 'gh-pages/initializr' do
+    cp_from_initializr('favicon.ico')
+  end
+
+  file 'gh-pages/css/bootstrap.min.css' => 'gh-pages/css' do
+    cp_from_initializr('css/bootstrap.min.css', 'css')
+  end
+
+  file 'gh-pages/css/bootstrap-theme.min.css' => 'gh-pages/css' do
+    cp_from_initializr('css/bootstrap-theme.min.css', 'css')
+  end
+
+  file 'gh-pages/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' =>
+       'gh-pages/js/vendor' do
+    cp_from_initializr('js/vendor/modernizr-2.6.2-respond-1.1.0.min.js',
+                       'js/vendor')
+  end
+
+  directory 'gh-pages/css' => 'gh-pages'
+
+  file 'README.html' => :emacs_installed do
+    export_html_using_emacs('README.org')
+  end
+
+  file 'gh-pages/index.html' => [ 'gh-pages', 'README.html' ] do
+
+    require 'erb'
+    require 'ostruct'
+
+    class ContentWrapper < OpenStruct
+      def render(template)
+        ERB.new(template).result(binding)
+      end
+    end
+
+    template = File.read('rakelib/index.html.erb')
+
+    content = File.read('README.html')
+
+    cw = ContentWrapper.new({ content: content })
+    File.open('gh-pages/index.html', 'w') do |file|
+      file.write(cw.render(template))
+    end
+
+    rendered = File.read('gh-pages/index.html')
+    s = "<pre>\n<code class='language-ruby'>"
+    rendered = rendered.gsub('<pre class="src src-puppet">', s)
+    rendered = rendered.gsub('</pre>', '</code></pre>')
+    File.open('gh-pages/index.html', 'w') do |file|
+      file.write(rendered)
+    end
+    rm 'README.html', verbose: true
+  end
+
+  def export_html_using_emacs(file)
+    args = '--no-init-file --no-site-file --batch'
+    tangle_elisp =
+      %Q|(progn (require 'org) (find-file (expand-file-name \\"#{file}\\" \\"`pwd`\\")) (org-html-export-to-html nil nil nil t))|
+    command = %Q|emacs #{args} --eval "#{tangle_elisp}"|
+    stdout, stderr, _status = run(command)
+    puts stderr
+    puts stdout
+  end
+#+END_SRC
+** Literate Extraction
+
+   This single =.org= file can be extracted into many component
+   pieces. This is powered by Emacs and Ruby.
+
+   The Ruby part is invoked via =rake tangle= and the configuration is
+   below.
+
+   In short, emacs is invoked from the command line in "batch"
+   mode. Some small emacs lisp is passed in via the command line, and
+   that emacs lisp works with org-babel to extract files in place.
+
+#+BEGIN_SRC ruby :tangle ./rakelib/tangle.rake :padline no
+  def tangle_file_using_emacs(file)
+    args = '--no-init-file --no-site-file --batch'
+    tangle_elisp =
+      %Q|(progn (require 'ob-tangle) (org-babel-tangle-file \\"#{file}\\"))|
+    command = %Q|emacs #{args} --eval "#{tangle_elisp}"|
+    _stdout, stderr, status = run(command)
+    puts stderr unless status == 0
+  end
+
+  desc 'tangle literate source into puppet'
+  task :tangle => :emacs_installed do
+    tangle_file_using_emacs('README.org')
+  end
+#+END_SRC
