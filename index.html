@@ -35,7 +35,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1. @jedcn's MacOS Configuration</a>
+<li><a href="#sec-1">1. MacOS Configuration</a>
 <ul>
 <li><a href="#sec-1-1">1.1. Overview</a></li>
 <li><a href="#sec-1-2">1.2. Commands</a>
@@ -56,28 +56,33 @@
 </ul>
 </li>
 <li><a href="#sec-1-4">1.4. Resources</a></li>
+<li><a href="#sec-1-5">1.5. Ruby and Content Extraction</a></li>
+<li><a href="#sec-1-6">1.6. Rake Basics</a></li>
+<li><a href="#sec-1-7">1.7. Website</a>
+<ul>
+<li><a href="#sec-1-7-1">1.7.1. rakelib/index.html.erb</a></li>
+<li><a href="#sec-1-7-2">1.7.2. rakelib/ghpages.rake</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-8">1.8. Tangling Puppet</a></li>
+<li><a href="#sec-1-9">1.9. Staying up-to-date with boxen/our-boxen</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-
 <div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> @jedcn's MacOS Configuration</h2>
+<h2 id="sec-1"><span class="section-number-2">1</span> MacOS Configuration</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This is my configuration for setting up MacOS machines that I work
-on.
+on. It can setup my dotfiles, system settings, and install
+applications.
 </p>
 
 <p>
-It is based in <a href="http://boxen.github.com">boxen</a> which was created by <a href="https://github.com">Github</a>. The configuration
-is based in <a href="http://puppetlabs.com">puppet</a>.
-</p>
-
-<p>
-This repository is a fork of <a href="https://github.com/boxen/our-boxen">boxen/our-boxen</a>, and has been renamed
-to "my-boxen" because it's just for me.
+It is based on <a href="http://boxen.github.com">boxen</a> which was created by <a href="https://github.com">Github</a>. Boxen is written
+in <a href="http://puppetlabs.com">puppet</a>.
 </p>
 </div>
 
@@ -113,6 +118,11 @@ screen zoom, fast key repeat, etc)
 This works for me, and enables me to have things "just the way I
 want them" without having to maintain a list of instructions so that
 I can remember how they got that way.
+</p>
+
+<p>
+This repository is a fork of <a href="https://github.com/boxen/our-boxen">boxen/our-boxen</a>, and has been renamed
+to "my-boxen" because it's just for me.
 </p>
 
 <p>
@@ -547,6 +557,7 @@ not expect to manage them with boxen.
 </div>
 </div>
 </div>
+
 <div id="outline-container-sec-1-4" class="outline-3">
 <h3 id="sec-1-4"><span class="section-number-3">1.4</span> Resources</h3>
 <div class="outline-text-3" id="text-1-4">
@@ -570,6 +581,351 @@ of the puppet-* projects.
 <li><a href="http://jjasghar.github.io/blog/2014/01/01/customizing-boxen/">http://jjasghar.github.io/blog/2014/01/01/customizing-boxen/</a>
 </li>
 </ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-5" class="outline-3">
+<h3 id="sec-1-5"><span class="section-number-3">1.5</span> Ruby and Content Extraction</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+This single <code>.org</code> file can be extracted into many component
+pieces. This is powered by Emacs and Ruby.
+</p>
+
+<p>
+Some of these pieces are puppetry and some are web files. The two
+main categories are presently:
+</p>
+
+<ul class="org-ul">
+<li>*.pp extraction (for boxen runs)
+</li>
+<li>HTML extraction (for building a static, descriptive site)
+</li>
+</ul>
+
+<p>
+As far as Ruby is concerned, the main driver is Rake. And so,
+there's a <code>Rakefile</code> and the are supporting <code>./rakelib/*.rake</code>
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-6" class="outline-3">
+<h3 id="sec-1-6"><span class="section-number-3">1.6</span> Rake Basics</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+One role played by this file is simple existence: so long as it
+exists, even if it contains no content, the <code>rake</code> command can find
+a home and understand the location of <code>./rakelib</code>.
+</p>
+
+<p>
+Another role is that it defines common functionality for running
+tasks and a default task.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ruby">def run(c)
+  require 'open3'
+  _stdin, stdout, stderr = Open3.popen3(c)
+  [ stdout.gets, stderr.gets, $?.to_i ]
+end
+
+task :emacs_installed do
+  location = `which emacs`
+  raise 'Unable to find emacs' if location.empty?
+end
+
+task default: :tangle
+</code></pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-7" class="outline-3">
+<h3 id="sec-1-7"><span class="section-number-3">1.7</span> Website</h3>
+<div class="outline-text-3" id="text-1-7">
+<p>
+This document can be unpacked into distinct puppet files that serve
+as configuration. It can also be unpacked into HTML files and Rake
+configuration builds and serves as a website.
+</p>
+
+<p>
+Those files are:
+</p>
+</div>
+
+<div id="outline-container-sec-1-7-1" class="outline-4">
+<h4 id="sec-1-7-1"><span class="section-number-4">1.7.1</span> rakelib/index.html.erb</h4>
+<div class="outline-text-4" id="text-1-7-1">
+<p>
+This content started as the index.html associated with the
+Bootstrap version of <a href="http://html5boilerplate.com/">HTML5BoilerPlate</a>. I removed the core content
+and replaced it with ERB. I also added a link to prism.js and css.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-html">&lt;!DOCTYPE html&gt;
+&lt;!--[if lt IE 7]&gt;      &lt;html class="no-js lt-ie9 lt-ie8 lt-ie7"&gt; &lt;![endif]--&gt;
+&lt;!--[if IE 7]&gt;         &lt;html class="no-js lt-ie9 lt-ie8"&gt; &lt;![endif]--&gt;
+&lt;!--[if IE 8]&gt;         &lt;html class="no-js lt-ie9"&gt; &lt;![endif]--&gt;
+&lt;!--[if gt IE 8]&gt;&lt;!--&gt; &lt;html class="no-js"&gt; &lt;!--&lt;![endif]--&gt;
+    &lt;head&gt;
+	&lt;meta charset="utf-8"&gt;
+	&lt;meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"&gt;
+	&lt;title&gt;My Boxen&lt;/title&gt;
+	&lt;meta name="description" content=""&gt;
+	&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+
+	&lt;link rel="stylesheet" href="css/bootstrap.min.css"&gt;
+	&lt;style&gt;
+	    body {
+		padding-top: 50px;
+		padding-bottom: 20px;
+	    }
+	&lt;/style&gt;
+	&lt;link rel="stylesheet" href="css/bootstrap-theme.min.css"&gt;
+	&lt;link rel="stylesheet" href="css/prism.css"&gt;
+	&lt;link rel="stylesheet" href="css/main.css"&gt;
+
+	&lt;script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"&gt;&lt;/script&gt;
+	&lt;script src="js/vendor/prism.js"&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+	&lt;!--[if lt IE 7]&gt;
+	    &lt;p class="browsehappy"&gt;You are using an &lt;strong&gt;outdated&lt;/strong&gt; browser. Please &lt;a href="http://browsehappy.com/"&gt;upgrade your browser&lt;/a&gt; to improve your experience.&lt;/p&gt;
+	&lt;![endif]--&gt;
+
+    &lt;div class="container"&gt;
+
+      &lt;%= content %&gt;
+
+      &lt;hr&gt;
+
+      &lt;footer&gt;
+	&lt;p&gt;:)&lt;/p&gt;
+      &lt;/footer&gt;
+    &lt;/div&gt; &lt;!-- /container --&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-7-2" class="outline-4">
+<h4 id="sec-1-7-2"><span class="section-number-4">1.7.2</span> rakelib/ghpages.rake</h4>
+<div class="outline-text-4" id="text-1-7-2">
+<p>
+This file contains Rake-based instructions for building up static
+web content that serves as a website.
+</p>
+
+<p>
+This static content will be hosted on Github Pages, and so, the
+following makes it so that the directory <code>gh-pages/</code> is created
+and the contents of that directory are a single branch from this
+same repository.
+</p>
+
+<p>
+There's also a part that knows about <a href="http://www.initializr.com">http://www.initializr.com</a>,
+and how to download a copy of HTML5 Boiler Plate. This comes in a
+ZIP. These instructions know how to unpack the ZIP and put parts
+of it in the right places.
+</p>
+
+<p>
+Finally there's a part in here that knows how to extract this
+<code>.org</code> file using emacs into HTML and then insert that HTML into
+an ERB enhanced template.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ruby">require 'rake/clean'
+
+desc 'Create Github Pages content'
+task 'build-gh-pages' =&gt; [ 'gh-pages',
+			   'gh-pages-supporting-content',
+			   'gh-pages/index.html' ]
+
+#
+# Setup ./gh-pages as a git clone with gh-pages checked out.
+#
+directory 'gh-pages' do
+  repo = 'https://github.com/jedcn/my-boxen.git'
+  branch = 'gh-pages'
+  dir = branch
+  args = "#{repo} --branch #{branch} --single-branch ./#{dir}"
+  command = "git clone #{args}"
+  stdout, stderr, _status = run(command)
+  puts stderr, stdout
+end
+
+#
+# Extract supporting content from HTML5BoilerPlate
+#
+task 'gh-pages-supporting-content' =&gt; [ 'gh-pages/favicon.ico',
+					'gh-pages/css/bootstrap.min.css',
+					'gh-pages/css/bootstrap-theme.min.css',
+					'gh-pages/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' ]
+
+def add_option(url, s)
+  "#{url}&amp;#{s}"
+end
+
+CLEAN.include('gh-pages/initializr.zip')
+CLEAN.include('gh-pages/initializr')
+file 'gh-pages/initializr' do
+  chdir('gh-pages') do
+    `wget -O initializr.zip 'http://www.initializr.com/builder?boot-hero&amp;jquerymin&amp;h5bp-iecond&amp;h5bp-chromeframe&amp;h5bp-analytics&amp;h5bp-favicon&amp;h5bp-appletouchicons&amp;modernizrrespond&amp;izr-emptyscript&amp;boot-css&amp;boot-scripts'`
+    `unzip initializr.zip`
+  end
+end
+
+#
+# Setup files from HTML5BoilerPlate
+#
+def cp_from_initializr(file, dir)
+  dest =
+    if dir
+      "gh-pages/#{dir}"
+    else
+      'gh-pages'
+    end
+  FileUtils.cp("gh-pages/initializr/#{file}", dest, verbose: true)
+end
+
+file 'gh-pages/favicon.ico' =&gt; 'gh-pages/initializr' do
+  cp_from_initializr('favicon.ico')
+end
+
+directory 'gh-pages/css' =&gt; 'gh-pages'
+directory 'gh-pages/js' =&gt; 'gh-pages'
+directory 'gh-pages/js/vendor' =&gt; 'gh-pages/js'
+
+file 'gh-pages/favicon.ico' =&gt; 'gh-pages/initializr' do
+  cp_from_initializr('favicon.ico')
+end
+
+file 'gh-pages/css/bootstrap.min.css' =&gt; 'gh-pages/css' do
+  cp_from_initializr('css/bootstrap.min.css', 'css')
+end
+
+file 'gh-pages/css/bootstrap-theme.min.css' =&gt; 'gh-pages/css' do
+  cp_from_initializr('css/bootstrap-theme.min.css', 'css')
+end
+
+file 'gh-pages/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' =&gt;
+     'gh-pages/js/vendor' do
+  cp_from_initializr('js/vendor/modernizr-2.6.2-respond-1.1.0.min.js',
+		     'js/vendor')
+end
+
+directory 'gh-pages/css' =&gt; 'gh-pages'
+
+file 'README.html' =&gt; :emacs_installed do
+  export_html_using_emacs('README.org')
+end
+
+file 'gh-pages/index.html' =&gt; [ 'gh-pages', 'README.html' ] do
+
+  require 'erb'
+  require 'ostruct'
+
+  class ContentWrapper &lt; OpenStruct
+    def render(template)
+      ERB.new(template).result(binding)
+    end
+  end
+
+  template = File.read('rakelib/index.html.erb')
+
+  content = File.read('README.html')
+
+  cw = ContentWrapper.new({ content: content })
+  File.open('gh-pages/index.html', 'w') do |file|
+    file.write(cw.render(template))
+  end
+
+  rendered = File.read('gh-pages/index.html')
+  s = "&lt;pre&gt;\n&lt;code class='language-ruby'&gt;"
+  rendered = rendered.gsub('&lt;pre class="src src-puppet"&gt;', s)
+  rendered = rendered.gsub('&lt;/pre&gt;', '&lt;/code&gt;&lt;/pre&gt;')
+  File.open('gh-pages/index.html', 'w') do |file|
+    file.write(rendered)
+  end
+  rm 'README.html', verbose: true
+end
+
+def export_html_using_emacs(file)
+  args = '--no-init-file --no-site-file --batch'
+  tangle_elisp =
+    %Q|(progn (require 'org) (find-file (expand-file-name \\"#{file}\\" \\"`pwd`\\")) (org-html-export-to-html nil nil nil t))|
+  command = %Q|emacs #{args} --eval "#{tangle_elisp}"|
+  stdout, stderr, _status = run(command)
+  puts stderr
+  puts stdout
+end
+</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-8" class="outline-3">
+<h3 id="sec-1-8"><span class="section-number-3">1.8</span> Tangling Puppet</h3>
+<div class="outline-text-3" id="text-1-8">
+<p>
+A series of puppet files can be extracted from this document. This
+works by invoking emacs in batch mode. Some small emacs lisp is
+passed in via the command line, and that emacs lisp works with
+org-babel to extract files in place.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ruby">def tangle_file_using_emacs(file)
+  args = '--no-init-file --no-site-file --batch'
+  tangle_elisp =
+    %Q|(progn (require 'ob-tangle) (org-babel-tangle-file \\"#{file}\\"))|
+  command = %Q|emacs #{args} --eval "#{tangle_elisp}"|
+  _stdout, stderr, status = run(command)
+  puts stderr unless status == 0
+end
+
+desc 'tangle literate source into puppet'
+task :tangle =&gt; :emacs_installed do
+  tangle_file_using_emacs('README.org')
+end
+</code></pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-9" class="outline-3">
+<h3 id="sec-1-9"><span class="section-number-3">1.9</span> Staying up-to-date with boxen/our-boxen</h3>
+<div class="outline-text-3" id="text-1-9">
+<p>
+This repository is a fork of <a href="https://github.com/boxen/our-boxen">boxen/our-boxen</a>, and so, while I've
+done a bunch of customization, I'd like to stay up-to-date with the
+original repository to get fixes, security patches, etc.
+</p>
+
+<p>
+This is setup by creating a remote named "upstream" that points to
+<a href="https://github.com/boxen/our-boxen">boxen/our-boxen</a>. Then the master branch from this repo is merged in
+like regular.
+</p>
+
+<p>
+The directions are here: <a href="https://help.github.com/articles/syncing-a-fork/">github.com/articles/syncing-a-fork/</a>.
+</p>
 </div>
 </div>
 </div>
