@@ -93,7 +93,7 @@
 
     This pulls in the non-homebrew applications that I use.
 
-**** Browsers
+**** Applications
 
      I use the standard browsers, and I use Slate for Window
      Management.
@@ -109,6 +109,17 @@
      bought 1Password through the AppStore. When I went through the
      AppStore, things worked just fine and so here's where I've ended
      up.
+
+     Near as I can tell, if you try to get something running with
+     boxen and then you give up and remove the puppetry, you can
+     manually remove the application but you should also remove
+     something called a receipt that can be found in the =/var/db=
+     directory, for example:
+
+     + =sudo rm .puppet_compressed_app_installed_1Password\ 5=
+     + =sudo rm /var/db/.puppet_appdmg_installed_LittleSnitch=
+
+     I learned this in the [[https://github.com/boxen/our-boxen/blob/master/docs/faq.md][official boxen FAQ]].
 
      #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp :padline no
        class people::jedcn::applications {
