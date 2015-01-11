@@ -2,11 +2,11 @@
 
   I care about how my computer is configured.
 
-  I like being able to magnify my screen so that I can easily show
-  things to my daughter.
+  I like being able to easily zoom to anywhere on my screen so that I
+  can easily show things to my daughter.
 
-  I like being able to control what I am working with, and focus on it
-  or dismiss it without much effort.
+  I like being able to control what I am working with, and focus it or
+  dismiss it without much effort.
 
   There are certain programs I know how to use, and I'd like them to
   be present.
@@ -21,18 +21,19 @@
 
    On one hand, it is part of a larger collection of files at
    https://github.com/jedcn/mac-config, and this means a formatted,
-   web accessible copy is available here: [[https://github.com/jedcn/mac-config/blob/master/README.org.][README.org]].
+   web accessible version of this single file is available here:
+   [[https://github.com/jedcn/mac-config/blob/master/README.org.][README.org]].
 
    But, this file also contains chunks of computer code, and these
-   chunks can be extracted into distinct files. In turn, these files
-   play one of three roles:
+   chunks can be extracted into distinct files. These files play one
+   of three roles:
 
-   1. Some of the files contain HTML and serve as the basis of
-      https://jedcn.github.io/mac-config.
+   1. Some of the files contain HTML and serve as the basis of a
+      simple "website:" https://jedcn.github.io/mac-config.
    2. Some of the files contain configuration in a language called
-      [[http://puppetlabs.com][puppet]]. These can be used within a framework named [[https://boxen.github.com][boxen]], and
-      literally *are declarations* that can change my computer's
-      configuration as a result of running a command.
+      [[http://puppetlabs.com][puppet]]. These play a role within a framework named [[https://boxen.github.com][boxen]], and
+      *are declarations* that can change my computer's configuration
+      as a result of running a command.
    3. Some of the files contain helper code in a language called [[http://en.wikipedia.org/wiki/Ruby_(programming_language)][ruby]],
       and these glue things together by extracting code, building up
       the website, etc.
@@ -51,29 +52,79 @@
    of view, *this* is an experiment using [[http://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] to
    describe how I configure my computer.
 
-   Why document configuration at all? It comes from the tension
+   Why document computer configuration at all? It stems from tension
    between these two ideas:
 
    1. I rarely configure a new computer, and yet,
    2. I deeply care about how my computer is configured.
 
-   The core motivation for documenting this in the Literate Style
-   stems from wanting to capture prose descriptions (with links and
-   such) side-by-side my boxen configuration.
+   The core motivation for documenting this in a Literate System stems
+   from wanting to capture prose descriptions (with links and such)
+   side-by-side my boxen configuration.
 
    It is also motivated by the idea that I am sometimes asked, "How
    did you configure your computer to do such-and-such?"
 
-   The neat trick about Literate Source is that it can be made dense
-   enough to create more than one artifact. This file *is* the puppet
-   configuration *and* it *is* the website.
+   The neat trick about Literate Source is that it can be dense enough
+   to create more than one artifact. This file *is* the puppet
+   configuration and it *is* the website and it *is* the glue code
+   that puts everything together.
 
-   Why not make it so that a single document can help me share with
-   people?
+   So, why not make it so that a single document can help me share
+   with people?
 
 ** Who is this for?
 
-   TODO
+   I hope most of my prose configuration descriptions are accessible
+   to all mac users.
+
+   When it comes to boxen and puppet, what I have here works but I'm
+   not an expert by any means. If you've never seen a boxen
+   configuration before, you can surely see it here and see how things
+   are laid out.
+
+** Who uses this?
+
+   I am the only explicit user of this configuration. I use it outside
+   of the context of any group or company, and I only have a single
+   computer.
+
+   Having worked with boxen for a small bit now, I think it's all
+   about [[https://en.wikipedia.org/wiki/Metcalfe's_law][Metcalfe's Law]] in the context of how many users and computers
+   you're working with. The more of either one you have the more
+   useful boxen will be.
+
+   And so, when it's just me, or just you, *I'd think twice about
+   using boxen itself.*
+
+   When it comes to this particular config, I can see how someone
+   could get an idea for what boxen is from it, or perhaps copy and
+   paste a few snippets into theirs.
+
+   However, no one should clone or fork this repository. Instead, if
+   you're looking to get started with boxen, then you should fork
+   [[https://github.com/boxen/our-boxen][boxen/our-boxen]].
+
+** Agenda
+
+   We've got a general introduction to this document, and we
+   understand how it can be used, so what's left?
+
+   We'll lay things out as follows:
+
+   1. General Introduction (this)
+   2. OSX Settings
+   3. Dotfiles and Repositories
+   4. Applications
+   5. Command Line Utilities
+
+   Once this main content has been covered, we'll move onto the
+   details surrounding several supplementary concepts:
+
+   1. Boxen, Puppetry, and File Layout
+   2. How to Get Started with boxen
+   3. Glue Code and Rake Tasks
+   4. Keeping Things Up To Date
 
 ** Overview
 
