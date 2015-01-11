@@ -1,11 +1,79 @@
-* MacOS Configuration
+* Mac Config
 
-  This is my configuration for setting up MacOS machines that I work
-  on. It can setup my dotfiles, system settings, and install
-  applications.
+  I care about how my computer is configured.
 
-  It is based on [[http://boxen.github.com][boxen]] which was created by [[https://github.com][Github]]. Boxen is written
-  in [[http://puppetlabs.com][puppet]].
+  I like being able to magnify my screen so that I can easily show
+  things to my daughter.
+
+  I like being able to control what I am working with, and focus on it
+  or dismiss it without much effort.
+
+  There are certain programs I know how to use, and I'd like them to
+  be present.
+
+  And so I've put some time into thinking about how to configure my
+  setup, and this is what I've come up with.
+
+** What is this?
+
+   As I am typing this, I am writing plain text in a single file named
+   =README.org=. However, this single file is versatile.
+
+   On one hand, it is part of a larger collection of files at
+   https://github.com/jedcn/mac-config, and this means a formatted,
+   web accessible copy is available here: [[https://github.com/jedcn/mac-config/blob/master/README.org.][README.org]].
+
+   But, this file also contains chunks of computer code, and these
+   chunks can be extracted into distinct files. In turn, these files
+   play one of three roles:
+
+   1. Some of the files contain HTML and serve as the basis of
+      https://jedcn.github.io/mac-config.
+   2. Some of the files contain configuration in a language called
+      [[http://puppetlabs.com][puppet]]. These can be used within a framework named [[https://boxen.github.com][boxen]], and
+      literally *are declarations* that can change my computer's
+      configuration as a result of running a command.
+   3. Some of the files contain helper code in a language called [[http://en.wikipedia.org/wiki/Ruby_(programming_language)][ruby]],
+      and these glue things together by extracting code, building up
+      the website, etc.
+
+** Wait, what's =.org=?
+
+   *This* is a file named =README.org=. That extension, =.org=, means
+   that this is a plain text file that is structured following the
+   conventions of [[http://en.wikipedia.org/wiki/Org-mode][org-mode]].
+
+   A component of org-mode, named [[http://orgmode.org/worg/org-contrib/babel/][babel]], serves as the basis for
+   interspersing chunks of code with text, and allowing these chunks
+   to be extracted.
+
+   If this seems strange to you, it probably is. From the meta point
+   of view, *this* is an experiment using [[http://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] to
+   describe how I configure my computer.
+
+   Why document configuration at all? It comes from the tension
+   between these two ideas:
+
+   1. I rarely configure a new computer, and yet,
+   2. I deeply care about how my computer is configured.
+
+   The core motivation for documenting this in the Literate Style
+   stems from wanting to capture prose descriptions (with links and
+   such) side-by-side my boxen configuration.
+
+   It is also motivated by the idea that I am sometimes asked, "How
+   did you configure your computer to do such-and-such?"
+
+   The neat trick about Literate Source is that it can be made dense
+   enough to create more than one artifact. This file *is* the puppet
+   configuration *and* it *is* the website.
+
+   Why not make it so that a single document can help me share with
+   people?
+
+** Who is this for?
+
+   TODO
 
 ** Overview
 
