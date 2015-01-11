@@ -631,3 +631,28 @@
    like regular.
 
    The directions are here: [[https://help.github.com/articles/syncing-a-fork/][github.com/articles/syncing-a-fork/]].
+** Manual Installs
+
+   I installed the following Software manually:
+
+*** 1Password
+
+    I got this from the AppStore. I did because I couldn't figure out
+    how to license it, otherwise.
+
+*** Little Snitch
+
+    I tried installing this via puppet. I tried a provider of =appdmg=
+    and =pkgdmg=, and neither did I was expected. I started with
+    =appdmg=, and this put both the Installer and Uninstaller in my
+    Applications-- but that's not what I want. I want to run the
+    Installer *once* and then have "Little Snitch Configuration" be
+    the only thing that's in my Applications.
+
+    Anyway-- I gave up and I downloaded it from this URL and
+    double-clicked to the install:
+
+    http://www.obdev.at/downloads/littlesnitch/LittleSnitch-3.5.1.dmg
+
+    The install required a reboot, and after that, it immediately
+    started going.
