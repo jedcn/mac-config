@@ -4,17 +4,18 @@
 
    I care about how my computer is configured.
 
-   I like being able to easily zoom to anywhere on my screen so that I
-   can easily show things to my daughter.
+   I like manifying any part of my screen so that I can easily show
+   things to my daughter.
 
-   I like being able to control what I am working with, and focus it or
-   dismiss it without much effort.
+   I like controlling the applications that I am working with. I like
+   being able to easily expand, shrink, or dismiss them without much
+   effort.
 
    There are certain programs I know how to use, and I'd like them to
-   be present.
+   automatically be present.
 
-   And so I've put some time into thinking about how to configure my
-   setup, and this is what I've come up with.
+   And so, I've put some time into thinking about how to configure my
+   setup. This is what I've come up with.
 
 *** What is this?
 
@@ -307,6 +308,63 @@
 
 ** Applications
 
+   You can use boxen to install the applications that you work
+   with. In turn, boxen relies on modules to install applications, and
+   here are a few examples of modules that I use:
+
+   * [[https://github.com/boxen/puppet-firefox][puppet-firefox]]
+   * [[https://github.com/boxen/puppet-chrome][puppet-chrome]]
+   * [[https://github.com/boxen/puppet-slate][puppet-slate]]
+
+   After you declare that you want to have an application, like
+   firefox, you run the command =boxen= and the application will
+   "just" appear in your Applications folder.
+
+*** Boxen vs. Manual Install
+
+    Not all modules are created equally: some of them appear to have
+    worked a few years ago, but have since fallen into disrepair.
+    Because these modules provide the applications, the usefulness of
+    the module will vary based on how well the community supports any
+    given module.
+
+    And so, I make a choice with each application between using boxen
+    vs. installing by hand. In general, if I can get it through boxen,
+    that's what I'd prefer.
+
+*** Browsers
+
+   I use the standard set of browsers.
+
+*** Window Management
+
+   [[https://github.com/jigish/slate][Slate]] was a game changer for me, and I've written more about it
+   here: http://jedcn.com/posts/slate/.
+
+   Many modules are defined underneath the Boxen Github repository:
+   https://github.com/boxen/. You can search for ones that are
+   formally part of that organization by visiting the link above and
+   typing the name of the application into to the "Filters."
+
+   My experience indicates that boxen support for any a particular
+   application When it comes to doing work, you can I think about the
+   a Boxen configuration allows you to call out which applications
+   should be installed with just a few lines of code. Each application
+   is provided for with a particular module, such as:
+
+*** Declarations
+
+    Here's the puppetry that handles my applications:
+
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp :padline no
+      class people::jedcn::applications {
+        include chrome
+        include chrome::canary
+        include firefox
+        include slate
+      }
+    #+END_SRC
+
 ** Command Line Utilities
 
 ** Boxen, Puppetry, and File Layout
@@ -396,49 +454,6 @@
         include people::jedcn::repositories
       }
     #+END_SRC
-
-*** applications.pp
-
-    This file declares =people::jedcn::applications=.
-
-    This pulls in the non-homebrew applications that I use.
-
-**** Applications
-
-     I use the standard browsers, and I use Slate for Window
-     Management.
-
-     I found that I had to manually launch slate and allow it access
-     to control my accessibility devices. This was a matter of
-     following prompts.
-
-     I tried getting onepassword here (with [[https://github.com/boxen/puppet-onepassword][puppet-onepassword]]), but I
-     couldn't figure out the licensing. Specifically, after a boxen
-     run it was in trial mode and looking for a license file. As far
-     as I remember, I didn't have a license file because I originally
-     bought 1Password through the AppStore. When I went through the
-     AppStore, things worked just fine and so here's where I've ended
-     up.
-
-     Near as I can tell, if you try to get something running with
-     boxen and then you give up and remove the puppetry, you can
-     manually remove the application but you should also remove
-     something called a receipt that can be found in the =/var/db=
-     directory, for example:
-
-     + =sudo rm .puppet_compressed_app_installed_1Password\ 5=
-     + =sudo rm /var/db/.puppet_appdmg_installed_LittleSnitch=
-
-     I learned this in the [[https://github.com/boxen/our-boxen/blob/master/docs/faq.md][official boxen FAQ]].
-
-     #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp :padline no
-       class people::jedcn::applications {
-         include chrome
-         include chrome::canary
-         include firefox
-         include slate
-       }
-     #+END_SRC
 
 *** git.pp
 
@@ -788,6 +803,7 @@
    like regular.
 
    The directions are here: [[https://help.github.com/articles/syncing-a-fork/][github.com/articles/syncing-a-fork/]].
+
 ** Manual Installs
 
    I installed the following Software manually:
@@ -813,3 +829,30 @@
 
     The install required a reboot, and after that, it immediately
     started going.
+
+** Oddities and Troubleshoot
+
+*** 1Password and Licensing
+
+    I tried getting onepassword here (with [[https://github.com/boxen/puppet-onepassword][puppet-onepassword]]), but I
+    couldn't figure out the licensing. Specifically, after a boxen run
+    it was in trial mode and looking for a license file. But, I didn't
+    have a license because I bought 1Password through the
+    AppStore.
+
+    After 15 minutes of mucking around, I installed through the
+    AppStore, and things worked just fine.
+
+*** Given up on a Module Failed Installations
+
+    Near as I can tell, if you try to get something running with boxen
+    and then you give up and remove the puppetry, you'll still have
+    whatever-didnt-install-the-way-you-wanted installed, and so, you
+    can manually remove that thing but you should also remove
+    something called a "receipt" that can be found in the =/var/db=
+    directory, for example:
+
+    + =sudo rm .puppet_compressed_app_installed_1Password\ 5=
+    + =sudo rm /var/db/.puppet_appdmg_installed_LittleSnitch=
+
+    I learned about receipts in the [[https://github.com/boxen/our-boxen/blob/master/docs/faq.md][official boxen FAQ]].
