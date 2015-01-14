@@ -1,130 +1,321 @@
 * Mac Config
 
-  I care about how my computer is configured.
+** Introduction
 
-  I like being able to easily zoom to anywhere on my screen so that I
-  can easily show things to my daughter.
+   I care about how my computer is configured.
 
-  I like being able to control what I am working with, and focus it or
-  dismiss it without much effort.
+   I like being able to easily zoom to anywhere on my screen so that I
+   can easily show things to my daughter.
 
-  There are certain programs I know how to use, and I'd like them to
-  be present.
+   I like being able to control what I am working with, and focus it or
+   dismiss it without much effort.
 
-  And so I've put some time into thinking about how to configure my
-  setup, and this is what I've come up with.
+   There are certain programs I know how to use, and I'd like them to
+   be present.
 
-** What is this?
+   And so I've put some time into thinking about how to configure my
+   setup, and this is what I've come up with.
 
-   As I am typing this, I am writing plain text in a single file named
-   =README.org=. However, this single file is versatile.
+*** What is this?
 
-   On one hand, it is part of a larger collection of files at
-   https://github.com/jedcn/mac-config, and this means a formatted,
-   web accessible version of this single file is available here:
-   [[https://github.com/jedcn/mac-config/blob/master/README.org.][README.org]].
+    As I am typing this, I am writing plain text in a single file named
+    =README.org=. However, this single file is versatile.
 
-   But, this file also contains chunks of computer code, and these
-   chunks can be extracted into distinct files. These files play one
-   of three roles:
+    On one hand, it is part of a larger collection of files at
+    https://github.com/jedcn/mac-config, and this means a formatted,
+    web accessible version of this single file is available here:
+    [[https://github.com/jedcn/mac-config/blob/master/README.org.][README.org]].
 
-   1. Some of the files contain HTML and serve as the basis of a
-      simple "website:" https://jedcn.github.io/mac-config.
-   2. Some of the files contain configuration in a language called
-      [[http://puppetlabs.com][puppet]]. These play a role within a framework named [[https://boxen.github.com][boxen]], and
-      *are declarations* that can change my computer's configuration
-      as a result of running a command.
-   3. Some of the files contain helper code in a language called [[http://en.wikipedia.org/wiki/Ruby_(programming_language)][ruby]],
-      and these glue things together by extracting code, building up
-      the website, etc.
+    But, this file also contains chunks of computer code, and these
+    chunks can be extracted into distinct files. These files play one
+    of three roles:
 
-** Wait, what's =.org=?
+    1. Some of the files contain HTML and serve as the basis of a
+       simple "website:" https://jedcn.github.io/mac-config.
+    2. Some of the files contain configuration in a language called
+       [[http://puppetlabs.com][puppet]]. These play a role within a framework named [[https://boxen.github.com][boxen]], and
+       *are declarations* that can change my computer's configuration
+       as a result of running a command.
+    3. Some of the files contain helper code in a language called [[http://en.wikipedia.org/wiki/Ruby_(programming_language)][ruby]],
+       and these glue things together by extracting code, building up
+       the website, etc.
 
-   *This* is a file named =README.org=. That extension, =.org=, means
-   that this is a plain text file that is structured following the
-   conventions of [[http://en.wikipedia.org/wiki/Org-mode][org-mode]].
+*** Wait, what's =.org=?
 
-   A component of org-mode, named [[http://orgmode.org/worg/org-contrib/babel/][babel]], serves as the basis for
-   interspersing chunks of code with text, and allowing these chunks
-   to be extracted.
+    *This* is a file named =README.org=. That extension, =.org=, means
+    that this is a plain text file that is structured following the
+    conventions of [[http://en.wikipedia.org/wiki/Org-mode][org-mode]].
 
-   If this seems strange to you, it probably is. From the meta point
-   of view, *this* is an experiment using [[http://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] to
-   describe how I configure my computer.
+    A component of org-mode, named [[http://orgmode.org/worg/org-contrib/babel/][babel]], serves as the basis for
+    interspersing chunks of code with text, and allowing these chunks
+    to be extracted.
 
-   Why document computer configuration at all? It stems from tension
-   between these two ideas:
+    If this seems strange to you, it probably is. From the meta point
+    of view, *this* is an experiment using [[http://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] to
+    describe how I configure my computer.
 
-   1. I rarely configure a new computer, and yet,
-   2. I deeply care about how my computer is configured.
+    Why document computer configuration at all? It stems from tension
+    between these two ideas:
 
-   The core motivation for documenting this in a Literate System stems
-   from wanting to capture prose descriptions (with links and such)
-   side-by-side my boxen configuration.
+    1. I rarely configure a new computer, and yet,
+    2. I deeply care about how my computer is configured.
 
-   It is also motivated by the idea that I am sometimes asked, "How
-   did you configure your computer to do such-and-such?"
+    The core motivation for documenting this in a Literate System stems
+    from wanting to capture prose descriptions (with links and such)
+    side-by-side my boxen configuration.
 
-   The neat trick about Literate Source is that it can be dense enough
-   to create more than one artifact. This file *is* the puppet
-   configuration and it *is* the website and it *is* the glue code
-   that puts everything together.
+    It is also motivated by the idea that I am sometimes asked, "How
+    did you configure your computer to do such-and-such?"
 
-   So, why not make it so that a single document can help me share
-   with people?
+    The neat trick about Literate Source is that it can be dense enough
+    to create more than one artifact. This file *is* the puppet
+    configuration and it *is* the website and it *is* the glue code
+    that puts everything together.
 
-** Who is this for?
+    So, why not make it so that a single document can help me share
+    with people?
 
-   I hope most of my prose configuration descriptions are accessible
-   to all mac users.
+*** Who is this for?
 
-   When it comes to boxen and puppet, what I have here works but I'm
-   not an expert by any means. If you've never seen a boxen
-   configuration before, you can surely see it here and see how things
-   are laid out.
+    I hope most of my prose configuration descriptions are accessible
+    to all mac users.
 
-** Who uses this?
+    When it comes to boxen and puppet, what I have here works but I'm
+    not an expert by any means. If you've never seen a boxen
+    configuration before, you can surely see it here and see how things
+    are laid out.
 
-   I am the only explicit user of this configuration. I use it outside
-   of the context of any group or company, and I only have a single
-   computer.
+*** Who uses this?
 
-   Having worked with boxen for a small bit now, I think it's all
-   about [[https://en.wikipedia.org/wiki/Metcalfe's_law][Metcalfe's Law]] in the context of how many users and computers
-   you're working with. The more of either one you have the more
-   useful boxen will be.
+    I am the only explicit user of this configuration. I use it outside
+    of the context of any group or company, and I only have a single
+    computer.
 
-   And so, when it's just me, or just you, *I'd think twice about
-   using boxen itself.*
+    Having worked with boxen for a small bit now, I think it's all
+    about [[https://en.wikipedia.org/wiki/Metcalfe's_law][Metcalfe's Law]] in the context of how many users and computers
+    you're working with. The more of either one you have the more
+    useful boxen will be.
 
-   When it comes to this particular config, I can see how someone
-   could get an idea for what boxen is from it, or perhaps copy and
-   paste a few snippets into theirs.
+    And so, when it's just me, or just you, *I'd think twice about
+    using boxen itself.*
 
-   However, no one should clone or fork this repository. Instead, if
-   you're looking to get started with boxen, then you should fork
-   [[https://github.com/boxen/our-boxen][boxen/our-boxen]].
+    When it comes to this particular config, I can see how someone
+    could get an idea for what boxen is from it, or perhaps copy and
+    paste a few snippets into theirs.
 
-** Agenda
+    However, no one should clone or fork this repository. Instead, if
+    you're looking to get started with boxen, then you should fork
+    [[https://github.com/boxen/our-boxen][boxen/our-boxen]].
 
-   We've got a general introduction to this document, and we
-   understand how it can be used, so what's left?
+*** Agenda
 
-   We'll lay things out as follows:
+    We've got a general introduction to this document, and we
+    understand how it can be used, so what's left?
 
-   1. General Introduction (this)
-   2. OSX Settings
-   3. Dotfiles and Repositories
-   4. Applications
-   5. Command Line Utilities
+    We'll lay things out as follows:
 
-   Once this main content has been covered, we'll move onto the
-   details surrounding several supplementary concepts:
+    1. General Introduction (this)
+    2. OSX Settings
+    3. Dotfiles and Repositories
+    4. Applications
+    5. Command Line Utilities
 
-   1. Boxen, Puppetry, and File Layout
-   2. How to Get Started with boxen
-   3. Glue Code and Rake Tasks
-   4. Keeping Things Up To Date
+    As we cover the content above, we'll intertwine prose with
+    puppetry (the language of boxen). The intent is to go straight at
+    what we're trying to achieve, and then, once we know where we want
+    to get to, we'll see how things fit together within the boxen
+    framework.
+
+    There's a bunch of mechanics underneath it all, and once this main
+    content has been covered, we'll move onto several supplementary
+    concepts:
+
+    1. Boxen, Puppetry, and File Layout
+    2. How to Get Started with boxen
+    3. Glue Code and Rake Tasks
+    4. Keeping Things Up To Date
+
+** OSX Settings
+
+   I've started with the idea of configuring OSX because I think it's
+   the most compelling reason for using boxen. I can imagine a
+   situation where I use boxen *just* for the ability to automatically
+   configure OSX, and nothing more.
+
+   That said, boxen itself doesn't know about OSX, but you can use a
+   module named [[https://github.com/boxen/puppet-osx][puppet-osx]], and it provides the ability to do things
+   like:
+
+   1. Map CAPS LOCK to CTRL.
+   2. Make your key presses repeat very quickly.
+   3. Make it so that holding CTRL and scrolling on your trackpad will
+      magnify the screen underneath the mouse pointer.
+   4. Switch your shell to ZSH.
+   5. Automatically hide the dock.
+   6. Remove clutter from the dock by making it only contain running
+      apps.
+   7. Setup a message on your lock screen to provides your contact
+      information if your laptop is found.
+
+   All of these things are tweakable by hand, but using boxen lets you
+   get going in a flash, and lets you change things (say, the repeat
+   rate) in a controlled manner.
+
+   If you're working in this area, [[https://github.com/boxen/puppet-osx][the main README of the puppet-osx]]
+   project is critical to understanding these settings.
+
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/osx_config.pp :padline no
+     class people::jedcn::osx_config {
+
+       # ZSH
+       osx_chsh { $::luser:
+         shell   => '/opt/boxen/homebrew/bin/zsh',
+         require => Package['zsh'],
+       }
+
+       file_line { 'add zsh to /etc/shells':
+         path    => '/etc/shells',
+         line    => "${boxen::config::homebrewdir}/bin/zsh",
+         require => Package['zsh'],
+       }
+
+       # Dock Settings
+       include osx::dock::autohide
+       include osx::dock::clear_dock
+
+       # Screen Zoom
+       include osx::universal_access::ctrl_mod_zoom
+       include osx::universal_access::enable_scrollwheel_zoom
+
+       # Key Repeat
+       class { 'osx::global::key_repeat_delay':
+         delay => 10
+       }
+       include osx::global::key_repeat_rate
+
+       # Capslock becomes Control
+       include osx::keyboard::capslock_to_control
+
+       # Hot Corners
+       osx::dock::hot_corner { 'Show the desktop':
+         position => 'Bottom Right',
+         action => 'Desktop'
+       }
+       osx::dock::hot_corner { 'Put Display to Sleep':
+         position => 'Bottom Left',
+         action => 'Put Display to Sleep'
+       }
+
+       # Recovery Message
+       $recovery_owner = "This computer belongs to Jed Northridge."
+       $recovery_contact = "If found, please contact jedcn@jedcn.com or 305-985-3326."
+       osx::recovery_message { "${recovery_owner} ${recovery_contact}": }
+     }
+   #+END_SRC
+
+** Dotfiles and Repositories
+
+   I generally use [[https://dotfiles.github.io/][dotfiles]], and I specifically use [[https://github.com/andsens/homeshick][homeshick]] with my
+   own [[https://github.com/jedcn/dot-org-files][dot-org-files]].
+
+   In this area, boxen enables you to:
+
+   1. Declare which repositories should be cloned on the
+      machine. These don't have to limited to dotfiles, for example, I
+      like to have [[https://github.com/robbyrussell/oh-my-zsh/][oh-my-zsh]] and [[https://github.com/rupa/z][z]].
+   2. Setup links from your home directory to those repositories.
+
+   Of course, you don't have to use boxen to setup links if the system
+   you're using has this capability, but in my case I let boxen do the
+   work even though homeshick can handle it.
+
+   I expect that I'll have dozens and dozens of repositories cloned
+   onto my machine. My general game plan is to put most of my
+   repositories underneath =/project=, and to make a special place for
+   repositories that are used to bootstrap my shell (dot files,
+   oh-my-zsh, z, etc). These "bootstrap repositories" live underneath
+   =/opt/init-src=, which I picked because it's so close to boxen's
+   home, =/opt/boxen=.
+
+   I plan on only using boxen to manage the ones at =/opt/init-src=.
+
+   The puppetry below creates a directory, and clones several
+   repositories:
+
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/repositories.pp :padline no
+     class people::jedcn::repositories {
+
+       $my_init_src = '/opt/init-src'
+
+       file { $my_init_src:
+         ensure => directory,
+         mode   => 0644,
+       }
+
+       repository { "${my_init_src}/dot-org-files":
+         source  => 'jedcn/dot-org-files',
+         require => File[$my_init_src]
+       }
+
+       repository { "${my_init_src}/emacs-setup":
+         source  => 'jedcn/emacs-setup',
+         require => File[$my_init_src]
+       }
+
+       repository { "${my_init_src}/z":
+         source  => 'rupa/z',
+         require => File[$my_init_src]
+       }
+
+       repository { "${my_init_src}/oh-my-zsh":
+         source  => 'robbyrussell/oh-my-zsh',
+         require => File[$my_init_src]
+       }
+     }
+   #+END_SRC
+
+   And this puppetry creates three links. The "require" attributes
+   instruct puppet to make sure the main directory and repositories
+   are cloned before this runs:
+
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/links.pp :padline no
+     class people::jedcn::links {
+
+       $my_init_src = '/opt/init-src'
+
+       file { "/Users/${luser}/.zshrc":
+         ensure  => link,
+         mode    => '0644',
+         target  => "${my_init_src}/dot-org-files/home/.zshrc",
+         require => Repository["${my_init_src}/dot-org-files"],
+       }
+
+       file { "/Users/${luser}/.oh-my-zsh":
+         ensure  => link,
+         target  => "${my_init_src}/oh-my-zsh",
+         require => Repository["${my_init_src}/oh-my-zsh"],
+       }
+
+       file { "/Users/${luser}/.slate":
+         ensure  => link,
+         mode    => '0644',
+         target  => "${my_init_src}/dot-org-files/home/.slate",
+         require => Repository["${my_init_src}/dot-org-files"],
+       }
+     }
+   #+END_SRC
+
+** Applications
+
+** Command Line Utilities
+
+** Boxen, Puppetry, and File Layout
+
+** How to Get Started with boxen
+
+** Glue Code and Rake Tasks
+
+** Keeping Things Up To Date
 
 ** Overview
 
@@ -303,159 +494,6 @@
           ],
         }
       }
-    #+END_SRC
-*** links.pp
-
-    This file declares =people::jedcn::links=.
-
-    This class creates symbolic links to various dotfiles.
-
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/links.pp :padline no
-      class people::jedcn::links {
-
-        $my_init_src = '/opt/init-src'
-
-        file { "/Users/${luser}/.zshrc":
-          ensure  => link,
-          mode    => '0644',
-          target  => "${my_init_src}/dot-org-files/home/.zshrc",
-          require => Repository["${my_init_src}/dot-org-files"],
-        }
-
-        file { "/Users/${luser}/.oh-my-zsh":
-          ensure  => link,
-          target  => "${my_init_src}/oh-my-zsh",
-          require => Repository["${my_init_src}/oh-my-zsh"],
-        }
-
-        file { "/Users/${luser}/.slate":
-          ensure  => link,
-          mode    => '0644',
-          target  => "${my_init_src}/dot-org-files/home/.slate",
-          require => Repository["${my_init_src}/dot-org-files"],
-        }
-      }
-    #+END_SRC
-
-*** osx_config.pp
-
-    This file declares =people::jedcn::osx_config=.
-
-    This class sets my OSX configuration.
-
-    Without boxen, these would be set by hand tweaking panels
-    underneath System Preferences and editing various files.
-
-    The following is achieved:
-
-    1. zsh, installed via homebrew, is set as my default shell.
-    2. The dock is configured to automatically hide.
-    3. The dock is configured to only contain apps that are running.
-    4. Holding CTRL and scrolling on trackpad will now magnify the
-       screen.
-    5. The speed at which keys "repeat" when they are pressed is
-       significantly increased.
-    6. The capslock key is configured to act like control.
-
-    I found it very helpful to review [[https://github.com/boxen/puppet-osx][the main README of the
-    puppet-osx]] project to understand these settings.
-
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/osx_config.pp :padline no
-      class people::jedcn::osx_config {
-
-        # ZSH
-        osx_chsh { $::luser:
-          shell   => '/opt/boxen/homebrew/bin/zsh',
-          require => Package['zsh'],
-        }
-
-        file_line { 'add zsh to /etc/shells':
-          path    => '/etc/shells',
-          line    => "${boxen::config::homebrewdir}/bin/zsh",
-          require => Package['zsh'],
-        }
-
-        # Dock Settings
-        include osx::dock::autohide
-        include osx::dock::clear_dock
-
-        # Screen Zoom
-        include osx::universal_access::ctrl_mod_zoom
-        include osx::universal_access::enable_scrollwheel_zoom
-
-        # Key Repeat
-        class { 'osx::global::key_repeat_delay':
-          delay => 10
-        }
-        include osx::global::key_repeat_rate
-
-        # Capslock becomes Control
-        include osx::keyboard::capslock_to_control
-
-        # Hot Corners
-        osx::dock::hot_corner { 'Show the desktop':
-          position => 'Bottom Right',
-          action => 'Desktop'
-        }
-        osx::dock::hot_corner { 'Put Display to Sleep':
-          position => 'Bottom Left',
-          action => 'Put Display to Sleep'
-        }
-
-        # Recovery Message
-        $recovery_owner = "This computer belongs to Jed Northridge."
-        $recovery_contact = "If found, please contact jedcn@jedcn.com or 305-985-3326."
-        osx::recovery_message { "${recovery_owner} ${recovery_contact}": }
-      }
-    #+END_SRC
-
-*** repositories.pp
-
-    This file declares =people::jedcn::repositories=.
-
-    This class causes a directory to come into existence and several
-    repositories to be cloned underneath that directory.
-
-    The repositories involved are concerned with system scripts,
-    configuration, and dotfiles.
-
-    These repositories are necessary for bootstrapping. They lay down
-    a solid foundation for work to begin upon.
-
-    I will keep non-system repositories at another location, and I do
-    not expect to manage them with boxen.
-
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/repositories.pp :padline no
-      class people::jedcn::repositories {
-
-        $my_init_src = '/opt/init-src'
-
-        file { $my_init_src:
-          ensure => directory,
-          mode   => 0644,
-        }
-
-        repository { "${my_init_src}/dot-org-files":
-          source  => 'jedcn/dot-org-files',
-          require => File[$my_init_src]
-        }
-
-        repository { "${my_init_src}/emacs-setup":
-          source  => 'jedcn/emacs-setup',
-          require => File[$my_init_src]
-        }
-
-        repository { "${my_init_src}/z":
-          source  => 'rupa/z',
-          require => File[$my_init_src]
-        }
-
-        repository { "${my_init_src}/oh-my-zsh":
-          source  => 'robbyrussell/oh-my-zsh',
-          require => File[$my_init_src]
-        }
-      }
-
     #+END_SRC
 
 ** Resources
