@@ -167,7 +167,7 @@
    If you're working in this area, [[https://github.com/boxen/puppet-osx][the main README of the puppet-osx]]
    project is critical to understanding these settings.
 
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/osx_config.pp :padline no
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/osx_config.pp
      class people::jedcn::osx_config {
 
        # ZSH
@@ -250,7 +250,7 @@
    + robbyrussell/oh-my-zsh
    + rupa/z
 
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/repositories.pp :padline no
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/repositories.pp
      class people::jedcn::repositories {
 
        $my_init_src = '/opt/init-src'
@@ -289,7 +289,7 @@
    The "require" attributes instruct puppet to make sure the main
    directory and repositories are cloned before the links are created:
 
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/links.pp :padline no
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/links.pp
      class people::jedcn::links {
 
        $my_init_src = '/opt/init-src'
@@ -371,7 +371,7 @@
 
     Here's the puppetry that handles my applications:
 
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp :padline no
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp
       class people::jedcn::applications {
         include chrome
         include chrome::canary
@@ -401,7 +401,7 @@
 
    Without further delay, here are the packages I like:
 
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/homebrew.pp :padline no
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/homebrew.pp
      class people::jedcn::homebrew {
        $homebrew_packages = [
                              'ag',
@@ -437,7 +437,7 @@
    This file declares =people::jedcn=. This knows how to include
    everything, but doesn't know anything on its own.
 
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn.pp :padline no
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn.pp
       class people::jedcn {
         include people::jedcn::applications
         include people::jedcn::git
@@ -471,7 +471,7 @@
 
     This class calls out my git configuration.
 
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/git.pp :padline no
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/git.pp
       class people::jedcn::git {
         git::config::global { 'core.editor':
           value  => '/opt/boxen/homebrew/bin/emacsclient'
@@ -517,7 +517,7 @@
    Another role is that it defines common functionality for running
    tasks and a default task.
 
-#+BEGIN_SRC ruby :tangle ./Rakefile :padline no
+#+BEGIN_SRC ruby :tangle ./Rakefile
   def run(c)
     require 'open3'
     _stdin, stdout, stderr = Open3.popen3(c)
@@ -546,7 +546,7 @@
     Bootstrap version of [[http://html5boilerplate.com/][HTML5BoilerPlate]]. I removed the core content
     and replaced it with ERB. I also added a link to prism.js and css.
 
-#+BEGIN_SRC html :tangle ./rakelib/index.html.erb :padline no
+#+BEGIN_SRC html :tangle ./rakelib/index.html.erb
   <!DOCTYPE html>
   <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
   <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -611,7 +611,7 @@
     =.org= file using emacs into HTML and then insert that HTML into
     an ERB enhanced template.
 
-#+BEGIN_SRC ruby :tangle ./rakelib/ghpages.rake :padline no
+#+BEGIN_SRC ruby :tangle ./rakelib/ghpages.rake
   require 'rake/clean'
 
   desc 'Create Github Pages content'
@@ -746,7 +746,7 @@
    passed in via the command line, and that emacs lisp works with
    org-babel to extract files in place.
 
-#+BEGIN_SRC ruby :tangle ./rakelib/tangle.rake :padline no
+#+BEGIN_SRC ruby :tangle ./rakelib/tangle.rake
   def tangle_file_using_emacs(file)
     args = '--no-init-file --no-site-file --batch'
     tangle_elisp =
