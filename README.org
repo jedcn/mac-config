@@ -4,7 +4,7 @@
 
    I care about how my computer is configured.
 
-   I like manifying any part of my screen so that I can easily show
+   I like magnifying any part of my screen so that I can easily show
    things to my daughter.
 
    I like controlling the applications that I am working with. I like
@@ -12,20 +12,20 @@
    effort.
 
    There are certain programs I know how to use, and I'd like them to
-   automatically be present.
+   automatically installed if they aren't.
 
    And so, I've put some time into thinking about how to configure my
    setup. This is what I've come up with.
 
 *** What is this?
 
-    As I am typing this, I am writing plain text in a single file named
-    =README.org=. However, this single file is versatile.
+    As I am typing this, I am writing plain text in a single file
+    named =README.org=. However, this single file is versatile.
 
     On one hand, it is part of a larger collection of files at
     https://github.com/jedcn/mac-config, and this means a formatted,
     web accessible version of this single file is available here:
-    [[https://github.com/jedcn/mac-config/blob/master/README.org.][README.org]].
+    [[https://github.com/jedcn/mac-config/blob/master/README.org][README.org]].
 
     But, this file also contains chunks of computer code, and these
     chunks can be extracted into distinct files. These files play one
@@ -45,14 +45,14 @@
 
     *This* is a file named =README.org=. That extension, =.org=, means
     that this is a plain text file that is structured following the
-    conventions of [[http://en.wikipedia.org/wiki/Org-mode][org-mode]].
+    conventions of [[http://en.wikipedia.org/wiki/Org-mode][org-mode]], finally, org-mode is a part of [[https://www.gnu.org/software/emacs/][emacs]].
 
     A component of org-mode, named [[http://orgmode.org/worg/org-contrib/babel/][babel]], serves as the basis for
     interspersing chunks of code with text, and allowing these chunks
     to be extracted.
 
     If this seems strange to you, it probably is. From the meta point
-    of view, *this* is an experiment using [[http://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] to
+    of view, *this* is an experiment in using [[http://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] to
     describe how I configure my computer.
 
     Why document computer configuration at all? It stems from tension
@@ -61,15 +61,17 @@
     1. I rarely configure a new computer, and yet,
     2. I deeply care about how my computer is configured.
 
-    The core motivation for documenting this in a Literate System stems
-    from wanting to capture prose descriptions (with links and such)
-    side-by-side my boxen configuration.
+    The core motivation for documenting this in a Literate System
+    stems from wanting to capture prose descriptions (with links and
+    such) side-by-side my boxen configuration.
 
     It is also motivated by the idea that I am sometimes asked, "How
-    did you configure your computer to do such-and-such?"
+    did you configure your computer to do such-and-such?" I don't have
+    a great memory so I'd benefit from a self-describing
+    configuration.
 
-    The neat trick about Literate Source is that it can be dense enough
-    to create more than one artifact. This file *is* the puppet
+    The neat trick about Literate Source is that it can be dense
+    enough to create more than one artifact. This file *is* the puppet
     configuration and it *is* the website and it *is* the glue code
     that puts everything together.
 
@@ -83,19 +85,19 @@
 
     When it comes to boxen and puppet, what I have here works but I'm
     not an expert by any means. If you've never seen a boxen
-    configuration before, you can surely see it here and see how things
-    are laid out.
+    configuration before, you can surely see it here and see how
+    things are laid out.
 
 *** Who uses this?
 
-    I am the only explicit user of this configuration. I use it outside
-    of the context of any group or company, and I only have a single
-    computer.
+    I am the only explicit user of this configuration. I use it
+    outside of the context of any group or company, and I only have a
+    single computer.
 
     Having worked with boxen for a small bit now, I think it's all
-    about [[https://en.wikipedia.org/wiki/Metcalfe's_law][Metcalfe's Law]] in the context of how many users and computers
-    you're working with. The more of either one you have the more
-    useful boxen will be.
+    about [[https://en.wikipedia.org/wiki/Metcalfe's_law][Metcalfe's Law]] in the context of how many users and
+    computers you're working with. The more of either one you have the
+    more useful boxen will be.
 
     And so, when it's just me, or just you, *I'd think twice about
     using boxen itself.*
@@ -238,10 +240,15 @@
    =/opt/init-src=, which I picked because it's so close to boxen's
    home, =/opt/boxen=.
 
-   I plan on only using boxen to manage the ones at =/opt/init-src=.
+   I plan on using boxen to only manage the ones at =/opt/init-src=.
 
    The puppetry below creates a directory, and clones several
    repositories:
+
+   + jedcn/dot-org-files
+   + jedcn/emacs-setup
+   + robbyrussell/oh-my-zsh
+   + rupa/z
 
    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/repositories.pp :padline no
      class people::jedcn::repositories {
@@ -275,9 +282,12 @@
      }
    #+END_SRC
 
-   And this puppetry creates three links. The "require" attributes
-   instruct puppet to make sure the main directory and repositories
-   are cloned before this runs:
+   And this next puppetry creates several links so that the files
+   inside of those repositories appear in places relative to my home
+   directory.
+
+   The "require" attributes instruct puppet to make sure the main
+   directory and repositories are cloned before the links are created:
 
    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/links.pp :padline no
      class people::jedcn::links {
@@ -308,6 +318,9 @@
 
 ** Applications
 
+   Next up, after dot-files and repositories have been figured out, we
+   figure out applications like Chrome and Firefox.
+
    You can use boxen to install the applications that you work
    with. In turn, boxen relies on modules to install applications, and
    here are a few examples of modules that I use:
@@ -318,39 +331,41 @@
 
    After you declare that you want to have an application, like
    firefox, you run the command =boxen= and the application will
-   "just" appear in your Applications folder.
+   "just" appear in your Applications folder. This means installing
+   applications is reduced to writing a few lines of code rather than
+   visiting websites, downloading =.dmg= files, and running
+   installers.
+
+   However, you still have the ability to install an application
+   manually, so which path should you choose?
 
 *** Boxen vs. Manual Install
 
-    Not all modules are created equally: some of them appear to have
-    worked a few years ago, but have since fallen into disrepair.
-    Because these modules provide the applications, the usefulness of
-    the module will vary based on how well the community supports any
-    given module.
+    Not all puppet-modules are created equally. This is especially so
+    when it comes to applications: some of them call out older
+    versions of applications. These may no longer work, or there may
+    be newer versions available.
+
+    Also, in some cases, you need to install an application via the
+    AppStore to get the correctly licensed version of it. This
+    happened to me with 1Password.
 
     And so, I make a choice with each application between using boxen
     vs. installing by hand. In general, if I can get it through boxen,
     that's what I'd prefer.
 
+    After all of that, let's talk about the applications that are
+    installed as part of this puppet config.
+
 *** Browsers
 
-   I use the standard set of browsers.
+    I use the standard set of browsers, and can pull in Chrome,
+    Firefox, and their development versions.
 
 *** Window Management
 
-   [[https://github.com/jigish/slate][Slate]] was a game changer for me, and I've written more about it
-   here: http://jedcn.com/posts/slate/.
-
-   Many modules are defined underneath the Boxen Github repository:
-   https://github.com/boxen/. You can search for ones that are
-   formally part of that organization by visiting the link above and
-   typing the name of the application into to the "Filters."
-
-   My experience indicates that boxen support for any a particular
-   application When it comes to doing work, you can I think about the
-   a Boxen configuration allows you to call out which applications
-   should be installed with just a few lines of code. Each application
-   is provided for with a particular module, such as:
+    [[https://github.com/jigish/slate][Slate]] was a game changer for me, and I've written more about it
+    here: http://jedcn.com/posts/slate/.
 
 *** Declarations
 
@@ -367,84 +382,62 @@
 
 ** Command Line Utilities
 
+   I get all of my command line utilities from [[http://brew.sh][homebrew]]. Usually if I
+   land on a new computer I type a number of =brew install xyz=
+   commands, but this puppetry allows me to put all of the packages I
+   want in an array, run a single =boxen= command, and then I'm done.
+
+   As I scan through what's below, I recognize that the majority of
+   packages are simple, standard installs. It's like you typed =brew
+   install ag=, for example.
+
+   However, you can install with options, as I do with emacs with
+   options certain options that I learned of in a post titled [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/][Color
+   Themes: Redux]] in [[ttp://emacsredux.com][Emacs Redux]].
+
+   As a quick note, Homebrew is the standard package provider for
+   puppetry within boxen. This means that if you declare a =package=
+   (as seen below) then the =provider= defaults to Homebrew.
+
+   Without further delay, here are the packages I like:
+
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/homebrew.pp :padline no
+     class people::jedcn::homebrew {
+       $homebrew_packages = [
+                             'ag',
+                             'tmux',
+                             'tree',
+                             'wget',
+                             'zsh',
+                             ]
+
+       package { $homebrew_packages: }
+
+       package { 'cask':
+         ensure  => present,
+         require => Package['emacs'],
+       }
+
+       package { 'emacs':
+         ensure          => present,
+         install_options => [
+           '--cocoa',
+           '--srgb'
+         ],
+       }
+     }
+   #+END_SRC
+
 ** Boxen, Puppetry, and File Layout
 
-** How to Get Started with boxen
+   TODO XXX TODO
 
-** Glue Code and Rake Tasks
+   I start with a single puppet file: =jedcn.pp=.
 
-** Keeping Things Up To Date
+   This file declares =people::jedcn=. This knows how to include
+   everything, but doesn't know anything on its own.
 
-** Overview
-
-  The point of this system is that you can reduce the setup time for a
-  new MacOS machine to ~30 minutes and running a few commands.
-
-  Once complete, you'll have:
-
-  1. Applications installed (such as Chrome, Firefox)
-  2. Homebrew utilities installed
-  3. Dotfiles cloned and linked
-  4. Git configured
-  5. OSX configured (bind capslock to control, auto-hide the dock,
-     screen zoom, fast key repeat, etc)
-  6. Ruby and Node installations
-
-  This works for me, and enables me to have things "just the way I
-  want them" without having to maintain a list of instructions so that
-  I can remember how they got that way.
-
-  This repository is a fork of [[https://github.com/boxen/our-boxen][boxen/our-boxen]], and has been renamed
-  to "my-boxen" because it's just for me.
-
-  As a caveat, I am new to boxen: I don't know how this will play out
-  over the months and years to come.
-
-  I have created a Resources section at the bottom of this document
-  that details websites, articles, and repositories I read through
-  while getting this going.
-
-** Commands
-
-*** New Machine
-
-    The commands you'd run on a fresh Mac are:
-
-    #+BEGIN_SRC sh
-      xcode-select --install
-      sudo mkdir -p /opt/boxen
-      sudo chown ${USER}:staff /opt/boxen
-      git clone https://github.com/jedcn/my-boxen /opt/boxen/repo
-      /opt/boxen/repo/script/boxen
-    #+END_SRC
-
-    These commands:
-
-    1. Install xcode (which gets you a compiler: gcc)
-    2. Clone my-boxen configuration to /opt/boxen/repo
-    3. Invoke boxen which reads my-boxen configuration and sets up the
-       machine.
-
-*** Existing Machine
-
-    If you've already setup your Mac, you can change your boxen
-    configuration and run =boxen= to see those changes realized. This
-    can be completed in as short as 10 seconds.
-
-** Files
-
-   Whenever you run =boxen= the configuration from certain files is
-   applied. These files are all puppet files. An explanation and
-   manifest follows.
-
-*** jedcn.pp
-
-    I start with a single puppet file: =jedcn.pp=.
-
-    This file declares =people::jedcn=. This knows how to include
-    everything, but doesn't know anything on its own.
-
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn.pp :padline no
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn.pp :padline no
       class people::jedcn {
         include people::jedcn::applications
         include people::jedcn::git
@@ -453,7 +446,24 @@
         include people::jedcn::osx_config
         include people::jedcn::repositories
       }
-    #+END_SRC
+   #+END_SRC
+
+
+** How to Get Started with boxen
+
+** Glue Code and Rake Tasks
+
+** Keeping Things Up To Date
+
+** Commands
+
+** Files
+
+   Whenever you run =boxen= the configuration from certain files is
+   applied. These files are all puppet files. An explanation and
+   manifest follows.
+
+*** jedcn.pp
 
 *** git.pp
 
@@ -470,46 +480,6 @@
     #+END_SRC
 
 *** homebrew.pp
-
-    This file declares =people::jedcn::homebrew=.
-
-    This class calls out all of the package I install from [[http://brew.sh][homebrew]].
-
-    Homebrew is the standard package provider for puppetry within
-    boxen.
-
-    The majority of packages are simple, standard installs. It's like
-    you typed =brew install ag=, for example.
-
-    I install emacs with options certain options that I learned of in a
-    post titled [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/][Color Themes: Redux]] in [[ttp://emacsredux.com][Emacs Redux]].
-
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/homebrew.pp :padline no
-      class people::jedcn::homebrew {
-        $homebrew_packages = [
-                              'ag',
-                              'tmux',
-                              'tree',
-                              'wget',
-                              'zsh',
-                              ]
-
-        package { $homebrew_packages: }
-
-        package { 'cask':
-          ensure  => present,
-          require => Package['emacs'],
-        }
-
-        package { 'emacs':
-          ensure          => present,
-          install_options => [
-            '--cocoa',
-            '--srgb'
-          ],
-        }
-      }
-    #+END_SRC
 
 ** Resources
 
@@ -856,3 +826,46 @@
     + =sudo rm /var/db/.puppet_appdmg_installed_LittleSnitch=
 
     I learned about receipts in the [[https://github.com/boxen/our-boxen/blob/master/docs/faq.md][official boxen FAQ]].
+
+*** What does a module do?
+
+    If you've found a puppet module that you'd like to check out, the
+    first place to look is in the file named =manifests/init.pp=. I
+    believe this is the entry point for all modules. You can usually
+    see other files that are included into it or URLs, version
+    numbers, and configuration options.
+
+*** Where do you find modules?
+
+    Modules can be defined anywhere, and the most popular ones are
+    underneath the Boxen Github repository:
+    https://github.com/boxen/.
+
+    You can search for ones that are formally part of that
+    organization by visiting the link above and typing the name of the
+    application into to the "Filters."
+
+*** Starting on machine without boxen?
+
+    The commands you'd run on a fresh Mac are:
+
+    #+BEGIN_SRC sh
+      xcode-select --install
+      sudo mkdir -p /opt/boxen
+      sudo chown ${USER}:staff /opt/boxen
+      git clone https://github.com/jedcn/my-boxen /opt/boxen/repo
+      /opt/boxen/repo/script/boxen
+    #+END_SRC
+
+    These commands:
+
+    1. Install xcode (which gets you a compiler: gcc)
+    2. Clone my-boxen configuration to /opt/boxen/repo
+    3. Invoke boxen which reads my-boxen configuration and sets up the
+       machine.
+
+*** Starting on a machine that has boxen?
+
+    If you've already setup your Mac, you can change your boxen
+    configuration and run =boxen= to see those changes realized. This
+    can be completed in as short as 10 seconds.
