@@ -138,392 +138,521 @@
     3. Glue Code and Rake Tasks
     4. Keeping Things Up To Date
 
-** OSX Settings
+** Configuration
 
-   I've started with the idea of configuring OSX because I think it's
-   the most compelling reason for using boxen. I can imagine a
-   situation where I use boxen *just* for the ability to automatically
-   configure OSX, and nothing more.
+   This section details my actual configuration.
 
-   That said, boxen itself doesn't know about OSX, but you can use a
-   module named [[https://github.com/boxen/puppet-osx][puppet-osx]], and it provides the ability to do things
-   like:
+   We'll start with prose alongside puppet, and later on I will
+   explain how everything comes together in the Administrativia
+   section.
 
-   1. Map CAPS LOCK to CTRL.
-   2. Make your key presses repeat very quickly.
-   3. Make it so that holding CTRL and scrolling on your trackpad will
-      magnify the screen underneath the mouse pointer.
-   4. Switch your shell to ZSH.
-   5. Automatically hide the dock.
-   6. Remove clutter from the dock by making it only contain running
-      apps.
-   7. Setup a message on your lock screen to provides your contact
-      information if your laptop is found.
+   All of the configuration that you're about to see is functional. It
+   defines "rules" about how my computer should be configured. This
+   includes:
 
-   All of these things are tweakable by hand, but using boxen lets you
-   get going in a flash, and lets you change things (say, the repeat
-   rate) in a controlled manner.
+   + Which system settings should be in place
+   + Which repositories should be cloned (say, dotfiles)
+   + Which links should be created (saa, to those cloned repositories)
+   + Which applications should be installed
+   + Which homebrew installs should be performed
+   + Which git settings should be configured
 
-   If you're working in this area, [[https://github.com/boxen/puppet-osx][the main README of the puppet-osx]]
-   project is critical to understanding these settings.
+   The nature of puppet is that it "makes things match" the rules, and
+   so, if there's a rule that says 'Chrome needs to be installed' then
+   puppet will check to see if Chrome is present, and install it if it
+   is not. *If* Chrome already is installed, then puppet does nothing.
 
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/osx_config.pp
-     class people::jedcn::osx_config {
+   This means that a first run of boxen might take 30 or 40 minutes
+   while dozens of programs are downloaded and installed, but
+   subsequent runs take just a few seconds.
 
-       # ZSH
-       osx_chsh { $::luser:
-         shell   => '/opt/boxen/homebrew/bin/zsh',
-         require => Package['zsh'],
-       }
+*** OSX Settings
 
-       file_line { 'add zsh to /etc/shells':
-         path    => '/etc/shells',
-         line    => "${boxen::config::homebrewdir}/bin/zsh",
-         require => Package['zsh'],
-       }
+    I've started with the idea of configuring OSX because I think it's
+    the most compelling reason for using boxen. I can imagine a
+    situation where I use boxen *just* for the ability to automatically
+    configure OSX, and nothing more.
 
-       # Dock Settings
-       include osx::dock::autohide
-       include osx::dock::clear_dock
+    That said, boxen itself doesn't know about OSX, but you can use a
+    module named [[https://github.com/boxen/puppet-osx][puppet-osx]], and it provides the ability to do things
+    like:
 
-       # Screen Zoom
-       include osx::universal_access::ctrl_mod_zoom
-       include osx::universal_access::enable_scrollwheel_zoom
+    1. Map CAPS LOCK to CTRL.
+    2. Make your key presses repeat very quickly.
+    3. Make it so that holding CTRL and scrolling on your trackpad will
+       magnify the screen underneath the mouse pointer.
+    4. Switch your shell to ZSH.
+    5. Automatically hide the dock.
+    6. Remove clutter from the dock by making it only contain running
+       apps.
+    7. Setup a message on your lock screen to provides your contact
+       information if your laptop is found.
 
-       # Key Repeat
-       class { 'osx::global::key_repeat_delay':
-         delay => 10
-       }
-       include osx::global::key_repeat_rate
+    All of these things are tweakable by hand, but using boxen lets you
+    get going in a flash, and lets you change things (say, the repeat
+    rate) in a controlled manner.
 
-       # Capslock becomes Control
-       include osx::keyboard::capslock_to_control
+    If you're working in this area, [[https://github.com/boxen/puppet-osx][the main README of the puppet-osx]]
+    project is critical to understanding these settings.
 
-       # Hot Corners
-       osx::dock::hot_corner { 'Show the desktop':
-         position => 'Bottom Right',
-         action => 'Desktop'
-       }
-       osx::dock::hot_corner { 'Put Display to Sleep':
-         position => 'Bottom Left',
-         action => 'Put Display to Sleep'
-       }
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/osx_config.pp
+      class people::jedcn::osx_config {
 
-       # Recovery Message
-       $recovery_owner = "This computer belongs to Jed Northridge."
-       $recovery_contact = "If found, please contact jedcn@jedcn.com or 305-985-3326."
-       osx::recovery_message { "${recovery_owner} ${recovery_contact}": }
-     }
-   #+END_SRC
+        # ZSH
+        osx_chsh { $::luser:
+          shell   => '/opt/boxen/homebrew/bin/zsh',
+          require => Package['zsh'],
+        }
 
-** Dotfiles and Repositories
+        file_line { 'add zsh to /etc/shells':
+          path    => '/etc/shells',
+          line    => "${boxen::config::homebrewdir}/bin/zsh",
+          require => Package['zsh'],
+        }
 
-   I generally use [[https://dotfiles.github.io/][dotfiles]], and I specifically use [[https://github.com/andsens/homeshick][homeshick]] with my
-   own [[https://github.com/jedcn/dot-org-files][dot-org-files]].
+        # Dock Settings
+        include osx::dock::autohide
+        include osx::dock::clear_dock
 
-   In this area, boxen enables you to:
+        # Screen Zoom
+        include osx::universal_access::ctrl_mod_zoom
+        include osx::universal_access::enable_scrollwheel_zoom
 
-   1. Declare which repositories should be cloned on the
-      machine. These don't have to limited to dotfiles, for example, I
-      like to have [[https://github.com/robbyrussell/oh-my-zsh/][oh-my-zsh]] and [[https://github.com/rupa/z][z]].
-   2. Setup links from your home directory to those repositories.
+        # Key Repeat
+        class { 'osx::global::key_repeat_delay':
+          delay => 10
+        }
+        include osx::global::key_repeat_rate
 
-   Of course, you don't have to use boxen to setup links if the system
-   you're using has this capability, but in my case I let boxen do the
-   work even though homeshick can handle it.
+        # Capslock becomes Control
+        include osx::keyboard::capslock_to_control
 
-   I expect that I'll have dozens and dozens of repositories cloned
-   onto my machine. My general game plan is to put most of my
-   repositories underneath =/project=, and to make a special place for
-   repositories that are used to bootstrap my shell (dot files,
-   oh-my-zsh, z, etc). These "bootstrap repositories" live underneath
-   =/opt/init-src=, which I picked because it's so close to boxen's
-   home, =/opt/boxen=.
+        # Hot Corners
+        osx::dock::hot_corner { 'Show the desktop':
+          position => 'Bottom Right',
+          action => 'Desktop'
+        }
+        osx::dock::hot_corner { 'Put Display to Sleep':
+          position => 'Bottom Left',
+          action => 'Put Display to Sleep'
+        }
 
-   I plan on using boxen to only manage the ones at =/opt/init-src=.
-
-   The puppetry below creates a directory, and clones several
-   repositories:
-
-   + jedcn/dot-org-files
-   + jedcn/emacs-setup
-   + robbyrussell/oh-my-zsh
-   + rupa/z
-
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/repositories.pp
-     class people::jedcn::repositories {
-
-       $my_init_src = '/opt/init-src'
-
-       file { $my_init_src:
-         ensure => directory,
-         mode   => 0644,
-       }
-
-       repository { "${my_init_src}/dot-org-files":
-         source  => 'jedcn/dot-org-files',
-         require => File[$my_init_src]
-       }
-
-       repository { "${my_init_src}/emacs-setup":
-         source  => 'jedcn/emacs-setup',
-         require => File[$my_init_src]
-       }
-
-       repository { "${my_init_src}/z":
-         source  => 'rupa/z',
-         require => File[$my_init_src]
-       }
-
-       repository { "${my_init_src}/oh-my-zsh":
-         source  => 'robbyrussell/oh-my-zsh',
-         require => File[$my_init_src]
-       }
-     }
-   #+END_SRC
-
-   And this next puppetry creates several links so that the files
-   inside of those repositories appear in places relative to my home
-   directory.
-
-   The "require" attributes instruct puppet to make sure the main
-   directory and repositories are cloned before the links are created:
-
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/links.pp
-     class people::jedcn::links {
-
-       $my_init_src = '/opt/init-src'
-
-       file { "/Users/${luser}/.zshrc":
-         ensure  => link,
-         mode    => '0644',
-         target  => "${my_init_src}/dot-org-files/home/.zshrc",
-         require => Repository["${my_init_src}/dot-org-files"],
-       }
-
-       file { "/Users/${luser}/.oh-my-zsh":
-         ensure  => link,
-         target  => "${my_init_src}/oh-my-zsh",
-         require => Repository["${my_init_src}/oh-my-zsh"],
-       }
-
-       file { "/Users/${luser}/.slate":
-         ensure  => link,
-         mode    => '0644',
-         target  => "${my_init_src}/dot-org-files/home/.slate",
-         require => Repository["${my_init_src}/dot-org-files"],
-       }
-     }
-   #+END_SRC
-
-** Applications
-
-   Next up, after dot-files and repositories have been figured out, we
-   figure out applications like Chrome and Firefox.
-
-   You can use boxen to install the applications that you work
-   with. In turn, boxen relies on modules to install applications, and
-   here are a few examples of modules that I use:
-
-   * [[https://github.com/boxen/puppet-firefox][puppet-firefox]]
-   * [[https://github.com/boxen/puppet-chrome][puppet-chrome]]
-   * [[https://github.com/boxen/puppet-slate][puppet-slate]]
-
-   After you declare that you want to have an application, like
-   firefox, you run the command =boxen= and the application will
-   "just" appear in your Applications folder. This means installing
-   applications is reduced to writing a few lines of code rather than
-   visiting websites, downloading =.dmg= files, and running
-   installers.
-
-   However, you still have the ability to install an application
-   manually, so which path should you choose?
-
-*** Boxen vs. Manual Install
-
-    Not all puppet-modules are created equally. This is especially so
-    when it comes to applications: some of them call out older
-    versions of applications. These may no longer work, or there may
-    be newer versions available.
-
-    Also, in some cases, you need to install an application via the
-    AppStore to get the correctly licensed version of it. This
-    happened to me with 1Password.
-
-    And so, I make a choice with each application between using boxen
-    vs. installing by hand. In general, if I can get it through boxen,
-    that's what I'd prefer.
-
-    After all of that, let's talk about the applications that are
-    installed as part of this puppet config.
-
-*** Browsers
-
-    I use the standard set of browsers, and can pull in Chrome,
-    Firefox, and their development versions.
-
-*** Window Management
-
-    [[https://github.com/jigish/slate][Slate]] was a game changer for me, and I've written more about it
-    here: http://jedcn.com/posts/slate/.
-
-*** Declarations
-
-    Here's the puppetry that handles my applications:
-
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp
-      class people::jedcn::applications {
-        include chrome
-        include chrome::canary
-        include firefox
-        include slate
+        # Recovery Message
+        $recovery_owner = "This computer belongs to Jed Northridge."
+        $recovery_contact = "If found, please contact jedcn@jedcn.com or 305-985-3326."
+        osx::recovery_message { "${recovery_owner} ${recovery_contact}": }
       }
     #+END_SRC
 
-** Homebrew
+*** Dotfiles and Repositories
 
-   I get many command line utilities from [[http://brew.sh][homebrew]]. Usually if I land
-   on a new computer I type a number of =brew install xyz= commands,
-   but this puppetry allows me to put all of the packages I want in an
-   array, run a single =boxen= command, and then I'm done.
+    I generally use [[https://dotfiles.github.io/][dotfiles]], and I specifically use [[https://github.com/andsens/homeshick][homeshick]] with my
+    own [[https://github.com/jedcn/dot-org-files][dot-org-files]].
 
-   As I scan through what's below, I recognize that the majority of
-   packages are simple, standard installs. It's like you typed =brew
-   install ag=, for example.
+    In this area, boxen enables you to:
 
-   However, you can install with options, as I do with emacs. I
-   learned about these in a post titled [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/][Color Themes: Redux]].
+    1. Declare which repositories should be cloned on the
+       machine. These don't have to limited to dotfiles, for example, I
+       like to have [[https://github.com/robbyrussell/oh-my-zsh/][oh-my-zsh]] and [[https://github.com/rupa/z][z]].
+    2. Setup links from your home directory to those repositories.
 
-   Two quick notes in regards to puppet:
+    Of course, you don't have to use boxen to setup links if the system
+    you're using has this capability, but in my case I let boxen do the
+    work even though homeshick can handle it.
 
-   + Homebrew is the standard package provider for puppetry within
-     boxen. This means that if you declare a =package= (as seen below)
-     then the =provider= defaults to =homebrew=.
-   + If you install =cask= before you have =emacs=, then homebrew
-     tries to grab =emacs= (without the options I like). And so-- you
-     can use =require= attributes to manage dependencies with boxen.
+    I expect that I'll have dozens and dozens of repositories cloned
+    onto my machine. My general game plan is to put most of my
+    repositories underneath =/project=, and to make a special place for
+    repositories that are used to bootstrap my shell (dot files,
+    oh-my-zsh, z, etc). These "bootstrap repositories" live underneath
+    =/opt/init-src=, which I picked because it's so close to boxen's
+    home, =/opt/boxen=.
 
-   Here are the packages I like:
+    I plan on using boxen to only manage the ones at =/opt/init-src=.
 
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/homebrew.pp
-     class people::jedcn::homebrew {
-       $homebrew_packages = [
-                             'ag',
-                             'tmux',
-                             'tree',
-                             'wget',
-                             'zsh',
-                             ]
+    The puppetry below creates a directory, and clones several
+    repositories:
 
-       package { $homebrew_packages: }
+    + jedcn/dot-org-files
+    + jedcn/emacs-setup
+    + robbyrussell/oh-my-zsh
+    + rupa/z
 
-       package { 'cask':
-         ensure  => present,
-         require => Package['emacs'],
-       }
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/repositories.pp
+      class people::jedcn::repositories {
 
-       package { 'emacs':
-         ensure          => present,
-         install_options => [
-           '--cocoa',
-           '--srgb'
-         ],
-       }
-     }
-   #+END_SRC
+        $my_init_src = '/opt/init-src'
 
-** Git Configuration
+        file { $my_init_src:
+          ensure => directory,
+          mode   => 0644,
+        }
 
-   Boxen uses a package named [[https://github.com/boxen/puppet-git][puppet-git]] to manage git configuration
-   options.
+        repository { "${my_init_src}/dot-org-files":
+          source  => 'jedcn/dot-org-files',
+          require => File[$my_init_src]
+        }
 
-   I manually set my =user.email= and =user.name= when I first started
-   using my computer, and after some bootstrapping, I got to the point
-   where I could have boxen set my =core.editor=, and that's what's
-   below.
+        repository { "${my_init_src}/emacs-setup":
+          source  => 'jedcn/emacs-setup',
+          require => File[$my_init_src]
+        }
 
-   I hope to flesh this out in the future.
+        repository { "${my_init_src}/z":
+          source  => 'rupa/z',
+          require => File[$my_init_src]
+        }
 
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/git.pp
-     class people::jedcn::git {
-       git::config::global { 'core.editor':
-         value  => '/opt/boxen/homebrew/bin/emacsclient'
-       }
-     }
-   #+END_SRC
-
-** Boxen, Puppetry, and File Layout
-
-   Boxen pays attention to the puppetry in this project on the basis
-   of my user login: =jedcn=. The system allows for you to call out a
-   specific configuration for a user by placing a file at
-   =modules/people/manifests/$USER.pp=.
-
-   And so, I can put content at =modules/people/manifests/jedcn.pp=
-   that will be examined each time I run =boxen=.
-
-   When I write puppet, I do my best to group declarations into
-   distinct files, and so, my entry point only includes other files:
-
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn.pp
-      class people::jedcn {
-        include people::jedcn::applications
-        include people::jedcn::git
-        include people::jedcn::homebrew
-        include people::jedcn::links
-        include people::jedcn::osx_config
-        include people::jedcn::repositories
+        repository { "${my_init_src}/oh-my-zsh":
+          source  => 'robbyrussell/oh-my-zsh',
+          require => File[$my_init_src]
+        }
       }
-   #+END_SRC
+    #+END_SRC
 
-   These =include= statements invoke puppetry in other files, at
-   locations that match up with the directories if you replace the
-   =::= with =/=. As an example, you can find
-   =people::jedcn::applications= at
-   =modules/people/manifests/jedcn/applications.pp=.
+    And this next puppetry creates several links so that the files
+    inside of those repositories appear in places relative to my home
+    directory.
 
-** How to Get Started with boxen
+    The "require" attributes instruct puppet to make sure the main
+    directory and repositories are cloned before the links are created:
 
-** Glue Code and Rake Tasks
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/links.pp
+      class people::jedcn::links {
 
-** Keeping Things Up To Date
+        $my_init_src = '/opt/init-src'
 
-** Commands
+        file { "/Users/${luser}/.zshrc":
+          ensure  => link,
+          mode    => '0644',
+          target  => "${my_init_src}/dot-org-files/home/.zshrc",
+          require => Repository["${my_init_src}/dot-org-files"],
+        }
 
-** Files
+        file { "/Users/${luser}/.oh-my-zsh":
+          ensure  => link,
+          target  => "${my_init_src}/oh-my-zsh",
+          require => Repository["${my_init_src}/oh-my-zsh"],
+        }
 
-   Whenever you run =boxen= the configuration from certain files is
-   applied. These files are all puppet files. An explanation and
-   manifest follows.
+        file { "/Users/${luser}/.slate":
+          ensure  => link,
+          mode    => '0644',
+          target  => "${my_init_src}/dot-org-files/home/.slate",
+          require => Repository["${my_init_src}/dot-org-files"],
+        }
+      }
+    #+END_SRC
 
-** Resources
+*** Applications
 
-   My main resource was Gary Larizza's article called "[[http://garylarizza.com/blog/2013/02/15/puppet-plus-github-equals-laptop-love/][Puppet + Github
-   = Laptop <3]]" and [[https://github.com/glarizza/my-boxen/][glarizza/my-boxen]].
+    Next up, after dot-files and repositories have been figured out, we
+    figure out applications like Chrome and Firefox.
 
-   Other resources included:
+    You can use boxen to install the applications that you work
+    with. In turn, boxen relies on modules to install applications, and
+    here are a few examples of modules that I use:
 
-   + The official boxen homepage: https://boxen.github.com
-   + [[https://github.com/boxen/our-boxen][boxen/our-boxen]]
-   + Visiting https://github.com/boxen/ and then filtering through all
-     of the puppet-* projects.
-   + http://jjasghar.github.io/blog/2014/01/01/customizing-boxen/
+    * [[https://github.com/boxen/puppet-firefox][puppet-firefox]]
+    * [[https://github.com/boxen/puppet-chrome][puppet-chrome]]
+    * [[https://github.com/boxen/puppet-slate][puppet-slate]]
 
-** Ruby and Content Extraction
+    After you declare that you want to have an application, like
+    firefox, you run the command =boxen= and the application will
+    "just" appear in your Applications folder. This means installing
+    applications is reduced to writing a few lines of code rather than
+    visiting websites, downloading =.dmg= files, and running
+    installers.
 
-   This single =.org= file can be extracted into many component
-   pieces. This is powered by Emacs and Ruby.
+    However, you still have the ability to install an application
+    manually, so which path should you choose?
 
-   Some of these pieces are puppetry and some are web files. The two
-   main categories are presently:
+**** Boxen vs. Manual Install
 
-   + *.pp extraction (for boxen runs)
-   + HTML extraction (for building a static, descriptive site)
+     Not all puppet-modules are created equally. This is especially so
+     when it comes to applications: some of them call out older
+     versions of applications. These may no longer work, or there may
+     be newer versions available.
 
-   As far as Ruby is concerned, the main driver is Rake. And so,
-   there's a =Rakefile= and the are supporting =./rakelib/*.rake=
+     Also, in some cases, you need to install an application via the
+     AppStore to get the correctly licensed version of it. This
+     happened to me with 1Password.
 
-** Rake Basics
+     And so, I make a choice with each application between using boxen
+     vs. installing by hand. In general, if I can get it through boxen,
+     that's what I'd prefer.
+
+     After all of that, let's talk about the applications that are
+     installed as part of this puppet config.
+
+**** Browsers
+
+     I use the standard set of browsers, and can pull in Chrome,
+     Firefox, and their development versions.
+
+**** Window Management
+
+     [[https://github.com/jigish/slate][Slate]] was a game changer for me, and I've written more about it
+     here: http://jedcn.com/posts/slate/.
+
+**** Declarations
+
+     Here's the puppetry that handles my applications:
+
+     #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp
+       class people::jedcn::applications {
+         include chrome
+         include chrome::canary
+         include firefox
+         include slate
+       }
+     #+END_SRC
+
+*** Homebrew
+
+    I get many command line utilities from [[http://brew.sh][homebrew]]. Usually if I land
+    on a new computer I type a number of =brew install xyz= commands,
+    but this puppetry allows me to put all of the packages I want in an
+    array, run a single =boxen= command, and then I'm done.
+
+    As I scan through what's below, I recognize that the majority of
+    packages are simple, standard installs. It's like you typed =brew
+    install ag=, for example.
+
+    However, you can install with options, as I do with emacs. I
+    learned about these in a post titled [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/][Color Themes: Redux]].
+
+    Two quick notes in regards to puppet:
+
+    + Homebrew is the standard package provider for puppetry within
+      boxen. This means that if you declare a =package= (as seen below)
+      then the =provider= defaults to =homebrew=.
+    + If you install =cask= before you have =emacs=, then homebrew
+      tries to grab =emacs= (without the options I like). And so-- you
+      can use =require= attributes to manage dependencies with boxen.
+
+    Here are the packages I like:
+
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/homebrew.pp
+      class people::jedcn::homebrew {
+        $homebrew_packages = [
+                              'ag',
+                              'tmux',
+                              'tree',
+                              'wget',
+                              'zsh',
+                              ]
+
+        package { $homebrew_packages: }
+
+        package { 'cask':
+          ensure  => present,
+          require => Package['emacs'],
+        }
+
+        package { 'emacs':
+          ensure          => present,
+          install_options => [
+            '--cocoa',
+            '--srgb'
+          ],
+        }
+      }
+    #+END_SRC
+
+*** Git Configuration
+
+    Boxen uses a package named [[https://github.com/boxen/puppet-git][puppet-git]] to manage git configuration
+    options.
+
+    I manually set my =user.email= and =user.name= when I first started
+    using my computer, and after some bootstrapping, I got to the point
+    where I could have boxen set my =core.editor=, and that's what's
+    below.
+
+    I hope to flesh this out in the future.
+
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/git.pp
+      class people::jedcn::git {
+        git::config::global { 'core.editor':
+          value  => '/opt/boxen/homebrew/bin/emacsclient'
+        }
+      }
+    #+END_SRC
+
+** Boxen Administrativia
+
+   So far we've had the luxury of just looking at puppet configuration
+   and presuming that it somehow fits together. In this section, we'll
+   now consider where files are placed, how they interact, and how
+   boxen is run.
+
+*** Puppetry and File Layout
+
+    Boxen pays attention to the puppetry in this project on the basis
+    of my user login: =jedcn=. The system allows for you to call out a
+    specific configuration for a user by placing a file at
+    =modules/people/manifests/$USER.pp=.
+
+    And so, I can put content at =modules/people/manifests/jedcn.pp=
+    that will be examined each time I run =boxen=.
+
+    When I write puppet, I do my best to group declarations into
+    distinct files, and so, my entry point only includes other files:
+
+    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn.pp
+       class people::jedcn {
+         include people::jedcn::applications
+         include people::jedcn::git
+         include people::jedcn::homebrew
+         include people::jedcn::links
+         include people::jedcn::osx_config
+         include people::jedcn::repositories
+       }
+    #+END_SRC
+
+    These =include= statements invoke puppetry in other files, at
+    locations that match up with the directories if you replace the
+    =::= with =/=. As an example, you can find
+    =people::jedcn::applications= at
+    =modules/people/manifests/jedcn/applications.pp=.
+
+*** How to Get Started
+
+    I was confused when I first started using Boxen. I went to the
+    website, https://boxen.github.com/, but didn't know what to do
+    next.
+
+    I suspect that most boxen users do so within the context of a
+    company, and so, someone has already laid down some basic boxen
+    infrastructure and then subsequent users get told the first few
+    steps to bootstrap themselves by someone at the company.
+
+    If you are like me, and you don't have that luxury, so it may be
+    helpful to understand what I did:
+
+    I logged into github.com and forked [[https://github.com/boxen/our-boxen][boxen/our-boxen]], and now I had
+    [[https://github.com/jedcn/our-boxen][jedcn/our-boxen]]. Going forward your fork will contain your
+    configuration (or the configuration of your team) and
+    boxen/our-boxen can serve as its its "upstream". This fact will
+    allow your fork to pull in policy and security and code changes
+    from the boxen project.
+
+    I changed the name of my fork because I had trouble explaining
+    "our-boxen" to my friends. They didn't know what boxen was and
+    they didn't understand why I was using the word "our" in a
+    scenario where I was only managing *my own* mac config. I picked
+    the name "mac-config", and the new home of my boxen repository is
+    [[https://github.com/jedcn/mac-config/][jedcn/mac-config]].
+
+    At any rate, now that your fork exists, the next step is to get it
+    cloned locally and then bootstrap boxen. The first boxen run will
+    install the defaults that Github/Boxen promotes.
+
+**** Bootstrapping
+
+     Boxen has just a couple pre-requisites that need to be met:
+
+     + xCode should be installed
+     + Your boxen fork should be cloned to =/opt/boxen/repo=
+
+     Once you've got these, you can run =boxen=. If you're down with
+     puppet, this is apparently very similar to a masterless scenario
+     where you're running =puppet apply=. I'm not down with puppet, so
+     I think of it as effectively "reifying" your boxen config.
+
+     The following commands should do the trick:
+
+     #+BEGIN_SRC sh
+       xcode-select --install
+       sudo mkdir -p /opt/boxen
+       sudo chown ${USER}:staff /opt/boxen
+       git clone https://github.com/jedcn/my-boxen /opt/boxen/repo
+       /opt/boxen/repo/script/boxen
+     #+END_SRC
+
+     When the first boxen run completed I didn't have any of the
+     configuration that you've seen so far. Instead, I had whatever
+     was in my clone, and this matched boxen/our-boxen on the day I
+     forked it. So, what does your first boxen run get you?
+
+     The official answer is here: [[https://github.com/boxen/our-boxen#what-you-get][boxen/our-boxen#what-you-get]].
+
+     When it comes to ruby and node, what I saw was that I had several
+     installations via [[https://github.com/wfarr/nodenv][nodenv]] and [[https://github.com/sstephenson/rbenv][rbenv]]. These were located at
+     =/opt/rubies= and =/opt/boxen/nodenv/versions=:
+
+     #+BEGIN_SRC sh
+       $ ls /opt/rubies
+       1.9.3      1.9.3-p545 2.0.0      2.0.0-p451 2.1.0      2.1.1      2.1.2
+
+       $ ls /opt/boxen/nodenv/versions
+       v0.10    v0.10.31 v0.6     v0.6.20  v0.8     v0.8.26
+     #+END_SRC
+
+     Until now, I always used =rvm= rather than =rbenv=, and I'd never
+     used =nodenv=. Further-- when it comes to node-- I doubt I'll
+     ever need any version that's less than 0.10, but I didn't sweat
+     this, nor try to change it.
+
+     My thinking here is that what matters is ruby and node, not
+     necessarily one tool for getting ruby or node over
+     another. Further, I don't mind having a few extra rubies or nodes
+     around.
+
+     Finally-- even though ruby and node are some of my goto
+     programming languages-- I can still see serious value in using
+     boxen to manage OSX Configuration and Applications *even if* the
+     users of a computer *never use* ruby or node.
+
+**** Subsequent Runs
+
+     This first =boxen= run took about 25-30 minutes. However, once
+     your initial run is done, then you can run boxen at any time by
+     typing =boxen=. If there's nothing to do, a run can be completed
+     in as little as 10 seconds.
+
+     And then you can get into a flow where you make a change to your
+     puppet configuration, run boxen, and see what happens.
+
+** Literate Administrativia
+
+   Earlier on I said,
+
+   #+BEGIN_QUOTE
+     *this* is an experiment in using [[http://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] to describe
+      how I configure my computer.
+   #+END_QUOTE
+
+   And then I said:
+
+   #+BEGIN_QUOTE
+     The neat trick about Literate Source is that it can be dense
+     enough to create more than one artifact. This file *is* the
+     puppet configuration and it *is* the website and it *is* the glue
+     code that puts everything together.
+   #+END_QUOTE
+
+   And then I stopped talking about it. Let's revisit these ideas now
+   that we've been through the majority of the puppet configuration.
+
+   TODO
+
+*** Ruby and Content Extraction
+
+    This single =.org= file can be extracted into many component
+    pieces. This is powered by Emacs and Ruby.
+
+    Some of these pieces are puppetry and some are web files. The two
+    main categories are presently:
+
+    + *.pp extraction (for boxen runs)
+    + HTML extraction (for building a static, descriptive site)
+
+    As far as Ruby is concerned, the main driver is Rake. And so,
+    there's a =Rakefile= and the are supporting =./rakelib/*.rake=
+
+*** Rake Basics
 
    One role played by this file is simple existence: so long as it
    exists, even if it contains no content, the =rake= command can find
@@ -547,15 +676,15 @@
   task default: :tangle
 #+END_SRC
 
-** Website
+*** Website
 
-   This document can be unpacked into distinct puppet files that serve
-   as configuration. It can also be unpacked into HTML files and Rake
-   configuration builds and serves as a website.
+    This document can be unpacked into distinct puppet files that serve
+    as configuration. It can also be unpacked into HTML files and Rake
+    configuration builds and serves as a website.
 
-   Those files are:
+    Those files are:
 
-*** rakelib/index.html.erb
+**** rakelib/index.html.erb
 
     This content started as the index.html associated with the
     Bootstrap version of [[http://html5boilerplate.com/][HTML5BoilerPlate]]. I removed the core content
@@ -607,7 +736,7 @@
   </html>
 #+END_SRC
 
-*** rakelib/ghpages.rake
+**** rakelib/ghpages.rake
 
     This file contains Rake-based instructions for building up static
     web content that serves as a website.
@@ -754,7 +883,7 @@
   end
 #+END_SRC
 
-** Tangling Puppet
+*** Tangling Puppet
 
    A series of puppet files can be extracted from this document. This
    works by invoking emacs in batch mode. Some small emacs lisp is
@@ -777,110 +906,104 @@
   end
 #+END_SRC
 
-** Staying up-to-date with boxen/our-boxen
+*** Staying up-to-date with boxen/our-boxen
 
-   This repository is a fork of [[https://github.com/boxen/our-boxen][boxen/our-boxen]], and so, while I've
-   done a bunch of customization, I'd like to stay up-to-date with the
-   original repository to get fixes, security patches, etc.
+    This repository is a fork of [[https://github.com/boxen/our-boxen][boxen/our-boxen]], and so, while I've
+    done a bunch of customization, I'd like to stay up-to-date with the
+    original repository to get fixes, security patches, etc.
 
-   This is setup by creating a remote named "upstream" that points to
-   [[https://github.com/boxen/our-boxen][boxen/our-boxen]]. Then the master branch from this repo is merged in
-   like regular.
+    This is setup by creating a remote named "upstream" that points to
+    [[https://github.com/boxen/our-boxen][boxen/our-boxen]]. Then the master branch from this repo is merged in
+    like regular.
 
-   The directions are here: [[https://help.github.com/articles/syncing-a-fork/][github.com/articles/syncing-a-fork/]].
+    The directions are here: [[https://help.github.com/articles/syncing-a-fork/][github.com/articles/syncing-a-fork/]].
 
-** Manual Installs
+*** Manual Installs
 
-   I installed the following Software manually:
+    I installed the following Software manually:
 
-*** 1Password
+**** 1Password
 
-    I got this from the AppStore. I did because I couldn't figure out
-    how to license it, otherwise.
+     I got this from the AppStore. I did because I couldn't figure out
+     how to license it, otherwise.
 
-*** Little Snitch
+**** Little Snitch
 
-    I tried installing this via puppet. I tried a provider of =appdmg=
-    and =pkgdmg=, and neither did I was expected. I started with
-    =appdmg=, and this put both the Installer and Uninstaller in my
-    Applications-- but that's not what I want. I want to run the
-    Installer *once* and then have "Little Snitch Configuration" be
-    the only thing that's in my Applications.
+     I tried installing this via puppet. I tried a provider of =appdmg=
+     and =pkgdmg=, and neither did I was expected. I started with
+     =appdmg=, and this put both the Installer and Uninstaller in my
+     Applications-- but that's not what I want. I want to run the
+     Installer *once* and then have "Little Snitch Configuration" be
+     the only thing that's in my Applications.
 
-    Anyway-- I gave up and I downloaded it from this URL and
-    double-clicked to the install:
+     Anyway-- I gave up and I downloaded it from this URL and
+     double-clicked to the install:
 
-    http://www.obdev.at/downloads/littlesnitch/LittleSnitch-3.5.1.dmg
+     http://www.obdev.at/downloads/littlesnitch/LittleSnitch-3.5.1.dmg
 
-    The install required a reboot, and after that, it immediately
-    started going.
+     The install required a reboot, and after that, it immediately
+     started going.
 
-** Oddities and Troubleshoot
+*** Oddities and Troubleshoot
 
-*** 1Password and Licensing
+**** 1Password and Licensing
 
-    I tried getting onepassword here (with [[https://github.com/boxen/puppet-onepassword][puppet-onepassword]]), but I
-    couldn't figure out the licensing. Specifically, after a boxen run
-    it was in trial mode and looking for a license file. But, I didn't
-    have a license because I bought 1Password through the
-    AppStore.
+     I tried getting onepassword here (with [[https://github.com/boxen/puppet-onepassword][puppet-onepassword]]), but I
+     couldn't figure out the licensing. Specifically, after a boxen run
+     it was in trial mode and looking for a license file. But, I didn't
+     have a license because I bought 1Password through the
+     AppStore.
 
-    After 15 minutes of mucking around, I installed through the
-    AppStore, and things worked just fine.
+     After 15 minutes of mucking around, I installed through the
+     AppStore, and things worked just fine.
 
-*** Given up on a Module Failed Installations
+**** Given up on a Module Failed Installations
 
-    Near as I can tell, if you try to get something running with boxen
-    and then you give up and remove the puppetry, you'll still have
-    whatever-didnt-install-the-way-you-wanted installed, and so, you
-    can manually remove that thing but you should also remove
-    something called a "receipt" that can be found in the =/var/db=
-    directory, for example:
+     Near as I can tell, if you try to get something running with boxen
+     and then you give up and remove the puppetry, you'll still have
+     whatever-didnt-install-the-way-you-wanted installed, and so, you
+     can manually remove that thing but you should also remove
+     something called a "receipt" that can be found in the =/var/db=
+     directory, for example:
 
-    + =sudo rm .puppet_compressed_app_installed_1Password\ 5=
-    + =sudo rm /var/db/.puppet_appdmg_installed_LittleSnitch=
+     + =sudo rm .puppet_compressed_app_installed_1Password\ 5=
+     + =sudo rm /var/db/.puppet_appdmg_installed_LittleSnitch=
 
-    I learned about receipts in the [[https://github.com/boxen/our-boxen/blob/master/docs/faq.md][official boxen FAQ]].
+     I learned about receipts in the [[https://github.com/boxen/our-boxen/blob/master/docs/faq.md][official boxen FAQ]].
 
-*** What does a module do?
+**** What does a module do?
 
-    If you've found a puppet module that you'd like to check out, the
-    first place to look is in the file named =manifests/init.pp=. I
-    believe this is the entry point for all modules. You can usually
-    see other files that are included into it or URLs, version
-    numbers, and configuration options.
+     If you've found a puppet module that you'd like to check out, the
+     first place to look is in the file named =manifests/init.pp=. I
+     believe this is the entry point for all modules. You can usually
+     see other files that are included into it or URLs, version
+     numbers, and configuration options.
 
-*** Where do you find modules?
+**** Where do you find modules?
 
-    Modules can be defined anywhere, and the most popular ones are
-    underneath the Boxen Github repository:
-    https://github.com/boxen/.
+     Modules can be defined anywhere, and the most popular ones are
+     underneath the Boxen Github repository:
+     https://github.com/boxen/.
 
-    You can search for ones that are formally part of that
-    organization by visiting the link above and typing the name of the
-    application into to the "Filters."
+     You can search for ones that are formally part of that
+     organization by visiting the link above and typing the name of the
+     application into to the "Filters."
 
-*** Starting on machine without boxen?
+*** Glue Code and Rake Tasks
 
-    The commands you'd run on a fresh Mac are:
+*** Keeping Things Up To Date
 
-    #+BEGIN_SRC sh
-      xcode-select --install
-      sudo mkdir -p /opt/boxen
-      sudo chown ${USER}:staff /opt/boxen
-      git clone https://github.com/jedcn/my-boxen /opt/boxen/repo
-      /opt/boxen/repo/script/boxen
-    #+END_SRC
+*** Commands
 
-    These commands:
+*** Resources
 
-    1. Install xcode (which gets you a compiler: gcc)
-    2. Clone my-boxen configuration to /opt/boxen/repo
-    3. Invoke boxen which reads my-boxen configuration and sets up the
-       machine.
+    My main resource was Gary Larizza's article called "[[http://garylarizza.com/blog/2013/02/15/puppet-plus-github-equals-laptop-love/][Puppet + Github
+    = Laptop <3]]" and [[https://github.com/glarizza/my-boxen/][glarizza/my-boxen]].
 
-*** Starting on a machine that has boxen?
+    Other resources included:
 
-    If you've already setup your Mac, you can change your boxen
-    configuration and run =boxen= to see those changes realized. This
-    can be completed in as short as 10 seconds.
+    + The official boxen homepage: https://boxen.github.com
+    + [[https://github.com/boxen/our-boxen][boxen/our-boxen]]
+    + Visiting https://github.com/boxen/ and then filtering through all
+      of the puppet-* projects.
+    + http://jjasghar.github.io/blog/2014/01/01/customizing-boxen/
