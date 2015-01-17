@@ -380,26 +380,30 @@
       }
     #+END_SRC
 
-** Command Line Utilities
+** Homebrew
 
-   I get all of my command line utilities from [[http://brew.sh][homebrew]]. Usually if I
-   land on a new computer I type a number of =brew install xyz=
-   commands, but this puppetry allows me to put all of the packages I
-   want in an array, run a single =boxen= command, and then I'm done.
+   I get many command line utilities from [[http://brew.sh][homebrew]]. Usually if I land
+   on a new computer I type a number of =brew install xyz= commands,
+   but this puppetry allows me to put all of the packages I want in an
+   array, run a single =boxen= command, and then I'm done.
 
    As I scan through what's below, I recognize that the majority of
    packages are simple, standard installs. It's like you typed =brew
    install ag=, for example.
 
-   However, you can install with options, as I do with emacs with
-   options certain options that I learned of in a post titled [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/][Color
-   Themes: Redux]] in [[ttp://emacsredux.com][Emacs Redux]].
+   However, you can install with options, as I do with emacs. I
+   learned about these in a post titled [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/][Color Themes: Redux]].
 
-   As a quick note, Homebrew is the standard package provider for
-   puppetry within boxen. This means that if you declare a =package=
-   (as seen below) then the =provider= defaults to Homebrew.
+   Two quick notes in regards to puppet:
 
-   Without further delay, here are the packages I like:
+   + Homebrew is the standard package provider for puppetry within
+     boxen. This means that if you declare a =package= (as seen below)
+     then the =provider= defaults to =homebrew=.
+   + If you install =cask= before you have =emacs=, then homebrew
+     tries to grab =emacs= (without the options I like). And so-- you
+     can use =require= attributes to manage dependencies with boxen.
+
+   Here are the packages I like:
 
    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/homebrew.pp
      class people::jedcn::homebrew {
@@ -428,14 +432,38 @@
      }
    #+END_SRC
 
+** Git Configuration
+
+   Boxen uses a package named [[https://github.com/boxen/puppet-git][puppet-git]] to manage git configuration
+   options.
+
+   I manually set my =user.email= and =user.name= when I first started
+   using my computer, and after some bootstrapping, I got to the point
+   where I could have boxen set my =core.editor=, and that's what's
+   below.
+
+   I hope to flesh this out in the future.
+
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/git.pp
+     class people::jedcn::git {
+       git::config::global { 'core.editor':
+         value  => '/opt/boxen/homebrew/bin/emacsclient'
+       }
+     }
+   #+END_SRC
+
 ** Boxen, Puppetry, and File Layout
 
-   TODO XXX TODO
+   Boxen pays attention to the puppetry in this project on the basis
+   of my user login: =jedcn=. The system allows for you to call out a
+   specific configuration for a user by placing a file at
+   =modules/people/manifests/$USER.pp=.
 
-   I start with a single puppet file: =jedcn.pp=.
+   And so, I can put content at =modules/people/manifests/jedcn.pp=
+   that will be examined each time I run =boxen=.
 
-   This file declares =people::jedcn=. This knows how to include
-   everything, but doesn't know anything on its own.
+   When I write puppet, I do my best to group declarations into
+   distinct files, and so, my entry point only includes other files:
 
    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn.pp
       class people::jedcn {
@@ -448,6 +476,11 @@
       }
    #+END_SRC
 
+   These =include= statements invoke puppetry in other files, at
+   locations that match up with the directories if you replace the
+   =::= with =/=. As an example, you can find
+   =people::jedcn::applications= at
+   =modules/people/manifests/jedcn/applications.pp=.
 
 ** How to Get Started with boxen
 
@@ -462,24 +495,6 @@
    Whenever you run =boxen= the configuration from certain files is
    applied. These files are all puppet files. An explanation and
    manifest follows.
-
-*** jedcn.pp
-
-*** git.pp
-
-    This file declares =people::jedcn::git=.
-
-    This class calls out my git configuration.
-
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/git.pp
-      class people::jedcn::git {
-        git::config::global { 'core.editor':
-          value  => '/opt/boxen/homebrew/bin/emacsclient'
-        }
-      }
-    #+END_SRC
-
-*** homebrew.pp
 
 ** Resources
 
