@@ -31,12 +31,12 @@
     chunks can be extracted into distinct files. These files play one
     of three roles:
 
-    1. Some of the files contain HTML and serve as the basis of a
-       simple "website:" https://jedcn.github.io/mac-config.
-    2. Some of the files contain configuration in a language called
+    1. Some of the files contain configuration in a language called
        [[http://puppetlabs.com][puppet]]. These play a role within a framework named [[https://boxen.github.com][boxen]], and
        *are declarations* that can change my computer's configuration
        as a result of running a command.
+    2. Other files contain HTML and serve as the basis of a simple
+       "website:" https://jedcn.github.io/mac-config.
     3. Some of the files contain helper code in a language called [[http://en.wikipedia.org/wiki/Ruby_(programming_language)][ruby]],
        and these glue things together by extracting code, building up
        the website, etc.
@@ -45,7 +45,7 @@
 
     *This* is a file named =README.org=. That extension, =.org=, means
     that this is a plain text file that is structured following the
-    conventions of [[http://en.wikipedia.org/wiki/Org-mode][org-mode]], finally, org-mode is a part of [[https://www.gnu.org/software/emacs/][emacs]].
+    conventions of [[http://en.wikipedia.org/wiki/Org-mode][org-mode]]. org-mode is a part of [[https://www.gnu.org/software/emacs/][emacs]].
 
     A component of org-mode, named [[http://orgmode.org/worg/org-contrib/babel/][babel]], serves as the basis for
     interspersing chunks of code with text, and allowing these chunks
@@ -63,7 +63,7 @@
 
     The core motivation for documenting this in a Literate System
     stems from wanting to capture prose descriptions (with links and
-    such) side-by-side my boxen configuration.
+    such) side-by-side with my boxen configuration.
 
     It is also motivated by the idea that I am sometimes asked, "How
     did you configure your computer to do such-and-such?" I don't have
@@ -788,51 +788,51 @@
      replaced it with a single ERB substitution. I also added a link
      to =prism.js= and =prism.css=. I manually downloaded these.
 
-#+BEGIN_SRC html :tangle ./rakelib/index.html.erb
-  <!DOCTYPE html>
-  <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-  <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-  <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-  <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-      <head>
-          <meta charset="utf-8">
-          <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-          <title>My Boxen</title>
-          <meta name="description" content="">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
+     #+BEGIN_SRC html :tangle ./rakelib/index.html.erb
+       <!DOCTYPE html>
+       <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+       <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+       <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+       <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+           <head>
+               <meta charset="utf-8">
+               <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+               <title>My Boxen</title>
+               <meta name="description" content="">
+               <meta name="viewport" content="width=device-width, initial-scale=1">
 
-          <link rel="stylesheet" href="css/bootstrap.min.css">
-          <style>
-              body {
-                  padding-top: 50px;
-                  padding-bottom: 20px;
-              }
-          </style>
-          <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-          <link rel="stylesheet" href="css/prism.css">
-          <link rel="stylesheet" href="css/main.css">
+               <link rel="stylesheet" href="css/bootstrap.min.css">
+               <style>
+                   body {
+                       padding-top: 50px;
+                       padding-bottom: 20px;
+                   }
+               </style>
+               <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+               <link rel="stylesheet" href="css/prism.css">
+               <link rel="stylesheet" href="css/main.css">
 
-          <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-          <script src="js/vendor/prism.js"></script>
-      </head>
-      <body>
-          <!--[if lt IE 7]>
-              <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-          <![endif]-->
+               <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+               <script src="js/vendor/prism.js"></script>
+           </head>
+           <body>
+               <!--[if lt IE 7]>
+                   <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+               <![endif]-->
 
-      <div class="container">
+           <div class="container">
 
-        <%= content %>
+             <%= content %>
 
-        <hr>
+             <hr>
 
-        <footer>
-          <p>:)</p>
-        </footer>
-      </div> <!-- /container -->
-      </body>
-  </html>
-#+END_SRC
+             <footer>
+               <p>:)</p>
+             </footer>
+           </div> <!-- /container -->
+           </body>
+       </html>
+     #+END_SRC
 
 **** rakelib/ghpages.rake
 
