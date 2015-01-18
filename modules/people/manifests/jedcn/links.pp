@@ -1,3 +1,4 @@
+
 class people::jedcn::links {
 
   $my_init_src = '/opt/init-src'

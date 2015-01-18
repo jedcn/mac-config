@@ -1,3 +1,4 @@
+
 class people::jedcn::osx_config {
 
   # ZSH

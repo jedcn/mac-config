@@ -1,3 +1,4 @@
+
 class people::jedcn::repositories {
 
   $my_init_src = '/opt/init-src'

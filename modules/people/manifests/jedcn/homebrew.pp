@@ -1,3 +1,4 @@
+
 class people::jedcn::homebrew {
   $homebrew_packages = [
                         'ag',

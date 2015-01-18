@@ -1,3 +1,4 @@
+
 require 'rake/clean'
 
 desc 'Create Github Pages content'
@@ -9,7 +10,7 @@ task 'build-gh-pages' => [ 'gh-pages',
 # Setup ./gh-pages as a git clone with gh-pages checked out.
 #
 directory 'gh-pages' do
-  repo = 'https://github.com/jedcn/my-boxen.git'
+  repo = 'https://github.com/jedcn/mac-config.git'
   branch = 'gh-pages'
   dir = branch
   args = "#{repo} --branch #{branch} --single-branch ./#{dir}"
@@ -25,10 +26,6 @@ task 'gh-pages-supporting-content' => [ 'gh-pages/favicon.ico',
                                         'gh-pages/css/bootstrap.min.css',
                                         'gh-pages/css/bootstrap-theme.min.css',
                                         'gh-pages/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' ]
-
-def add_option(url, s)
-  "#{url}&#{s}"
-end
 
 CLEAN.include('gh-pages/initializr.zip')
 CLEAN.include('gh-pages/initializr')

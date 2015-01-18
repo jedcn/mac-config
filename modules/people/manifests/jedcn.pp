@@ -1,3 +1,4 @@
+
 class people::jedcn {
   include people::jedcn::applications
   include people::jedcn::git
