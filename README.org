@@ -8,62 +8,80 @@
    things to my daughter.
 
    I like controlling the applications that I am working with. I like
-   being able to easily expand, shrink, or dismiss them without much
-   effort.
+   being able to easily expand, shrink, or dismiss the windows they
+   are in.
 
-   There are certain programs I know how to use, and I'd like them to
-   automatically installed if they aren't.
+   There are certain programs I know how to use, and I would like them
+   to automatically installed without any effort on my part.
 
-   And so, I've put some time into thinking about how to configure my
-   setup. This is what I've come up with.
+   I've put some time into thinking about how to configure my
+   setup. *This* is what I've come up with.
 
-*** What is this?
+*** What is *this*?
 
     As I am typing this, I am writing plain text in a single file
-    named =README.org=. However, this single file is versatile.
+    named =README.org=.
 
-    On one hand, it is part of a larger collection of files at
+    However, this single file is *versatile*.
+
+    #+BEGIN_QUOTE
+      ver•sa•tile (vûrˈsə-təl, -tīlˌ)
+
+      adj. Capable of doing many things competently.
+
+      adj. Having varied uses or serving many functions.
+
+      adj. Variable or inconstant; changeable.
+    #+END_QUOTE
+
+    It is part of a larger collection of files at
     https://github.com/jedcn/mac-config, and this means a formatted,
     web accessible version of this single file is available here:
-    [[https://github.com/jedcn/mac-config/blob/master/README.org][README.org]].
+    https://github.com/jedcn/mac-config/blob/master/README.org.
 
-    But, this file also contains chunks of computer code, and these
-    chunks can be extracted into distinct files. These files play one
-    of three roles:
+    This file contains chunks of computer code, and these chunks can
+    be programmatically extracted into distinct files. The snippets
+    can be split into two categories:
 
-    1. Some of the files contain configuration in a language called
+    1. Some of files contain configuration in a language called
        [[http://puppetlabs.com][puppet]]. These play a role within a framework named [[https://boxen.github.com][boxen]], and
-       *are declarations* that can change my computer's configuration
-       as a result of running a command.
-    2. Other files contain HTML and serve as the basis of a simple
-       "website:" https://jedcn.github.io/mac-config.
-    3. Some of the files contain helper code in a language called [[http://en.wikipedia.org/wiki/Ruby_(programming_language)][ruby]],
+       *are declarations* that can change the configuration of my
+       computer.
+    2. Some of files contain helper code in a language called [[http://en.wikipedia.org/wiki/Ruby_(programming_language)][ruby]],
        and these glue things together by extracting code, building up
        the website, etc.
 
+    Finally, this entire file can be converted into HTML and it serves
+    as the basis of http://jedcn.github.io/mac-config.
+
 *** Wait, what's =.org=?
 
-    *This* is a file named =README.org=. That extension, =.org=, means
-    that this is a plain text file that is structured following the
+    *This* is a file named =README.org=. The =.org= extension means
+    that this is a plain text file structured following the
     conventions of [[http://en.wikipedia.org/wiki/Org-mode][org-mode]]. org-mode is a part of [[https://www.gnu.org/software/emacs/][emacs]].
 
     A component of org-mode, named [[http://orgmode.org/worg/org-contrib/babel/][babel]], serves as the basis for
-    interspersing chunks of code with text, and allowing these chunks
+    intertwining chunks of code with text, and allowing these chunks
     to be extracted.
 
-    If this seems strange to you, it probably is. From the meta point
-    of view, *this* is an experiment in using [[http://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] to
-    describe how I configure my computer.
+    If this seems strange to you, it probably is. Stepping back,
+    *this* is an experiment in using [[http://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] to describe
+    how I configure my computer.
 
-    Why document computer configuration at all? It stems from tension
-    between these two ideas:
+    Why document computer configuration at all? It stems from the
+    tension between these ideas:
 
-    1. I rarely configure a new computer, and yet,
-    2. I deeply care about how my computer is configured.
+    1. I rarely configure a new computer, and yet I deeply care about
+       how my computer is configured.
+    2. If I had to get a new computer, it would be important for me to
+       quickly get back to how I like having things setup, and yet,
+       this happens so infrequently that I would not remember what I
+       did to get it into the state I had it.
 
-    The core motivation for documenting this in a Literate System
-    stems from wanting to capture prose descriptions (with links and
-    such) side-by-side with my boxen configuration.
+    That said, why use a Literate System? I am not comfortable with
+    boxen or puppet, so I benefit from having a written description of
+    my intention near the puppetry. I can also easily include links to
+    blogs or applications regarding my motivation.
 
     It is also motivated by the idea that I am sometimes asked, "How
     did you configure your computer to do such-and-such?" I don't have
@@ -71,28 +89,33 @@
     configuration.
 
     The neat trick about Literate Source is that it can be dense
-    enough to create more than one artifact. This file *is* the puppet
-    configuration and it *is* the website and it *is* the glue code
-    that puts everything together.
+    enough to create more than one artifact.
+
+    #+BEGIN_QUOTE
+      This file *is* the puppet configuration and it *is* the website
+      and it *is* the glue code that puts everything together.
+    #+END_QUOTE
 
     So, why not make it so that a single document can help me share
     with people?
 
 *** Who is this for?
 
-    I hope most of my prose configuration descriptions are accessible
+    Any prose descriptions behind my motivations should be accessible
     to all mac users.
 
-    When it comes to boxen and puppet, what I have here works but I'm
-    not an expert by any means. If you've never seen a boxen
-    configuration before, you can surely see it here and see how
-    things are laid out.
+    When it comes to boxen and puppet, what I have here is functional,
+    but I am not an expert by any means.
+
+    If you have never worked with boxen or seen a configuration
+    before, this could help you get the general idea.
 
 *** Who uses this?
 
-    I am the only explicit user of this configuration. I use it
-    outside of the context of any group or company, and I only have a
-    single computer.
+    I am the only explicit user of this configuration.
+
+    I use it outside of the context of any group or company, and I
+    only have a single computer.
 
     Having worked with boxen for a small bit now, I think it's all
     about [[https://en.wikipedia.org/wiki/Metcalfe's_law][Metcalfe's Law]] in the context of how many users and
@@ -100,20 +123,21 @@
     more useful boxen will be.
 
     And so, when it's just me, or just you, *I'd think twice about
-    using boxen itself.*
+    using boxen itself.* I have spent more time fooling with boxen
+    that it would take to take some written notes while directly
+    configuring a single computer.
 
-    When it comes to this particular config, I can see how someone
-    could get an idea for what boxen is from it, or perhaps copy and
-    paste a few snippets into theirs.
-
-    However, no one should clone or fork this repository. Instead, if
-    you're looking to get started with boxen, then you should fork
-    [[https://github.com/boxen/our-boxen][boxen/our-boxen]].
+    As I said previously, when it comes to this explicit config, I can
+    see how someone could get an idea for what boxen is from it, or
+    perhaps copy and paste a few snippets into theirs. *However*, no
+    one should clone or fork this repository. Instead, if you're
+    looking to get started with boxen for yourself, then you should
+    read the section "How to Get Started" below.
 
 *** Agenda
 
-    We've got a general introduction to this document, and we
-    understand how it can be used, so what's left?
+    Now that we ahve seen a general introduction to this document, and
+    we understand how it can be used, let's consider what's left.
 
     We'll lay things out as follows:
 
@@ -123,20 +147,15 @@
     4. Applications
     5. Command Line Utilities
 
-    As we cover the content above, we'll intertwine prose with
-    puppetry (the language of boxen). The intent is to go straight at
-    what we're trying to achieve, and then, once we know where we want
-    to get to, we'll see how things fit together within the boxen
-    framework.
+    As we cover the content above, we will mix prose with puppetry
+    (the language of boxen). We will go straight at the puppet
+    configuration that enables certain configuration and application
+    installation. Once we are doen with that, we will see how the
+    pieces fit together within boxen.
 
-    There's a bunch of mechanics underneath it all, and once this main
-    content has been covered, we'll move onto several supplementary
-    concepts:
-
-    1. Boxen, Puppetry, and File Layout
-    2. How to Get Started with boxen
-    3. Glue Code and Rake Tasks
-    4. Keeping Things Up To Date
+    Finally, once we have seen the basic configuration and know how
+    boxen works, we will consider some of the Literate aspects of the
+    project and supplementary material.
 
 ** Configuration
 
@@ -781,7 +800,7 @@
     into ERB and by writing a rake task that can download and unpack
     an HTML5Boilerplate zip.
 
-**** rakelib/index.html.erb
+**** =rakelib/index.html.erb=
 
      There are a few versions of [[http://html5boilerplate.com/][HTML5BoilerPlate]], and the one we see
      below is bsed on the Bootstrap. I removed the core content and
@@ -837,7 +856,7 @@
        </html>
      #+END_SRC
 
-**** rakelib/ghpages.rake
+**** =rakelib/ghpages.rake=
 
      Next, I wrote up Rake-based instructions for building up static
      web content that serves as a website.
