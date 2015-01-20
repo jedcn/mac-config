@@ -134,7 +134,7 @@
     looking to get started with boxen for yourself, then you should
     read the section "How to Get Started" below.
 
-*** Agenda
+*** What Next?
 
     Now that we ahve seen a general introduction to this document, and
     we understand how it can be used, let's consider what's left.
@@ -159,42 +159,46 @@
 
 ** Configuration
 
-   This section details my actual configuration.
+   Let's begin by talking about my actual configuration.
 
    We'll start with prose alongside puppet, and later on I will
-   explain how everything comes together in the Administrativia
+   explain how everything comes together in the Boxen Administrativia
    section.
 
-   All of the configuration that you're about to see is functional. It
-   defines "rules" about how my computer should be configured. This
-   includes:
+   The code snippets you are about are pieces of functional (as in,
+   working) puppetry. They defines "rules" about how my computer
+   should be configured, and this includes:
 
    + Which system settings should be in place
    + Which repositories should be cloned (say, dotfiles)
-   + Which links should be created (saa, to those cloned repositories)
+   + Which links should be created (saa, to cloned dotfiles or
+     installed applications)
    + Which applications should be installed
    + Which homebrew installs should be performed
    + Which git settings should be configured
 
    The nature of puppet is that it "makes things match" the rules, and
-   so, if there's a rule that says 'Chrome needs to be installed' then
-   puppet will check to see if Chrome is present, and install it if it
-   is not. *If* Chrome already is installed, then puppet does nothing.
+   so, if there is a rule that says 'Chrome needs to be installed'
+   then puppet will check to see if Chrome is present. *If Chrome is
+   installed*, then boxen does nothing. *If Chrome is not installed*,
+   then boxen installs it.
 
-   This means that a first run of boxen might take 30 or 40 minutes
-   while dozens of programs are downloaded and installed, but
+   Consequently, the first run of boxen might take 30 or 40 minutes
+   while dozens of programs are downloaded and installed, while
    subsequent runs take just a few seconds.
 
 *** OSX Settings
 
-    I've started with the idea of configuring OSX because I think it's
-    the most compelling reason for using boxen. I can imagine a
-    situation where I use boxen *just* for the ability to automatically
-    configure OSX, and nothing more.
+    Configuring OSX settings is normally done through various System
+    Preferences screens, but with boxen you can write your
+    configuration in a file.
 
-    That said, boxen itself doesn't know about OSX, but you can use a
-    module named [[https://github.com/boxen/puppet-osx][puppet-osx]], and it provides the ability to do things
-    like:
+    This is one of the most compelling reasons for using boxen. I can
+    imagine a situation where I use boxen *just* for the ability to
+    automatically configure OSX, and nothing more.
+
+    Boxen itself doesn't know about OSX, but you can use a module
+    named [[https://github.com/boxen/puppet-osx][puppet-osx]], and it provides the ability to do things like:
 
     1. Map CAPS LOCK to CTRL.
     2. Make your key presses repeat very quickly.
@@ -207,12 +211,13 @@
     7. Setup a message on your lock screen to provides your contact
        information if your laptop is found.
 
-    All of these things are tweakable by hand, but using boxen lets you
-    get going in a flash, and lets you change things (say, the repeat
-    rate) in a controlled manner.
+    All of these things are tweakable by hand, but using boxen lets
+    you get going in a flash, and lets you change things (say, the
+    repeat rate) in a controlled manner that gets checked into source
+    control.
 
-    If you're working in this area, [[https://github.com/boxen/puppet-osx][the main README of the puppet-osx]]
-    project is critical to understanding these settings.
+    I found [[https://github.com/boxen/puppet-osx][the main README of the puppet-osx]] critical to
+    understanding the following settings:
 
     #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/osx_config.pp
       class people::jedcn::osx_config {
@@ -262,6 +267,9 @@
         osx::recovery_message { "${recovery_owner} ${recovery_contact}": }
       }
     #+END_SRC
+
+    The extracted version of this file is available here:
+    https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/osx_config.pp
 
 *** Dotfiles and Repositories
 
