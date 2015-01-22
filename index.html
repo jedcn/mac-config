@@ -1346,7 +1346,8 @@ to <code>prism.js</code> and <code>prism.css</code>. I manually downloaded these
 
 <div class="org-src-container">
 
-<pre class="src src-html">&lt;!DOCTYPE html&gt;
+<pre>
+<code class='language-markup'>&lt;!DOCTYPE html&gt;
 &lt;!--[if lt IE 7]&gt;      &lt;html class="no-js lt-ie9 lt-ie8 lt-ie7"&gt; &lt;![endif]--&gt;
 &lt;!--[if IE 7]&gt;         &lt;html class="no-js lt-ie9 lt-ie8"&gt; &lt;![endif]--&gt;
 &lt;!--[if IE 8]&gt;         &lt;html class="no-js lt-ie9"&gt; &lt;![endif]--&gt;
@@ -1537,6 +1538,10 @@ file 'gh-pages/index.html' =&gt; [ 'gh-pages', 'README.html' ] do
   ruby = "&lt;pre&gt;\n&lt;code class='language-ruby'&gt;"
   rendered = rendered.gsub('&lt;pre class="src src-puppet"&gt;', ruby)
   rendered = rendered.gsub('&lt;pre class="src src-ruby"&gt;', ruby)
+
+  html = "&lt;pre&gt;\n&lt;code class='language-markup'&gt;"
+  rendered = rendered.gsub('&lt;pre class="src src-html"&gt;', html)
+
   rendered = rendered.gsub('&lt;/pre&gt;', '&lt;/code&gt;&lt;/pre&gt;')
   File.open('gh-pages/index.html', 'w') do |file|
     file.write(rendered)
