@@ -1204,7 +1204,8 @@ I've been using the term "extract" synonymously.
 
 <div class="org-src-container">
 
-<pre class="src src-ruby">def run(c)
+<pre>
+<code class='language-ruby'>def run(c)
   require 'open3'
   _stdin, stdout, stderr = Open3.popen3(c)
   [ stdout.gets, stderr.gets, $?.to_i ]
@@ -1251,7 +1252,8 @@ bit of elisp which uses org-babel functions to extract the snippets.
 
 <div class="org-src-container">
 
-<pre class="src src-ruby">def tangle_file_using_emacs(file)
+<pre>
+<code class='language-ruby'>def tangle_file_using_emacs(file)
   args = '--no-init-file --no-site-file --batch'
   tangle_elisp =
     %Q|(progn (require 'ob-tangle) (org-babel-tangle-file \\"#{file}\\"))|
@@ -1428,7 +1430,8 @@ an ERB enhanced template.
 
 <div class="org-src-container">
 
-<pre class="src src-ruby">require 'rake/clean'
+<pre>
+<code class='language-ruby'>require 'rake/clean'
 
 desc 'Create Github Pages content'
 task 'build-gh-pages' =&gt; [ 'gh-pages',
@@ -1531,8 +1534,9 @@ file 'gh-pages/index.html' =&gt; [ 'gh-pages', 'README.html' ] do
   end
 
   rendered = File.read('gh-pages/index.html')
-  s = "&lt;pre&gt;\n&lt;code class='language-ruby'&gt;"
-  rendered = rendered.gsub('&lt;pre class="src src-puppet"&gt;', s)
+  ruby = "&lt;pre&gt;\n&lt;code class='language-ruby'&gt;"
+  rendered = rendered.gsub('&lt;pre class="src src-puppet"&gt;', ruby)
+  rendered = rendered.gsub('&lt;pre class="src src-ruby"&gt;', ruby)
   rendered = rendered.gsub('&lt;/pre&gt;', '&lt;/code&gt;&lt;/pre&gt;')
   File.open('gh-pages/index.html', 'w') do |file|
     file.write(rendered)
