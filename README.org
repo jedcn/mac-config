@@ -194,8 +194,8 @@
     configuration in a file.
 
     This is one of the most compelling reasons for using boxen. I can
-    imagine a situation where I use boxen *just* for the ability to
-    automatically configure OSX, and nothing more.
+    imagine using boxen *just* for the ability to automatically
+    configure OSX, and nothing more.
 
     Boxen itself doesn't know about OSX, but you can use a module
     named [[https://github.com/boxen/puppet-osx][puppet-osx]], and it provides the ability to do things like:
@@ -268,42 +268,29 @@
       }
     #+END_SRC
 
-    The extracted version of this file is available here:
-    https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/osx_config.pp
+    The extracted version of this file is available in
+    [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/osx_config.pp][modules/people/manifests/jedcn/osx_config.pp]].
 
 *** Dotfiles and Repositories
 
-    I generally use [[https://dotfiles.github.io/][dotfiles]], and I specifically use [[https://github.com/andsens/homeshick][homeshick]] with my
-    own [[https://github.com/jedcn/dot-org-files][dot-org-files]].
+    You can configure boxen to clone repositories and ensure their
+    presence on each run. It doesn't fetch/pull, but it can bring them
+    down initially. I pull down repositories that are part of my
+    bootstrapping process. In particular:
 
-    In this area, boxen enables you to:
+    + My dotfiles ([[https://github.com/jedcn/dot-org-files][jedcn/dot-org-files]], [[https://github.com/jedcn/emacs-setup][jedcn/emacs-setup]])
+    + [[https://github.com/robbyrussell/oh-my-zsh/][oh-my-zsh]], and
+    + [[https://github.com/rupa/z][z]] (it's the new j)
 
-    1. Declare which repositories should be cloned on the
-       machine. These don't have to limited to dotfiles, for example, I
-       like to have [[https://github.com/robbyrussell/oh-my-zsh/][oh-my-zsh]] and [[https://github.com/rupa/z][z]].
-    2. Setup links from your home directory to those repositories.
+    And I land these near boxen, at =/opt/init-src=.
 
-    Of course, you don't have to use boxen to setup links if the system
-    you're using has this capability, but in my case I let boxen do the
-    work even though homeshick can handle it.
+    Once these are cloned, I use boxen to create links, say from
+    =~/.slate=, to a file within one of these cloned repositories.
 
-    I expect that I'll have dozens and dozens of repositories cloned
-    onto my machine. My general game plan is to put most of my
-    repositories underneath =/project=, and to make a special place for
-    repositories that are used to bootstrap my shell (dot files,
-    oh-my-zsh, z, etc). These "bootstrap repositories" live underneath
-    =/opt/init-src=, which I picked because it's so close to boxen's
-    home, =/opt/boxen=.
-
-    I plan on using boxen to only manage the ones at =/opt/init-src=.
-
-    The puppetry below creates a directory, and clones several
-    repositories:
-
-    + jedcn/dot-org-files
-    + jedcn/emacs-setup
-    + robbyrussell/oh-my-zsh
-    + rupa/z
+    It is worth noting that you don't have to give up on
+    whatever-you-were-using-for-creating-links before. They can live
+    side-by-side, and you can keep using your former system on
+    machines without boxen.
 
     #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/repositories.pp
       class people::jedcn::repositories {
@@ -336,6 +323,10 @@
         }
       }
     #+END_SRC
+
+    The extracted version of this file is available in
+    [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at
+    [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/repositories.pp][modules/people/manifests/jedcn/repositories.pp]].
 
     And this next puppetry creates several links so that the files
     inside of those repositories appear in places relative to my home
@@ -371,46 +362,47 @@
       }
     #+END_SRC
 
+    The extracted version of this file is available in
+    [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/repositories.pp][modules/people/manifests/jedcn/links.pp]].
+
 *** Applications
 
     Next up, after dot-files and repositories have been figured out, we
     figure out applications like Chrome and Firefox.
 
     You can use boxen to install the applications that you work
-    with. In turn, boxen relies on modules to install applications, and
-    here are a few examples of modules that I use:
+    with. In turn, boxen relies on modules to install
+    applications. Here are a few modules that I use:
 
     * [[https://github.com/boxen/puppet-firefox][puppet-firefox]]
     * [[https://github.com/boxen/puppet-chrome][puppet-chrome]]
     * [[https://github.com/boxen/puppet-slate][puppet-slate]]
 
-    After you declare that you want to have an application, like
+    After you declare that you want to have an application, say
     firefox, you run the command =boxen= and the application will
-    "just" appear in your Applications folder. This means installing
-    applications is reduced to writing a few lines of code rather than
-    visiting websites, downloading =.dmg= files, and running
-    installers.
+    "just" appear in your Applications folder. In theory, this allows
+    you to replace visiting a website, downloading a =.dmg= file, and
+    running an installer with writing a few lines of configuration and
+    running boxen.
 
     However, you still have the ability to install an application
     manually, so which path should you choose?
 
 **** Boxen vs. Manual Install
 
-     Not all puppet-modules are created equally. This is especially so
+     Not all puppet modules are created equally. This is especially so
      when it comes to applications: some of them call out older
      versions of applications. These may no longer work, or there may
      be newer versions available.
 
-     Also, in some cases, you need to install an application via the
+     In some cases, you need to install an application via the
      AppStore to get the correctly licensed version of it. This
      happened to me with 1Password.
 
-     And so, I make a choice with each application between using boxen
-     vs. installing by hand. In general, if I can get it through boxen,
-     that's what I'd prefer.
-
-     After all of that, let's talk about the applications that are
-     installed as part of this puppet config.
+     I make a choice with each application between using boxen
+     vs. installing by hand. In general, if I can get it through
+     boxen, that's what I'd prefer. But, when it's just me (and not a
+     team of people) I'll give up after 20 minutes of hacking around.
 
 **** Browsers
 
@@ -435,19 +427,24 @@
        }
      #+END_SRC
 
+    The extracted version of this file is available in
+    [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at
+    [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/applications.pp][modules/people/manifests/jedcn/applications.pp]].
+
 *** Homebrew
 
-    I get many command line utilities from [[http://brew.sh][homebrew]]. Usually if I land
-    on a new computer I type a number of =brew install xyz= commands,
-    but this puppetry allows me to put all of the packages I want in an
-    array, run a single =boxen= command, and then I'm done.
+    I get many command line utilities from [[http://brew.sh][homebrew]].
+
+    Boxen allows me to replace several =brew install= commands with a
+    single boxen run.
 
     As I scan through what's below, I recognize that the majority of
-    packages are simple, standard installs. It's like you typed =brew
+    packages are simple, standard installs. It's like typing =brew
     install ag=, for example.
 
     However, you can install with options, as I do with emacs. I
-    learned about these in a post titled [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/][Color Themes: Redux]].
+    learned about these particular options in this post: [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/][Color Themes:
+    Redux]].
 
     Two quick notes in regards to puppet:
 
@@ -487,6 +484,9 @@
       }
     #+END_SRC
 
+    The extracted version of this file is available in
+    [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/homebrew.pp][modules/people/manifests/jedcn/homebrew.pp]].
+
 *** Git Configuration
 
     Boxen uses a package named [[https://github.com/boxen/puppet-git][puppet-git]] to manage git configuration
@@ -506,6 +506,9 @@
         }
       }
     #+END_SRC
+
+    The extracted version of this file is available in
+    [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/git.pp][modules/people/manifests/jedcn/git.pp]].
 
 ** Boxen Administrativia
 
@@ -538,6 +541,9 @@
        }
     #+END_SRC
 
+    The extracted version of this file is available in
+    [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn.pp][modules/people/manifests/jedcn.pp]].
+
     These =include= statements invoke puppetry in other files, at
     locations that match up with the directories if you replace the
     =::= with =/=. As an example, you can find
@@ -561,9 +567,9 @@
     I logged into github.com and forked [[https://github.com/boxen/our-boxen][boxen/our-boxen]], and now I had
     [[https://github.com/jedcn/our-boxen][jedcn/our-boxen]]. Going forward your fork will contain your
     configuration (or the configuration of your team) and
-    boxen/our-boxen can serve as its its "upstream". This fact will
-    allow your fork to pull in policy and security and code changes
-    from the boxen project.
+    boxen/our-boxen can serve as its "upstream". This will allow your
+    fork to pull in policy, security, and code changes from the main
+    boxen project.
 
     I changed the name of my fork because I had trouble explaining
     "our-boxen" to my friends. They didn't know what boxen was and
@@ -574,7 +580,7 @@
 
     At any rate, now that your fork exists, the next step is to get it
     cloned locally and then bootstrap boxen. The first boxen run will
-    install the defaults that Github/Boxen promotes.
+    install the defaults that the main boxen/our-boxen promotes.
 
 **** Bootstrapping
 
@@ -585,10 +591,13 @@
 
      Once you've got these, you can run =boxen=. If you're down with
      puppet, this is apparently very similar to a masterless scenario
-     where you're running =puppet apply=. I'm not down with puppet, so
-     I think of it as effectively "reifying" your boxen config.
+     where you're running =puppet apply=.
 
-     The following commands should do the trick:
+     I'm not down with puppet, so I think of it as effectively
+     "reifying" your boxen config.
+
+     The following commands should do the trick re: the
+     pre-requisites:
 
      #+BEGIN_SRC sh
        xcode-select --install
@@ -603,11 +612,12 @@
      was in my clone, and this matched boxen/our-boxen on the day I
      forked it. So, what does your first boxen run get you?
 
-     The official answer is here: [[https://github.com/boxen/our-boxen#what-you-get][boxen/our-boxen#what-you-get]].
+     The official answer is here: [[https://github.com/boxen/our-boxen#what-you-get][boxen/our-boxen#what-you-get]]. But, I
+     suspect this is out of date. Is nodenv the same thing as nvm?
 
-     When it comes to ruby and node, what I saw was that I had several
-     installations via [[https://github.com/wfarr/nodenv][nodenv]] and [[https://github.com/sstephenson/rbenv][rbenv]]. These were located at
-     =/opt/rubies= and =/opt/boxen/nodenv/versions=:
+     When it comes to ruby and node, I had several installations via
+     [[https://github.com/wfarr/nodenv][nodenv]] and [[https://github.com/sstephenson/rbenv][rbenv]]. These were located at =/opt/rubies= and
+     =/opt/boxen/nodenv/versions=:
 
      #+BEGIN_SRC sh
        $ ls /opt/rubies
@@ -617,15 +627,14 @@
        v0.10    v0.10.31 v0.6     v0.6.20  v0.8     v0.8.26
      #+END_SRC
 
-     Until now, I always used =rvm= rather than =rbenv=, and I'd never
-     used =nodenv=. Further-- when it comes to node-- I doubt I'll
-     ever need any version that's less than 0.10, but I didn't sweat
-     this, nor try to change it.
+     Until now, I always used =rvm= rather than =rbenv=, and I have
+     never used =nodenv=. Further-- when it comes to node-- I doubt
+     I'll ever need any version that's less than 0.10, but I didn't
+     sweat this, nor try to change it.
 
      My thinking here is that what matters is ruby and node, not
-     necessarily one tool for getting ruby or node over
-     another. Further, I don't mind having a few extra rubies or nodes
-     around.
+     necessarily one tool for getting ruby or node over another.
+     Further, I don't mind having a few extra rubies or nodes around.
 
      Finally-- even though ruby and node are some of my goto
      programming languages-- I can still see serious value in using
@@ -634,10 +643,10 @@
 
 **** Subsequent Runs
 
-     This first =boxen= run took about 25-30 minutes. However, once
-     your initial run is done, then you can run boxen at any time by
-     typing =boxen=. If there's nothing to do, a run can be completed
-     in as little as 10 seconds.
+     This first =boxen= run took about 25-30 minutes. However, once my
+     initial run was done, then you can run boxen at any time by
+     typing =boxen=, and, if there's nothing to do, a run can be
+     completed in as little as 10 seconds.
 
      And then you can get into a flow where you make a change to your
      puppet configuration, run boxen, and see what happens.
@@ -680,8 +689,8 @@
 
    And here: http://jedcn.github.io/mac-config.
 
-   This is possible because code snippets, spanning any language, are
-   embedded into this document. Most of them have associated
+   This is possible because snippets of code, spanning any language,
+   are embedded into this document. Most of them have associated
    directives that indicate how they should be extracted.
 
    Let's talk more about that.
@@ -740,6 +749,9 @@
        task default: :tangle
      #+END_SRC
 
+     The extracted version of this file is available in
+     [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/Rakefile][Rakefile]].
+
      Which leads to the question, *What's :tangle?*
 
 **** Tangling (extracting) README.org into distinct files
@@ -750,7 +762,8 @@
 
      While emacs is a text editor, it is also a tool that can execute
      [[https://en.wikipedia.org/wiki/Emacs_Lisp][elisp]]. Further, if you run emacs in "batch mode," it does not
-     start the text editing user interface it's common associated with.
+     start the text editing user interface it is most commonly
+     associated with.
 
      And so, below, you'll see a ruby function that contains a brief
      bit of elisp which uses org-babel functions to extract the snippets.
@@ -770,6 +783,9 @@
          tangle_file_using_emacs('README.org')
        end
      #+END_SRC
+
+     The extracted version of this file is available in
+     [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/rakelib/tangle.rake][rakelib/tangle.rake]].
 
      And so, that's how all of the puppetry that you've seen above is
      unpacked.
@@ -801,7 +817,7 @@
     export mechanism that is built into org-mode.
 
     The content is effectively put into HTML within a =<body></body>=,
-    and then it's inserted into a basic template from
+    and then it is inserted into a basic template from
     HTML5Boilerplate.
 
     This is achieved by minimally converting the HTML5Boilerplate HTML
@@ -811,7 +827,7 @@
 **** =rakelib/index.html.erb=
 
      There are a few versions of [[http://html5boilerplate.com/][HTML5BoilerPlate]], and the one we see
-     below is bsed on the Bootstrap. I removed the core content and
+     below is based on the Bootstrap. I removed the core content and
      replaced it with a single ERB substitution. I also added a link
      to =prism.js= and =prism.css=. I manually downloaded these.
 
@@ -863,6 +879,9 @@
            </body>
        </html>
      #+END_SRC
+
+     The extracted version of this file is available in
+     [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/rakelib/index.html.erb][rakelib/index.html.erb]].
 
 **** =rakelib/ghpages.rake=
 
@@ -1007,10 +1026,13 @@
        end
      #+END_SRC
 
+     The extracted version of this file is available in
+     [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/rakelib/ghpages.rake][rakelib/ghpages.rake]].
+
 ** Odds and Ends
 
-   This following information, while valuable to me, didn't rightly
-   fit in anywhere, and so it landed here until it can be sorted out.
+   The following information, while valuable to me, didn't rightly fit
+   in anywhere, and so it landed here until it can be sorted out.
 
 *** Staying up-to-date with boxen/our-boxen
 
@@ -1024,14 +1046,61 @@
 
     The directions are here: [[https://help.github.com/articles/syncing-a-fork/][github.com/articles/syncing-a-fork/]].
 
-*** Manual Installs
+*** Given up on a Module Failed Installations
+
+    Near as I can tell, if you try to get something running with boxen
+    and then you give up and remove the puppetry, you'll still have
+    whatever-didnt-install-the-way-you-wanted installed, and so, you
+    can manually remove that thing but you should also remove
+    something called a "receipt" that can be found in the =/var/db=
+    directory, for example:
+
+    + =sudo rm .puppet_compressed_app_installed_1Password\ 5=
+    + =sudo rm /var/db/.puppet_appdmg_installed_LittleSnitch=
+
+    I learned about receipts in the [[https://github.com/boxen/our-boxen/blob/master/docs/faq.md][official boxen FAQ]].
+
+*** What does a module do?
+
+    If you've found a puppet module that you'd like to check out, the
+    first place to look is in the file named =manifests/init.pp=. I
+    believe this is the entry point for all modules. You can usually
+    see other files that are included into it or URLs, version
+    numbers, and configuration options.
+
+*** Where do you find modules?
+
+    Modules can be defined anywhere, and the most popular ones are
+    underneath the Boxen Github repository: https://github.com/boxen/.
+
+    You can search for ones that are formally part of that
+    organization by visiting the link above and typing the name of the
+    application into to the "Filters."
+
+*** Which version do you use for a module?
+
+    If you've found a module that you'd like to use, such as this one:
+    https://github.com/boxen/puppet-slate, you can add it to your
+    =Puppetfile=.
+
+    It's not immediately obvious which version to use, and so far, the
+    following has worked for me: look at the tags on the repository,
+    and pick the largest version.
+
+*** Applications I Installed Manually
 
     I installed the following Software manually:
 
 **** 1Password
 
-     I got this from the AppStore. I did because I couldn't figure out
-     how to license it, otherwise.
+     I tried getting onepassword here (with [[https://github.com/boxen/puppet-onepassword][puppet-onepassword]]), but I
+     couldn't figure out the licensing. Specifically, after a boxen
+     run it was in trial mode and looking for a license file. But, I
+     didn't have a license because I bought 1Password through the
+     AppStore.
+
+     After 15 minutes of mucking around, I installed through the
+     AppStore, and things worked just fine.
 
 **** Little Snitch
 
@@ -1049,51 +1118,6 @@
 
      The install required a reboot, and after that, it immediately
      started going.
-
-*** Oddities and Troubleshoot
-
-**** 1Password and Licensing
-
-     I tried getting onepassword here (with [[https://github.com/boxen/puppet-onepassword][puppet-onepassword]]), but I
-     couldn't figure out the licensing. Specifically, after a boxen run
-     it was in trial mode and looking for a license file. But, I didn't
-     have a license because I bought 1Password through the
-     AppStore.
-
-     After 15 minutes of mucking around, I installed through the
-     AppStore, and things worked just fine.
-
-**** Given up on a Module Failed Installations
-
-     Near as I can tell, if you try to get something running with boxen
-     and then you give up and remove the puppetry, you'll still have
-     whatever-didnt-install-the-way-you-wanted installed, and so, you
-     can manually remove that thing but you should also remove
-     something called a "receipt" that can be found in the =/var/db=
-     directory, for example:
-
-     + =sudo rm .puppet_compressed_app_installed_1Password\ 5=
-     + =sudo rm /var/db/.puppet_appdmg_installed_LittleSnitch=
-
-     I learned about receipts in the [[https://github.com/boxen/our-boxen/blob/master/docs/faq.md][official boxen FAQ]].
-
-**** What does a module do?
-
-     If you've found a puppet module that you'd like to check out, the
-     first place to look is in the file named =manifests/init.pp=. I
-     believe this is the entry point for all modules. You can usually
-     see other files that are included into it or URLs, version
-     numbers, and configuration options.
-
-**** Where do you find modules?
-
-     Modules can be defined anywhere, and the most popular ones are
-     underneath the Boxen Github repository:
-     https://github.com/boxen/.
-
-     You can search for ones that are formally part of that
-     organization by visiting the link above and typing the name of the
-     application into to the "Filters."
 
 *** Resources
 
