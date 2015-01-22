@@ -102,8 +102,9 @@ file 'gh-pages/index.html' => [ 'gh-pages', 'README.html' ] do
   end
 
   rendered = File.read('gh-pages/index.html')
-  s = "<pre>\n<code class='language-ruby'>"
-  rendered = rendered.gsub('<pre class="src src-puppet">', s)
+  ruby = "<pre>\n<code class='language-ruby'>"
+  rendered = rendered.gsub('<pre class="src src-puppet">', ruby)
+  rendered = rendered.gsub('<pre class="src src-ruby">', ruby)
   rendered = rendered.gsub('</pre>', '</code></pre>')
   File.open('gh-pages/index.html', 'w') do |file|
     file.write(rendered)
