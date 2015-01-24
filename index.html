@@ -841,6 +841,9 @@ I hope to flesh this out in the future.
   git::config::global { 'core.editor':
     value  =&gt; '/opt/boxen/homebrew/bin/emacsclient'
   }
+  git::config::global { 'push.default':
+    value  =&gt; 'simple'
+  }
 }
 </code></pre>
 </div>
