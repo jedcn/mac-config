@@ -494,10 +494,14 @@
 
     I manually set my =user.email= and =user.name= when I first started
     using my computer, and after some bootstrapping, I got to the point
-    where I could have boxen set my =core.editor=, and that's what's
-    below.
+    where I could have boxen set other values.
 
-    I hope to flesh this out in the future.
+    So far, I've got:
+
+    + =core.editor= so that I can use emacs (from boxen) for editing
+      commit messages and rebasing.
+    + =push.default= so that when I push (without an explicit
+      upstream) I end up pushing to a branch of the same name.
 
     #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/git.pp
       class people::jedcn::git {
