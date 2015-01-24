@@ -40,6 +40,10 @@ class people::jedcn::osx_config {
     action => 'Put Display to Sleep'
   }
 
+  # Make Developer Tools available in Safari (ie: right-click and see
+  # Inspect Element)
+  include osx::safari::enable_developer_mode
+
   # Recovery Message
   $recovery_owner = "This computer belongs to Jed Northridge."
   $recovery_contact = "If found, please contact jedcn@jedcn.com or 305-985-3326."

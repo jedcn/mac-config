@@ -208,7 +208,8 @@
     5. Automatically hide the dock.
     6. Remove clutter from the dock by making it only contain running
        apps.
-    7. Setup a message on your lock screen to provides your contact
+    7. Turn on the Developer Tools in Safari
+    8. Setup a message on your lock screen to provides your contact
        information if your laptop is found.
 
     All of these things are tweakable by hand, but using boxen lets
@@ -260,6 +261,10 @@
           position => 'Bottom Left',
           action => 'Put Display to Sleep'
         }
+
+        # Make Developer Tools available in Safari (ie: right-click and see
+        # Inspect Element)
+        include osx::safari::enable_developer_mode
 
         # Recovery Message
         $recovery_owner = "This computer belongs to Jed Northridge."
