@@ -1136,6 +1136,45 @@
      The install required a reboot, and after that, it immediately
      started going.
 
+     I then right-click on the Little Snitch icon in the menu bar and
+     turned it off. There is a key binding to turn it on:
+     CTRL+ALT+CMD+M.
+
+**** ScreenFlow 4
+
+     I use ScreenFlow for creating screencasts. It's not available
+     through the AppStore, but instead you can find it on the
+     http://telestream.com website. Getting it took a bit of fooling
+     around: I found it by going to [[http://dynamic.telestream.net/downloads/login.asp?prodid=screenflow&message=login][this login page]], logging in, and
+     then downloading it. Once I had the =.dmg=, it was a standard
+     install. I provided my license number once I was in.
+
+**** Mac Bartender
+
+     I use MacBartender to clean up the icons in my menu bar. This
+     initially started so that my screencasts didn't "leak" info, but
+     I've come to enjoy the lack of distraction.
+
+     I found the installer here:
+     http://www.macbartender.com/Demo/Bartender.zip. I double-clicked
+     to open it, I then double-click MacBartender, and it prompted me
+     to move it to the Applications folder, and then another prompt to
+     "Continue."
+
+     At this point, it was a "..." appearing in my menu bar.
+
+     I then pressed CMD-SPACE and started Bartender, and I:
+
+     + General > Start > [x] Launch Bartender at Login
+     + General > Start > Bartender Menu Bar Icon: Star
+
+     I then clicked on the Star and licensed it.
+
+     I then went through the preferences and each item (System Items +
+     Active Menu Items), and picked "Show in Bartender Bar, not in
+     Menu Bar." This reduced all of my menu bar items down to the
+     single Star.
+
 *** Resources
 
     My main resource was Gary Larizza's article called "[[http://garylarizza.com/blog/2013/02/15/puppet-plus-github-equals-laptop-love/][Puppet + Github
