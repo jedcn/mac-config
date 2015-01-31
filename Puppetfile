@@ -69,4 +69,4 @@ github "osx",         "2.8.0"
 github "slate",       "1.0.1"
 github "firefox",     "1.2.3"
 
-local_dev 'virtualbox'
+github "virtualbox", "1.0.14", :repo => "jedcn/puppet-virtualbox"
