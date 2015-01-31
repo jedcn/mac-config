@@ -1,3 +1,8 @@
+PATH
+  remote: /projects/puppet-virtualbox
+  specs:
+    virtualbox (0.0.1)
+
 GITHUBTARBALL
   remote: boxen/puppet-boxen
   specs:
@@ -142,5 +147,6 @@ DEPENDENCIES
   slate (= 1.0.1)
   stdlib (= 4.2.1)
   sudo (= 1.0.0)
+  virtualbox (>= 0)
   xquartz (= 1.2.1)
 

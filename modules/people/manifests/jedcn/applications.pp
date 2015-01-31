@@ -4,4 +4,6 @@ class people::jedcn::applications {
   include chrome::canary
   include firefox
   include slate
+
+  include virtualbox
 }
