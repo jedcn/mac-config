@@ -26,6 +26,11 @@ def dev(name, *args)
   mod name, :path => "#{ENV['HOME']}/src/boxen/puppet-#{name}"
 end
 
+# jedcn's shortcut for a module under development
+def local_dev(name, *args)
+  mod name, :path => "/projects/puppet-#{name}"
+end
+
 # Includes many of our custom types and providers, as well as global
 # config. Required.
 
@@ -63,3 +68,5 @@ github "chrome",      "1.2.0"
 github "osx",         "2.8.0"
 github "slate",       "1.0.1"
 github "firefox",     "1.2.3"
+
+github "virtualbox", "1.0.14", :repo => "jedcn/puppet-virtualbox"

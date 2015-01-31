@@ -429,6 +429,8 @@
          include chrome::canary
          include firefox
          include slate
+
+         include virtualbox
        }
      #+END_SRC
 
