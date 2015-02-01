@@ -1106,6 +1106,88 @@
     following has worked for me: look at the tags on the repository,
     and pick the largest version.
 
+*** Modifying an Existing Module
+
+**** The Problem
+
+    What if you find a module underneath https://github.com/boxen, but
+    that module is out of date?
+
+    For example, as of the time of this writing, the [[https://github.com/boxen/puppet-virtualbox][puppet-virtualbox]]
+    will install a virtualbox version that's 6 or so months old, and
+    is 4 releases behind what's presently available.
+
+    Further-- other people have shown up, done the work to grab a new
+    version, and opened up a pull request that has gone unanswered.
+    Here's a pull request that is just that: it is over 5 months old,
+    works just fine, but hasn't been merged or commented on by the
+    maintainers: [[https://github.com/boxen/puppet-virtualbox/pull/30][puppet-virtualbox/pull/30]].
+
+    And even if the maintainer was responding, it's possible that he
+    or she will say,"Actually, this module is created and used by XYZ
+    Group, and XYZ Group, the organization, is not ready to upgrade
+    beyond this version." And that is there prerogative, but what do
+    you do if you don't want to install the now-out-of-date version?
+
+**** Building The Solution
+
+     The good news is that all the hardwork was probably done by the
+     original package creator, and all you need to do is swap out a
+     couple strings.
+
+     But, what, exactly, should happen?
+
+     Here's what worked for me with puppet-virtualbox:
+
+     + I started by looking at the core [[https://github.com/boxen/puppet-virtualbox/blob/master/manifests/init.pp][manifests/init.pp]] file, and saw
+       that the version strings were obviously present.
+     + I then [[https://github.com/boxen/puppet-virtualbox/search?utf8=✓&q=4.3.14][searched across the repo]] for the status quo version
+       string, and saw that it was in the specs, too.
+     + I forked the repo: [[https://github.com/jedcn/puppet-virtualbox/][jedcn/puppet-virtualbox]].
+     + I cloned the repo to =/projects/puppet-virtualbox=
+     + I ran the specs with =rspec= (I happened to be using ruby
+       2.1.2p95 provided by boxen), and they passed (albeit, with warnings).
+     + I found URL for downloading the new(er) version on the
+       virtualbox site:
+       http://download.virtualbox.org/virtualbox/4.3.20/VirtualBox-4.3.20-96996-OSX.dmg
+     + I modified the source in =spec/classes/virtualbox_spec.rb= to
+       match this URL.
+     + I ran =rspec=, saw that things failed.
+     + I modified the code in manifests/init.pp with the new version
+       and patch, and saw that it passed.
+
+     And then I was ready to try it out.
+
+**** Trying the Solution Locally
+
+     Commit the changes to puppet-virtualbox. This looked like [[https://github.com/jedcn/puppet-virtualbox/commit/afaa6b376bbe31cd0422c9fec1edee511e969933][afaa6b]]
+     for me.
+
+     Then change over to your boxen repo, create branch named
+     =virtualbox=, and modify the =Puppetfile= to reference your local
+     copy of puppet-virtualbox. Next, somewhere in your manifests add
+     the proper =include virtualbox=. This looked like [[https://github.com/jedcn/mac-config/commit/6d00ae4d6beaddf827f05997212143b880306b7d][6d00ae]] for me.
+
+     Run boxen, and if all goes well, the most recent version of
+     virtual box will be installed.
+
+**** Make the Solution Globally Available
+
+     Now you know that the changes in your local =puppet-virtualbox=
+     are good, so push them back up to your fork, tag them, and then
+     modify your =Puppetfile= to reference the tagged version. Then
+     run boxen again-- it should capture some config files, say, in
+     =vendor/puppet/cache/jedcn-puppet-virtualbox-1.0.14.tar.gz=, but
+     be a no-op for installing a new application. Here's what it
+     looked like: [[https://github.com/jedcn/mac-config/commit/497361a7bed84062de4dd97b50cb4c3e4fddbd8d][497361]].
+
+**** Share your Work
+
+     And finally, open a pull request against the original package. If
+     the maintainer wants to take it, great. If not, leave a note
+     showing other people how to access what you've done:
+     [[https://github.com/boxen/puppet-virtualbox/pull/33][puppet-virtualbox/pull/33]].
+
 *** Applications I Installed Manually
 
     I installed the following Software manually:
