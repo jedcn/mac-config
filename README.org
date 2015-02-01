@@ -419,6 +419,12 @@
      [[https://github.com/jigish/slate][Slate]] was a game changer for me, and I've written more about it
      here: http://jedcn.com/posts/slate/.
 
+**** VirtualBox and Vagrant
+
+     So far, when I've been using virtual machines, I've been using
+     these two pieces of software together. I grabbed the latest of
+     each version as of January, 2015.
+
 **** Declarations
 
      Here's the puppetry that handles my applications:
@@ -431,6 +437,10 @@
          include slate
 
          include virtualbox
+
+         class { 'vagrant':
+           version => '1.7.2'
+         }
        }
      #+END_SRC
 

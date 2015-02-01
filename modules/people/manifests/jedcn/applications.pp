@@ -6,4 +6,8 @@ class people::jedcn::applications {
   include slate
 
   include virtualbox
+
+  class { 'vagrant':
+    version => '1.7.2'
+  }
 }
