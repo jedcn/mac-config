@@ -1124,10 +1124,10 @@
     maintainers: [[https://github.com/boxen/puppet-virtualbox/pull/30][puppet-virtualbox/pull/30]].
 
     And even if the maintainer was responding, it's possible that he
-    or she will say,"Actually, this module is created and used by XYZ
-    Group, and XYZ Group, the organization, is not ready to upgrade
-    beyond this version." And that is there prerogative, but what do
-    you do if you don't want to install the now-out-of-date version?
+    or she will say, "Actually, this module is created and used by XYZ
+    Group, and XYZ Group is not ready to upgrade beyond this version."
+    And that is there prerogative, but what do you do if you don't
+    want to install the now-out-of-date version?
 
 **** Building The Solution
 
@@ -1147,7 +1147,7 @@
      + I cloned the repo to =/projects/puppet-virtualbox=
      + I ran the specs with =rspec= (I happened to be using ruby
        2.1.2p95 provided by boxen), and they passed (albeit, with warnings).
-     + I found URL for downloading the new(er) version on the
+     + I found the URL for downloading the new(er) version on the
        virtualbox site:
        http://download.virtualbox.org/virtualbox/4.3.20/VirtualBox-4.3.20-96996-OSX.dmg
      + I modified the source in =spec/classes/virtualbox_spec.rb= to
@@ -1160,8 +1160,8 @@
 
 **** Trying the Solution Locally
 
-     Commit the changes to puppet-virtualbox. This looked like [[https://github.com/jedcn/puppet-virtualbox/commit/afaa6b376bbe31cd0422c9fec1edee511e969933][afaa6b]]
-     for me.
+     Commit the changes to =/projects/puppet-virtualbox=. This looked
+     like [[https://github.com/jedcn/puppet-virtualbox/commit/afaa6b376bbe31cd0422c9fec1edee511e969933][afaa6b]] for me.
 
      Then change over to your boxen repo, create branch named
      =virtualbox=, and modify the =Puppetfile= to reference your local
