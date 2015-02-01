@@ -716,7 +716,16 @@ here: <a href="http://jedcn.com/posts/slate/">http://jedcn.com/posts/slate/</a>.
 </div>
 </li>
 
-<li><a id="sec-1-2-3-4" name="sec-1-2-3-4"></a>Declarations<br  /><div class="outline-text-5" id="text-1-2-3-4">
+<li><a id="sec-1-2-3-4" name="sec-1-2-3-4"></a>VirtualBox and Vagrant<br  /><div class="outline-text-5" id="text-1-2-3-4">
+<p>
+So far, when I've been using virtual machines, I've been using
+these two pieces of software together. I grabbed the latest of
+each version as of January, 2015.
+</p>
+</div>
+</li>
+
+<li><a id="sec-1-2-3-5" name="sec-1-2-3-5"></a>Declarations<br  /><div class="outline-text-5" id="text-1-2-3-5">
 <p>
 Here's the puppetry that handles my applications:
 </p>
@@ -731,6 +740,10 @@ Here's the puppetry that handles my applications:
   include slate
 
   include virtualbox
+
+  class { 'vagrant':
+    version =&gt; '1.7.2'
+  }
 }
 </code></pre>
 </div>
