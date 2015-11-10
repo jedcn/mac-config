@@ -643,8 +643,8 @@ The extracted version of this file is available in
 <h4 id="sec-1-2-3"><span class="section-number-4">1.2.3</span> Applications</h4>
 <div class="outline-text-4" id="text-1-2-3">
 <p>
-Next up, after dot-files and repositories have been figured out, we
-figure out applications like Chrome and Firefox.
+Next up, after dot-files and repositories have been figured out,
+we figure out applications like Chrome.
 </p>
 
 <p>
@@ -654,8 +654,6 @@ applications. Here are a few modules that I use:
 </p>
 
 <ul class="org-ul">
-<li><a href="https://github.com/boxen/puppet-firefox">puppet-firefox</a>
-</li>
 <li><a href="https://github.com/boxen/puppet-chrome">puppet-chrome</a>
 </li>
 <li><a href="https://github.com/boxen/puppet-slate">puppet-slate</a>
@@ -663,12 +661,12 @@ applications. Here are a few modules that I use:
 </ul>
 
 <p>
-After you declare that you want to have an application, say
-firefox, you run the command <code>boxen</code> and the application will
-"just" appear in your Applications folder. In theory, this allows
-you to replace visiting a website, downloading a <code>.dmg</code> file, and
-running an installer with writing a few lines of configuration and
-running boxen.
+After you declare that you want to have an application, say slate,
+you run the command <code>boxen</code> and the application will "just" appear
+in your Applications folder. In theory, this allows you to replace
+visiting a website, downloading a <code>.dmg</code> file, and running an
+installer with writing a few lines of configuration and running
+boxen.
 </p>
 
 <p>
@@ -702,8 +700,7 @@ team of people) I'll give up after 20 minutes of hacking around.
 
 <li><a id="sec-1-2-3-2" name="sec-1-2-3-2"></a>Browsers<br  /><div class="outline-text-5" id="text-1-2-3-2">
 <p>
-I use the standard set of browsers, and can pull in Chrome,
-Firefox, and their development versions.
+I use Chrome and Chrome Canary.
 </p>
 </div>
 </li>
@@ -716,16 +713,7 @@ here: <a href="http://jedcn.com/posts/slate/">http://jedcn.com/posts/slate/</a>.
 </div>
 </li>
 
-<li><a id="sec-1-2-3-4" name="sec-1-2-3-4"></a>VirtualBox and Vagrant<br  /><div class="outline-text-5" id="text-1-2-3-4">
-<p>
-So far, when I've been using virtual machines, I've been using
-these two pieces of software together. I grabbed the latest of
-each version as of January, 2015.
-</p>
-</div>
-</li>
-
-<li><a id="sec-1-2-3-5" name="sec-1-2-3-5"></a>Declarations<br  /><div class="outline-text-5" id="text-1-2-3-5">
+<li><a id="sec-1-2-3-4" name="sec-1-2-3-4"></a>Declarations<br  /><div class="outline-text-5" id="text-1-2-3-4">
 <p>
 Here's the puppetry that handles my applications:
 </p>
@@ -736,14 +724,7 @@ Here's the puppetry that handles my applications:
 <code class='language-ruby'>class people::jedcn::applications {
   include chrome
   include chrome::canary
-  include firefox
   include slate
-
-  include virtualbox
-
-  class { 'vagrant':
-    version =&gt; '1.7.2'
-  }
 }
 </code></pre>
 </div>
