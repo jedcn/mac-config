@@ -285,6 +285,7 @@
 
     + My dotfiles ([[https://github.com/jedcn/dot-org-files][jedcn/dot-org-files]])
     + [[https://github.com/robbyrussell/oh-my-zsh/][oh-my-zsh]]
+    + [[https://github.com/cask/cask][cask (for emacs, not brew)]]
 
     And I land these near boxen, at =/opt/init-src=.
 
@@ -316,6 +317,12 @@
           source  => 'robbyrussell/oh-my-zsh',
           require => File[$my_init_src]
         }
+
+        repository { "${my_init_src}/cask":
+          source  => 'cask/cask',
+          require => File[$my_init_src]
+        }
+
       }
     #+END_SRC
 
@@ -354,6 +361,13 @@
           target  => "${my_init_src}/dot-org-files/home/.slate",
           require => Repository["${my_init_src}/dot-org-files"],
         }
+
+        file { "/Users/${luser}/.cask":
+          ensure  => link,
+          target  => "${my_init_src}/cask",
+          require => Repository["${my_init_src}/cask"],
+        }
+
       }
     #+END_SRC
 

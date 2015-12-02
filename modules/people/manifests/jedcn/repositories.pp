@@ -17,4 +17,10 @@ class people::jedcn::repositories {
     source  => 'robbyrussell/oh-my-zsh',
     require => File[$my_init_src]
   }
+
+  repository { "${my_init_src}/cask":
+    source  => 'cask/cask',
+    require => File[$my_init_src]
+  }
+
 }

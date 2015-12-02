@@ -22,4 +22,11 @@ class people::jedcn::links {
     target  => "${my_init_src}/dot-org-files/home/.slate",
     require => Repository["${my_init_src}/dot-org-files"],
   }
+
+  file { "/Users/${luser}/.cask":
+    ensure  => link,
+    target  => "${my_init_src}/cask",
+    require => Repository["${my_init_src}/cask"],
+  }
+
 }
