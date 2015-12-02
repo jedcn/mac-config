@@ -13,16 +13,6 @@ class people::jedcn::repositories {
     require => File[$my_init_src]
   }
 
-  repository { "${my_init_src}/emacs-setup":
-    source  => 'jedcn/emacs-setup',
-    require => File[$my_init_src]
-  }
-
-  repository { "${my_init_src}/z":
-    source  => 'rupa/z',
-    require => File[$my_init_src]
-  }
-
   repository { "${my_init_src}/oh-my-zsh":
     source  => 'robbyrussell/oh-my-zsh',
     require => File[$my_init_src]

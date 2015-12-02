@@ -283,14 +283,14 @@
     down initially. I pull down repositories that are part of my
     bootstrapping process. In particular:
 
-    + My dotfiles ([[https://github.com/jedcn/dot-org-files][jedcn/dot-org-files]], [[https://github.com/jedcn/emacs-setup][jedcn/emacs-setup]])
-    + [[https://github.com/robbyrussell/oh-my-zsh/][oh-my-zsh]], and
-    + [[https://github.com/rupa/z][z]] (it's the new j)
+    + My dotfiles ([[https://github.com/jedcn/dot-org-files][jedcn/dot-org-files]])
+    + [[https://github.com/robbyrussell/oh-my-zsh/][oh-my-zsh]]
 
     And I land these near boxen, at =/opt/init-src=.
 
-    Once these are cloned, I use boxen to create links, say from
-    =~/.slate=, to a file within one of these cloned repositories.
+    Once these are cloned, I use boxen to create links from where they
+    expected to be normally to a file within one of these cloned
+    repositories.
 
     It is worth noting that you don't have to give up on
     whatever-you-were-using-for-creating-links before. They can live
@@ -309,16 +309,6 @@
 
         repository { "${my_init_src}/dot-org-files":
           source  => 'jedcn/dot-org-files',
-          require => File[$my_init_src]
-        }
-
-        repository { "${my_init_src}/emacs-setup":
-          source  => 'jedcn/emacs-setup',
-          require => File[$my_init_src]
-        }
-
-        repository { "${my_init_src}/z":
-          source  => 'rupa/z',
           require => File[$my_init_src]
         }
 
