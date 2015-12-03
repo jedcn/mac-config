@@ -22,4 +22,9 @@ class people::jedcn::links {
     require => Repository["${my_init_src}/cask"],
   }
 
+  file { "/Users/${luser}/.hammerspoon":
+    ensure  => link,
+    target  => "${my_init_src}/dot-org-files/home/.hammerspoon",
+    require => Repository["${my_init_src}/dot-org-files"],
+  }
 }

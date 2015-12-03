@@ -361,6 +361,11 @@
           require => Repository["${my_init_src}/cask"],
         }
 
+        file { "/Users/${luser}/.hammerspoon":
+          ensure  => link,
+          target  => "${my_init_src}/dot-org-files/home/.hammerspoon",
+          require => Repository["${my_init_src}/dot-org-files"],
+        }
       }
     #+END_SRC
 
@@ -437,7 +442,10 @@
          include chrome::canary
 
          include brewcask
-         package { 'hammerspoon': provider => 'brewcask' }
+         package { 'hammerspoon':
+           provider => 'brewcask',
+           require  => File["/Users/${luser}/.hammerspoon"],
+         }
        }
      #+END_SRC
 
