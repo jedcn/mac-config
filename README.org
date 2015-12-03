@@ -355,13 +355,6 @@
           require => Repository["${my_init_src}/oh-my-zsh"],
         }
 
-        file { "/Users/${luser}/.slate":
-          ensure  => link,
-          mode    => '0644',
-          target  => "${my_init_src}/dot-org-files/home/.slate",
-          require => Repository["${my_init_src}/dot-org-files"],
-        }
-
         file { "/Users/${luser}/.cask":
           ensure  => link,
           target  => "${my_init_src}/cask",
@@ -381,17 +374,19 @@
 
     You can use boxen to install the applications that you work
     with. In turn, boxen relies on modules to install
-    applications. Here are a few modules that I use:
+    applications. Originally, I used modules like this:
 
     * [[https://github.com/boxen/puppet-chrome][puppet-chrome]]
-    * [[https://github.com/boxen/puppet-slate][puppet-slate]]
 
-    After you declare that you want to have an application, say slate,
-    you run the command =boxen= and the application will "just" appear
-    in your Applications folder. In theory, this allows you to replace
-    visiting a website, downloading a =.dmg= file, and running an
-    installer with writing a few lines of configuration and running
-    boxen.
+    But this did not work out well. Modules were hit-or-miss. Some
+    were not updated.
+
+    After you declare that you want to have an application, say
+    chrome, you run the command =boxen= and the application will
+    "just" appear in your Applications folder. In theory, this allows
+    you to replace visiting a website, downloading a =.dmg= file, and
+    running an installer with writing a few lines of configuration and
+    running boxen.
 
     However, you still have the ability to install an application
     manually, so which path should you choose?
@@ -418,8 +413,7 @@
 
 **** Window Management
 
-     [[https://github.com/jigish/slate][Slate]] was a game changer for me, and I've written more about it
-     here: http://jedcn.com/posts/slate/.
+     TBD
 
 **** Declarations
 
@@ -429,7 +423,6 @@
        class people::jedcn::applications {
          include chrome
          include chrome::canary
-         include slate
        }
      #+END_SRC
 
@@ -1098,7 +1091,7 @@
 *** Which version do you use for a module?
 
     If you've found a module that you'd like to use, such as this one:
-    https://github.com/boxen/puppet-slate, you can add it to your
+    https://github.com/boxen/puppet-chrome, you can add it to your
     =Puppetfile=.
 
     It's not immediately obvious which version to use, and so far, the

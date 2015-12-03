@@ -16,13 +16,6 @@ class people::jedcn::links {
     require => Repository["${my_init_src}/oh-my-zsh"],
   }
 
-  file { "/Users/${luser}/.slate":
-    ensure  => link,
-    mode    => '0644',
-    target  => "${my_init_src}/dot-org-files/home/.slate",
-    require => Repository["${my_init_src}/dot-org-files"],
-  }
-
   file { "/Users/${luser}/.cask":
     ensure  => link,
     target  => "${my_init_src}/cask",

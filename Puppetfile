@@ -67,4 +67,3 @@ github "xquartz",     "1.2.1"
 # https://github.com/boxen.
 github "chrome",      "1.2.0"
 github "osx",         "2.8.0"
-github "slate",       "1.0.1"
