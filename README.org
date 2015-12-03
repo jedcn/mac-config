@@ -370,7 +370,7 @@
 *** Applications
 
     Next up, after dot-files and repositories have been figured out,
-    we figure out applications like Chrome.
+    we figure out applications like Chrome and Hammerspoon.
 
     You can use boxen to install the applications that you work
     with. In turn, boxen relies on modules to install
@@ -379,14 +379,18 @@
     * [[https://github.com/boxen/puppet-chrome][puppet-chrome]]
 
     But this did not work out well. Modules were hit-or-miss. Some
-    were not updated.
+    were not updated. This hardship caused me to try out brewcask, and
+    so far as I can tell, that is the way to go with boxen.
 
-    After you declare that you want to have an application, say
-    chrome, you run the command =boxen= and the application will
-    "just" appear in your Applications folder. In theory, this allows
-    you to replace visiting a website, downloading a =.dmg= file, and
-    running an installer with writing a few lines of configuration and
-    running boxen.
+    Whether called out with an explicit puppet module, like
+    puppet-chrome, or called out via brewcask, after you declare that
+    you want to have an application, say chrome, you run the command
+    =boxen= and the application will "just" appear in your
+    Applications folder.
+
+    This allows you to replace visiting a website, downloading a
+    =.dmg= file, and running an installer with writing a few lines of
+    configuration and running boxen.
 
     However, you still have the ability to install an application
     manually, so which path should you choose?
@@ -404,8 +408,8 @@
 
      I make a choice with each application between using boxen
      vs. installing by hand. In general, if I can get it through
-     boxen, that's what I'd prefer. But, when it's just me (and not a
-     team of people) I'll give up after 20 minutes of hacking around.
+     boxen, that's what I'd prefer. And when I'm using boxen, I
+     strongly lean toward using brewcask.
 
 **** Browsers
 
@@ -413,7 +417,15 @@
 
 **** Window Management
 
-     TBD
+     I use Hammerspoon for window management, among other things.
+
+     After you run boxen, I still launched Hammerspoon and did the
+     following manually:
+
+     + Enabled Accessibility
+     + Select Launch Hammerspoon on Login
+     + Deselect Show Dock Icon
+     + Deselect Send Crash Data
 
 **** Declarations
 
@@ -423,6 +435,9 @@
        class people::jedcn::applications {
          include chrome
          include chrome::canary
+
+         include brewcask
+         package { 'hammerspoon': provider => 'brewcask' }
        }
      #+END_SRC
 
