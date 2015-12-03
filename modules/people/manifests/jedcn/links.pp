@@ -16,10 +16,15 @@ class people::jedcn::links {
     require => Repository["${my_init_src}/oh-my-zsh"],
   }
 
-  file { "/Users/${luser}/.slate":
+  file { "/Users/${luser}/.cask":
     ensure  => link,
-    mode    => '0644',
-    target  => "${my_init_src}/dot-org-files/home/.slate",
+    target  => "${my_init_src}/cask",
+    require => Repository["${my_init_src}/cask"],
+  }
+
+  file { "/Users/${luser}/.hammerspoon":
+    ensure  => link,
+    target  => "${my_init_src}/dot-org-files/home/.hammerspoon",
     require => Repository["${my_init_src}/dot-org-files"],
   }
 }
