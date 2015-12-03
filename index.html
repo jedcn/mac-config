@@ -526,11 +526,11 @@ bootstrapping process. In particular:
 </p>
 
 <ul class="org-ul">
-<li>My dotfiles (<a href="https://github.com/jedcn/dot-org-files">jedcn/dot-org-files</a>, <a href="https://github.com/jedcn/emacs-setup">jedcn/emacs-setup</a>)
+<li>My dotfiles (<a href="https://github.com/jedcn/dot-org-files">jedcn/dot-org-files</a>)
 </li>
-<li><a href="https://github.com/robbyrussell/oh-my-zsh/">oh-my-zsh</a>, and
+<li><a href="https://github.com/robbyrussell/oh-my-zsh/">oh-my-zsh</a>
 </li>
-<li><a href="https://github.com/rupa/z">z</a> (it's the new j)
+<li><a href="https://github.com/cask/cask">cask (for emacs, not brew)</a>
 </li>
 </ul>
 
@@ -539,8 +539,9 @@ And I land these near boxen, at <code>/opt/init-src</code>.
 </p>
 
 <p>
-Once these are cloned, I use boxen to create links, say from
-<code>~/.slate</code>, to a file within one of these cloned repositories.
+Once these are cloned, I use boxen to create links from where they
+expected to be normally to a file within one of these cloned
+repositories.
 </p>
 
 <p>
@@ -567,20 +568,16 @@ machines without boxen.
     require =&gt; File[$my_init_src]
   }
 
-  repository { "${my_init_src}/emacs-setup":
-    source  =&gt; 'jedcn/emacs-setup',
-    require =&gt; File[$my_init_src]
-  }
-
-  repository { "${my_init_src}/z":
-    source  =&gt; 'rupa/z',
-    require =&gt; File[$my_init_src]
-  }
-
   repository { "${my_init_src}/oh-my-zsh":
     source  =&gt; 'robbyrussell/oh-my-zsh',
     require =&gt; File[$my_init_src]
   }
+
+  repository { "${my_init_src}/cask":
+    source  =&gt; 'cask/cask',
+    require =&gt; File[$my_init_src]
+  }
+
 }
 </code></pre>
 </div>
@@ -622,10 +619,15 @@ directory and repositories are cloned before the links are created:
     require =&gt; Repository["${my_init_src}/oh-my-zsh"],
   }
 
-  file { "/Users/${luser}/.slate":
+  file { "/Users/${luser}/.cask":
     ensure  =&gt; link,
-    mode    =&gt; '0644',
-    target  =&gt; "${my_init_src}/dot-org-files/home/.slate",
+    target  =&gt; "${my_init_src}/cask",
+    require =&gt; Repository["${my_init_src}/cask"],
+  }
+
+  file { "/Users/${luser}/.hammerspoon":
+    ensure  =&gt; link,
+    target  =&gt; "${my_init_src}/dot-org-files/home/.hammerspoon",
     require =&gt; Repository["${my_init_src}/dot-org-files"],
   }
 }
@@ -644,29 +646,38 @@ The extracted version of this file is available in
 <div class="outline-text-4" id="text-1-2-3">
 <p>
 Next up, after dot-files and repositories have been figured out,
-we figure out applications like Chrome.
+we figure out applications like Chrome and Hammerspoon.
 </p>
 
 <p>
 You can use boxen to install the applications that you work
 with. In turn, boxen relies on modules to install
-applications. Here are a few modules that I use:
+applications. Originally, I used modules like this:
 </p>
 
 <ul class="org-ul">
 <li><a href="https://github.com/boxen/puppet-chrome">puppet-chrome</a>
 </li>
-<li><a href="https://github.com/boxen/puppet-slate">puppet-slate</a>
-</li>
 </ul>
 
 <p>
-After you declare that you want to have an application, say slate,
-you run the command <code>boxen</code> and the application will "just" appear
-in your Applications folder. In theory, this allows you to replace
-visiting a website, downloading a <code>.dmg</code> file, and running an
-installer with writing a few lines of configuration and running
-boxen.
+But this did not work out well. Modules were hit-or-miss. Some
+were not updated. This hardship caused me to try out brewcask, and
+so far as I can tell, that is the way to go with boxen.
+</p>
+
+<p>
+Whether called out with an explicit puppet module, like
+puppet-chrome, or called out via brewcask, after you declare that
+you want to have an application, say chrome, you run the command
+<code>boxen</code> and the application will "just" appear in your
+Applications folder.
+</p>
+
+<p>
+This allows you to replace visiting a website, downloading a
+<code>.dmg</code> file, and running an installer with writing a few lines of
+configuration and running boxen.
 </p>
 
 <p>
@@ -692,8 +703,8 @@ happened to me with 1Password.
 <p>
 I make a choice with each application between using boxen
 vs. installing by hand. In general, if I can get it through
-boxen, that's what I'd prefer. But, when it's just me (and not a
-team of people) I'll give up after 20 minutes of hacking around.
+boxen, that's what I'd prefer. And when I'm using boxen, I
+strongly lean toward using brewcask.
 </p>
 </div>
 </li>
@@ -707,9 +718,24 @@ I use Chrome and Chrome Canary.
 
 <li><a id="sec-1-2-3-3" name="sec-1-2-3-3"></a>Window Management<br  /><div class="outline-text-5" id="text-1-2-3-3">
 <p>
-<a href="https://github.com/jigish/slate">Slate</a> was a game changer for me, and I've written more about it
-here: <a href="http://jedcn.com/posts/slate/">http://jedcn.com/posts/slate/</a>.
+I use Hammerspoon for window management, among other things.
 </p>
+
+<p>
+After you run boxen, I still launched Hammerspoon and did the
+following manually:
+</p>
+
+<ul class="org-ul">
+<li>Enabled Accessibility
+</li>
+<li>Select Launch Hammerspoon on Login
+</li>
+<li>Deselect Show Dock Icon
+</li>
+<li>Deselect Send Crash Data
+</li>
+</ul>
 </div>
 </li>
 
@@ -724,7 +750,12 @@ Here's the puppetry that handles my applications:
 <code class='language-ruby'>class people::jedcn::applications {
   include chrome
   include chrome::canary
-  include slate
+
+  include brewcask
+  package { 'hammerspoon':
+    provider =&gt; 'brewcask',
+    require  =&gt; File["/Users/${luser}/.hammerspoon"],
+  }
 }
 </code></pre>
 </div>
@@ -1673,7 +1704,7 @@ application into to the "Filters."
 <div class="outline-text-4" id="text-1-5-5">
 <p>
 If you've found a module that you'd like to use, such as this one:
-<a href="https://github.com/boxen/puppet-slate">https://github.com/boxen/puppet-slate</a>, you can add it to your
+<a href="https://github.com/boxen/puppet-chrome">https://github.com/boxen/puppet-chrome</a>, you can add it to your
 <code>Puppetfile</code>.
 </p>
 
