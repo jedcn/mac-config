@@ -39,6 +39,10 @@ class people::jedcn::osx_config {
     position => 'Bottom Left',
     action => 'Put Display to Sleep'
   }
+  osx::dock::hot_corner { 'Start Screen Saver':
+    position => 'Top Left',
+    action => 'Start Screen Saver'
+  }
 
   # Make Developer Tools available in Safari (ie: right-click and see
   # Inspect Element)
