@@ -401,32 +401,15 @@
     =boxen= and the application will "just" appear in your
     Applications folder.
 
-    This allows you to replace visiting a website, downloading a
-    =.dmg= file, and running an installer with writing a few lines of
-    configuration and running boxen.
-
-    However, you still have the ability to install an application
-    manually, so which path should you choose?
-
-**** Boxen vs. Manual Install
-
-     Not all puppet modules are created equally. This is especially so
-     when it comes to applications: some of them call out older
-     versions of applications. These may no longer work, or there may
-     be newer versions available.
-
-     In some cases, you need to install an application via the
-     AppStore to get the correctly licensed version of it. This
-     happened to me with 1Password.
-
-     I make a choice with each application between using boxen
-     vs. installing by hand. In general, if I can get it through
-     boxen, that's what I'd prefer. And when I'm using boxen, I
-     strongly lean toward using brewcask.
-
 **** Browsers
 
      I use Chrome and Chrome Canary.
+
+**** Screen Saver
+
+     I've started using [[https://github.com/JohnCoates/Aerial][Aerial]]. Boxen will install it, but you still
+     need to open System Preferences -> Desktop & Screen Saver ->
+     Screen Saver, and select it.
 
 **** Window Management
 
@@ -461,14 +444,9 @@
        }
      #+END_SRC
 
-
-     + [[https://github.com/JohnCoates/Aerial][Aerial]] is a Screen Saver. Boxen will install it, but you still
-       need to Open System Preferences -> Desktop & Screen Saver ->
-       Screen Saver, and set it up.
-
-    The extracted version of this file is available in
-    [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at
-    [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/applications.pp][modules/people/manifests/jedcn/applications.pp]].
+     The extracted version of this file is available in
+     [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at
+     [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/applications.pp][modules/people/manifests/jedcn/applications.pp]].
 
 *** Homebrew
 
