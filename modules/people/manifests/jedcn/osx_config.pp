@@ -43,6 +43,10 @@ class people::jedcn::osx_config {
     position => 'Top Left',
     action => 'Start Screen Saver'
   }
+  osx::dock::hot_corner { 'Mission Control':
+    position => 'Top Right',
+    action => 'Mission Control'
+  }
 
   # Make Developer Tools available in Safari (ie: right-click and see
   # Inspect Element)
