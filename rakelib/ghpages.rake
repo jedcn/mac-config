@@ -6,18 +6,8 @@ task 'build-gh-pages' => [ 'gh-pages',
                            'gh-pages-supporting-content',
                            'gh-pages/index.html' ]
 
-#
-# Setup ./gh-pages as a git clone with gh-pages checked out.
-#
-directory 'gh-pages' do
-  repo = 'https://github.com/jedcn/mac-config.git'
-  branch = 'gh-pages'
-  dir = branch
-  args = "#{repo} --branch #{branch} --single-branch ./#{dir}"
-  command = "git clone #{args}"
-  stdout, stderr, _status = run(command)
-  puts stderr, stdout
-end
+directory 'gh-pages'
+directory 'tmp'
 
 #
 # Extract supporting content from HTML5BoilerPlate
@@ -25,12 +15,13 @@ end
 task 'gh-pages-supporting-content' => [ 'gh-pages/favicon.ico',
                                         'gh-pages/css/bootstrap.min.css',
                                         'gh-pages/css/bootstrap-theme.min.css',
-                                        'gh-pages/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' ]
+                                        'gh-pages/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' ]
 
-CLEAN.include('gh-pages/initializr.zip')
-CLEAN.include('gh-pages/initializr')
-file 'gh-pages/initializr' do
-  chdir('gh-pages') do
+CLEAN.include('tmp/initializr.zip')
+CLEAN.include('tmp/initializr')
+
+file 'tmp/initializr' => [ 'tmp' ] do
+  chdir('tmp') do
     `wget -O initializr.zip 'http://www.initializr.com/builder?boot-hero&jquerymin&h5bp-iecond&h5bp-chromeframe&h5bp-analytics&h5bp-favicon&h5bp-appletouchicons&modernizrrespond&izr-emptyscript&boot-css&boot-scripts'`
     `unzip initializr.zip`
   end
@@ -39,25 +30,21 @@ end
 #
 # Setup files from HTML5BoilerPlate
 #
-def cp_from_initializr(file, dir)
+def cp_from_initializr(file, dir=nil)
   dest =
     if dir
       "gh-pages/#{dir}"
     else
       'gh-pages'
     end
-  FileUtils.cp("gh-pages/initializr/#{file}", dest, verbose: true)
-end
-
-file 'gh-pages/favicon.ico' => 'gh-pages/initializr' do
-  cp_from_initializr('favicon.ico')
+  FileUtils.cp("tmp/initializr/#{file}", dest, verbose: true)
 end
 
 directory 'gh-pages/css' => 'gh-pages'
 directory 'gh-pages/js' => 'gh-pages'
 directory 'gh-pages/js/vendor' => 'gh-pages/js'
 
-file 'gh-pages/favicon.ico' => 'gh-pages/initializr' do
+file 'gh-pages/favicon.ico' => 'tmp/initializr' do
   cp_from_initializr('favicon.ico')
 end
 
@@ -69,9 +56,9 @@ file 'gh-pages/css/bootstrap-theme.min.css' => 'gh-pages/css' do
   cp_from_initializr('css/bootstrap-theme.min.css', 'css')
 end
 
-file 'gh-pages/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' =>
+file 'gh-pages/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' =>
      'gh-pages/js/vendor' do
-  cp_from_initializr('js/vendor/modernizr-2.6.2-respond-1.1.0.min.js',
+  cp_from_initializr('js/vendor/modernizr-2.8.3-respond-1.4.2.min.js',
                      'js/vendor')
 end
 
