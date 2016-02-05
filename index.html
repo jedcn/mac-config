@@ -681,45 +681,20 @@ you want to have an application, say chrome, you run the command
 <code>boxen</code> and the application will "just" appear in your
 Applications folder.
 </p>
-
-<p>
-This allows you to replace visiting a website, downloading a
-<code>.dmg</code> file, and running an installer with writing a few lines of
-configuration and running boxen.
-</p>
-
-<p>
-However, you still have the ability to install an application
-manually, so which path should you choose?
-</p>
 </div>
 
-<ol class="org-ol"><li><a id="sec-1-2-3-1" name="sec-1-2-3-1"></a>Boxen vs. Manual Install<br  /><div class="outline-text-5" id="text-1-2-3-1">
+<ol class="org-ol"><li><a id="sec-1-2-3-1" name="sec-1-2-3-1"></a>Browsers<br  /><div class="outline-text-5" id="text-1-2-3-1">
 <p>
-Not all puppet modules are created equally. This is especially so
-when it comes to applications: some of them call out older
-versions of applications. These may no longer work, or there may
-be newer versions available.
-</p>
-
-<p>
-In some cases, you need to install an application via the
-AppStore to get the correctly licensed version of it. This
-happened to me with 1Password.
-</p>
-
-<p>
-I make a choice with each application between using boxen
-vs. installing by hand. In general, if I can get it through
-boxen, that's what I'd prefer. And when I'm using boxen, I
-strongly lean toward using brewcask.
+I use Chrome and Chrome Canary.
 </p>
 </div>
 </li>
 
-<li><a id="sec-1-2-3-2" name="sec-1-2-3-2"></a>Browsers<br  /><div class="outline-text-5" id="text-1-2-3-2">
+<li><a id="sec-1-2-3-2" name="sec-1-2-3-2"></a>Screen Saver<br  /><div class="outline-text-5" id="text-1-2-3-2">
 <p>
-I use Chrome and Chrome Canary.
+I've started using <a href="https://github.com/JohnCoates/Aerial">Aerial</a>. Boxen will install it, but you still
+need to open System Preferences -&gt; Desktop &amp; Screen Saver -&gt;
+Screen Saver, and select it.
 </p>
 </div>
 </li>
@@ -771,14 +746,6 @@ Here's the puppetry that handles my applications:
 }
 </code></pre>
 </div>
-
-
-<ul class="org-ul">
-<li><a href="https://github.com/JohnCoates/Aerial">Aerial</a> is a Screen Saver. Boxen will install it, but you still
-need to Open System Preferences -&gt; Desktop &amp; Screen Saver -&gt;
-Screen Saver, and set it up.
-</li>
-</ul>
 
 <p>
 The extracted version of this file is available in
