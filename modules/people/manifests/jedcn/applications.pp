@@ -8,4 +8,8 @@ class people::jedcn::applications {
     provider => 'brewcask',
     require  => File["/Users/${luser}/.hammerspoon"],
   }
+
+  package { 'aerial':
+    provider => 'brewcask',
+  }
 }

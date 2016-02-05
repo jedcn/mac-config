@@ -446,8 +446,17 @@
            provider => 'brewcask',
            require  => File["/Users/${luser}/.hammerspoon"],
          }
+
+         package { 'aerial':
+           provider => 'brewcask',
+         }
        }
      #+END_SRC
+
+
+     + [[https://github.com/JohnCoates/Aerial][Aerial]] is a Screen Saver. Boxen will install it, but you still
+       need to Open System Preferences -> Desktop & Screen Saver ->
+       Screen Saver, and set it up.
 
     The extracted version of this file is available in
     [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at
