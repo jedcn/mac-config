@@ -22,7 +22,7 @@
         <link rel="stylesheet" href="css/prism.css">
         <link rel="stylesheet" href="css/main.css">
 
-        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
         <script src="js/vendor/prism.js"></script>
     </head>
     <body>
@@ -495,6 +495,14 @@ understanding the following settings:
     position =&gt; 'Bottom Left',
     action =&gt; 'Put Display to Sleep'
   }
+  osx::dock::hot_corner { 'Start Screen Saver':
+    position =&gt; 'Top Left',
+    action =&gt; 'Start Screen Saver'
+  }
+  osx::dock::hot_corner { 'Mission Control':
+    position =&gt; 'Top Right',
+    action =&gt; 'Mission Control'
+  }
 
   # Make Developer Tools available in Safari (ie: right-click and see
   # Inspect Element)
@@ -756,9 +764,21 @@ Here's the puppetry that handles my applications:
     provider =&gt; 'brewcask',
     require  =&gt; File["/Users/${luser}/.hammerspoon"],
   }
+
+  package { 'aerial':
+    provider =&gt; 'brewcask',
+  }
 }
 </code></pre>
 </div>
+
+
+<ul class="org-ul">
+<li><a href="https://github.com/JohnCoates/Aerial">Aerial</a> is a Screen Saver. Boxen will install it, but you still
+need to Open System Preferences -&gt; Desktop &amp; Screen Saver -&gt;
+Screen Saver, and set it up.
+</li>
+</ul>
 
 <p>
 The extracted version of this file is available in
@@ -1415,7 +1435,7 @@ to <code>prism.js</code> and <code>prism.css</code>. I manually downloaded these
 	&lt;link rel="stylesheet" href="css/prism.css"&gt;
 	&lt;link rel="stylesheet" href="css/main.css"&gt;
 
-	&lt;script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"&gt;&lt;/script&gt;
+	&lt;script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"&gt;&lt;/script&gt;
 	&lt;script src="js/vendor/prism.js"&gt;&lt;/script&gt;
     &lt;/head&gt;
     &lt;body&gt;
@@ -1455,10 +1475,7 @@ web content that serves as a website.
 </p>
 
 <p>
-This static content will be hosted on Github Pages, and so, the
-following makes it so that the directory <code>gh-pages/</code> is created
-and the contents of that directory are a single branch from this
-same repository.
+This static content will be hosted on Github Pages.
 </p>
 
 <p>
@@ -1466,6 +1483,11 @@ There's also a part that knows about <a href="http://www.initializr.com">http://
 and how to download a copy of HTML5 Boiler Plate. This comes in a
 ZIP. These instructions know how to unpack the ZIP and put parts
 of it in the right places.
+</p>
+
+<p>
+To be consistent, I should've set up something that knows about
+downloading primer.
 </p>
 
 <p>
@@ -1484,18 +1506,8 @@ task 'build-gh-pages' =&gt; [ 'gh-pages',
 			   'gh-pages-supporting-content',
 			   'gh-pages/index.html' ]
 
-#
-# Setup ./gh-pages as a git clone with gh-pages checked out.
-#
-directory 'gh-pages' do
-  repo = 'https://github.com/jedcn/mac-config.git'
-  branch = 'gh-pages'
-  dir = branch
-  args = "#{repo} --branch #{branch} --single-branch ./#{dir}"
-  command = "git clone #{args}"
-  stdout, stderr, _status = run(command)
-  puts stderr, stdout
-end
+directory 'gh-pages'
+directory 'tmp'
 
 #
 # Extract supporting content from HTML5BoilerPlate
@@ -1503,12 +1515,13 @@ end
 task 'gh-pages-supporting-content' =&gt; [ 'gh-pages/favicon.ico',
 					'gh-pages/css/bootstrap.min.css',
 					'gh-pages/css/bootstrap-theme.min.css',
-					'gh-pages/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' ]
+					'gh-pages/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' ]
 
-CLEAN.include('gh-pages/initializr.zip')
-CLEAN.include('gh-pages/initializr')
-file 'gh-pages/initializr' do
-  chdir('gh-pages') do
+CLEAN.include('tmp/initializr.zip')
+CLEAN.include('tmp/initializr')
+
+file 'tmp/initializr' =&gt; [ 'tmp' ] do
+  chdir('tmp') do
     `wget -O initializr.zip 'http://www.initializr.com/builder?boot-hero&amp;jquerymin&amp;h5bp-iecond&amp;h5bp-chromeframe&amp;h5bp-analytics&amp;h5bp-favicon&amp;h5bp-appletouchicons&amp;modernizrrespond&amp;izr-emptyscript&amp;boot-css&amp;boot-scripts'`
     `unzip initializr.zip`
   end
@@ -1517,25 +1530,21 @@ end
 #
 # Setup files from HTML5BoilerPlate
 #
-def cp_from_initializr(file, dir)
+def cp_from_initializr(file, dir=nil)
   dest =
     if dir
       "gh-pages/#{dir}"
     else
       'gh-pages'
     end
-  FileUtils.cp("gh-pages/initializr/#{file}", dest, verbose: true)
-end
-
-file 'gh-pages/favicon.ico' =&gt; 'gh-pages/initializr' do
-  cp_from_initializr('favicon.ico')
+  FileUtils.cp("tmp/initializr/#{file}", dest, verbose: true)
 end
 
 directory 'gh-pages/css' =&gt; 'gh-pages'
 directory 'gh-pages/js' =&gt; 'gh-pages'
 directory 'gh-pages/js/vendor' =&gt; 'gh-pages/js'
 
-file 'gh-pages/favicon.ico' =&gt; 'gh-pages/initializr' do
+file 'gh-pages/favicon.ico' =&gt; 'tmp/initializr' do
   cp_from_initializr('favicon.ico')
 end
 
@@ -1547,9 +1556,9 @@ file 'gh-pages/css/bootstrap-theme.min.css' =&gt; 'gh-pages/css' do
   cp_from_initializr('css/bootstrap-theme.min.css', 'css')
 end
 
-file 'gh-pages/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' =&gt;
+file 'gh-pages/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' =&gt;
      'gh-pages/js/vendor' do
-  cp_from_initializr('js/vendor/modernizr-2.6.2-respond-1.1.0.min.js',
+  cp_from_initializr('js/vendor/modernizr-2.8.3-respond-1.4.2.min.js',
 		     'js/vendor')
 end
 
