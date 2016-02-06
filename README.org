@@ -304,7 +304,8 @@
     It is worth noting that you don't have to give up on
     whatever-you-were-using-for-creating-links before. They can live
     side-by-side, and you can keep using your former system on
-    machines without boxen.
+    machines without boxen. I used to use both [[https://github.com/andsens/homeshick][homeshick]] and boxen,
+    but have since switched to only boxen.
 
     #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/repositories.pp
       class people::jedcn::repositories {

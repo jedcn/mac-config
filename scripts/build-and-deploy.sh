@@ -14,7 +14,6 @@ BUILD_DIR=gh-pages
 #
 # Create the static site in ./gh-pages
 rake build-gh-pages
-rake clean
 
 #
 # What branch serves as the source for Github Pages for this repo?
