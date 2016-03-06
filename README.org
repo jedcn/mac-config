@@ -1,512 +1,509 @@
-* Mac Config
+* Introduction
 
-** Introduction
+  This is the config for my Mac.
 
-   This is the config for my Mac.
+  I like for certain applications to be installed.
 
-   I like for certain applications to be installed.
+  I want my dot files to be automatically setup.
 
-   I want my dot files to be automatically setup.
+  There are certain operating system settings I want one way or
+  another.
 
-   There are certain operating system settings I want one way or
-   another.
+* Overview
 
-** Overview
+  It is based in [[https://github.com/boxen/our-boxen/#our-boxen][Boxen]]. The configuration can be reified with a single
+  command.
 
-   It is based in [[https://github.com/boxen/our-boxen/#our-boxen][Boxen]]. The configuration can be reified with a
-   single command.
+  When it comes to applications this essentially lists [[http://brew.sh/][Homebrew]] and
+  [[https://caskroom.github.io/][Homebrew Cask]] packages.
 
-   When it comes to applications this essentially lists [[http://brew.sh/][Homebrew]] and
-   [[https://caskroom.github.io/][Homebrew Cask]] packages.
+  Some things, like [[https://github.com/robbyrussell/oh-my-zsh][oh-my-zsh]], are installed by cloning a repository
+  and setting up links. Boxen can do that, too. This approach also
+  works for setting up dot-files.
+
+  Boxen can be extended with modules, and an example of such a module
+  is one that allows you to control OS settings such as mapping the
+  =CAPS LOCK= key to =CONTROL=.
 
-   Some things, like [[https://github.com/robbyrussell/oh-my-zsh][oh-my-zsh]], are installed by cloning a repository
-   and setting up links. Boxen can do that, too. This approach also
-   works for setting up dot-files.
+* OSX Settings
 
-   Boxen can be extended with modules, and an example of such a module
-   is one that allows you to control OS settings such as mapping the
-   =CAPS LOCK= key to =CONTROL=.
+  The following settings are made possible via [[https://github.com/boxen/puppet-osx][puppet-osx]].
 
-** OSX Settings
+  #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/osx_config.pp
+    class people::jedcn::osx_config {
 
-   The following settings are made possible via [[https://github.com/boxen/puppet-osx][puppet-osx]].
+      # ZSH
+      osx_chsh { $::luser:
+        shell   => '/opt/boxen/homebrew/bin/zsh',
+        require => Package['zsh'],
+      }
 
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/osx_config.pp
-     class people::jedcn::osx_config {
+      file_line { 'add zsh to /etc/shells':
+        path    => '/etc/shells',
+        line    => "${boxen::config::homebrewdir}/bin/zsh",
+        require => Package['zsh'],
+      }
 
-       # ZSH
-       osx_chsh { $::luser:
-         shell   => '/opt/boxen/homebrew/bin/zsh',
-         require => Package['zsh'],
-       }
+      # Dock Settings
+      include osx::dock::autohide
+      include osx::dock::clear_dock
 
-       file_line { 'add zsh to /etc/shells':
-         path    => '/etc/shells',
-         line    => "${boxen::config::homebrewdir}/bin/zsh",
-         require => Package['zsh'],
-       }
+      # Screen Zoom
+      include osx::universal_access::ctrl_mod_zoom
+      include osx::universal_access::enable_scrollwheel_zoom
+
+      # Key Repeat
+      class { 'osx::global::key_repeat_delay':
+        delay => 10
+      }
+      include osx::global::key_repeat_rate
+
+      # Capslock becomes Control
+      include osx::keyboard::capslock_to_control
+
+      # Hot Corners
+      osx::dock::hot_corner { 'Show the desktop':
+        position => 'Bottom Right',
+        action => 'Desktop'
+      }
+      osx::dock::hot_corner { 'Put Display to Sleep':
+        position => 'Bottom Left',
+        action => 'Put Display to Sleep'
+      }
+      osx::dock::hot_corner { 'Start Screen Saver':
+        position => 'Top Left',
+        action => 'Start Screen Saver'
+      }
+      osx::dock::hot_corner { 'Mission Control':
+        position => 'Top Right',
+        action => 'Mission Control'
+      }
 
-       # Dock Settings
-       include osx::dock::autohide
-       include osx::dock::clear_dock
+      # Make Developer Tools available in Safari (ie: right-click and see
+      # Inspect Element)
+      include osx::safari::enable_developer_mode
+
+      # Recovery Message
+      $recovery_owner = "This computer belongs to Jed Northridge."
+      $recovery_contact = "If found, please contact jedcn@jedcn.com or 305-985-3326."
+      osx::recovery_message { "${recovery_owner} ${recovery_contact}": }
+    }
+  #+END_SRC
 
-       # Screen Zoom
-       include osx::universal_access::ctrl_mod_zoom
-       include osx::universal_access::enable_scrollwheel_zoom
+  See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/osx_config.pp][modules/people/manifests/jedcn/osx_config.pp]].
 
-       # Key Repeat
-       class { 'osx::global::key_repeat_delay':
-         delay => 10
-       }
-       include osx::global::key_repeat_rate
-
-       # Capslock becomes Control
-       include osx::keyboard::capslock_to_control
+* Repositories and Dotfiles
 
-       # Hot Corners
-       osx::dock::hot_corner { 'Show the desktop':
-         position => 'Bottom Right',
-         action => 'Desktop'
-       }
-       osx::dock::hot_corner { 'Put Display to Sleep':
-         position => 'Bottom Left',
-         action => 'Put Display to Sleep'
-       }
-       osx::dock::hot_corner { 'Start Screen Saver':
-         position => 'Top Left',
-         action => 'Start Screen Saver'
-       }
-       osx::dock::hot_corner { 'Mission Control':
-         position => 'Top Right',
-         action => 'Mission Control'
-       }
+  Boxen can clone repositories:
 
-       # Make Developer Tools available in Safari (ie: right-click and see
-       # Inspect Element)
-       include osx::safari::enable_developer_mode
-
-       # Recovery Message
-       $recovery_owner = "This computer belongs to Jed Northridge."
-       $recovery_contact = "If found, please contact jedcn@jedcn.com or 305-985-3326."
-       osx::recovery_message { "${recovery_owner} ${recovery_contact}": }
-     }
-   #+END_SRC
+  #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/repositories.pp
+    class people::jedcn::repositories {
 
-   See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/osx_config.pp][modules/people/manifests/jedcn/osx_config.pp]].
+      $my_init_src = '/opt/init-src'
 
-**  Repositories and Dotfiles
+      file { $my_init_src:
+        ensure => directory,
+        mode   => 0644,
+      }
 
-   Boxen can clone repositories:
+      repository { "${my_init_src}/dot-org-files":
+        source  => 'jedcn/dot-org-files',
+        require => File[$my_init_src]
+      }
 
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/repositories.pp
-     class people::jedcn::repositories {
+      repository { "${my_init_src}/oh-my-zsh":
+        source  => 'robbyrussell/oh-my-zsh',
+        require => File[$my_init_src]
+      }
 
-       $my_init_src = '/opt/init-src'
+      repository { "${my_init_src}/cask":
+        source  => 'cask/cask',
+        require => File[$my_init_src]
+      }
 
-       file { $my_init_src:
-         ensure => directory,
-         mode   => 0644,
-       }
+    }
+  #+END_SRC
 
-       repository { "${my_init_src}/dot-org-files":
-         source  => 'jedcn/dot-org-files',
-         require => File[$my_init_src]
-       }
+  See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/repositories.pp][modules/people/manifests/jedcn/repositories.pp]].
 
-       repository { "${my_init_src}/oh-my-zsh":
-         source  => 'robbyrussell/oh-my-zsh',
-         require => File[$my_init_src]
-       }
+  Boxen can setup links to cloned repositories:
 
-       repository { "${my_init_src}/cask":
-         source  => 'cask/cask',
-         require => File[$my_init_src]
-       }
+  #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/links.pp
+    class people::jedcn::links {
 
-     }
-   #+END_SRC
+      $my_init_src = '/opt/init-src'
 
-   See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/repositories.pp][modules/people/manifests/jedcn/repositories.pp]].
+      file { "/Users/${luser}/.zshrc":
+        ensure  => link,
+        mode    => '0644',
+        target  => "${my_init_src}/dot-org-files/home/.zshrc",
+        require => Repository["${my_init_src}/dot-org-files"],
+      }
 
-   Boxen can setup links to cloned repositories:
+      file { "/Users/${luser}/.oh-my-zsh":
+        ensure  => link,
+        target  => "${my_init_src}/oh-my-zsh",
+        require => Repository["${my_init_src}/oh-my-zsh"],
+      }
 
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/links.pp
-     class people::jedcn::links {
+      file { "/Users/${luser}/.cask":
+        ensure  => link,
+        target  => "${my_init_src}/cask",
+        require => Repository["${my_init_src}/cask"],
+      }
 
-       $my_init_src = '/opt/init-src'
+      file { "/Users/${luser}/.hammerspoon":
+        ensure  => link,
+        target  => "${my_init_src}/dot-org-files/home/.hammerspoon",
+        require => Repository["${my_init_src}/dot-org-files"],
+      }
+    }
+  #+END_SRC
 
-       file { "/Users/${luser}/.zshrc":
-         ensure  => link,
-         mode    => '0644',
-         target  => "${my_init_src}/dot-org-files/home/.zshrc",
-         require => Repository["${my_init_src}/dot-org-files"],
-       }
+  See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/repositories.pp][modules/people/manifests/jedcn/links.pp]].
 
-       file { "/Users/${luser}/.oh-my-zsh":
-         ensure  => link,
-         target  => "${my_init_src}/oh-my-zsh",
-         require => Repository["${my_init_src}/oh-my-zsh"],
-       }
+* Applications
 
-       file { "/Users/${luser}/.cask":
-         ensure  => link,
-         target  => "${my_init_src}/cask",
-         require => Repository["${my_init_src}/cask"],
-       }
+  I'm using Homebrew Cask for applications. The only exception is
+  [[https://github.com/boxen/puppet-chrome][puppet-crome]].
 
-       file { "/Users/${luser}/.hammerspoon":
-         ensure  => link,
-         target  => "${my_init_src}/dot-org-files/home/.hammerspoon",
-         require => Repository["${my_init_src}/dot-org-files"],
-       }
-     }
-   #+END_SRC
+  #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp
+    class people::jedcn::applications {
+      include chrome
+      include chrome::canary
 
-   See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/repositories.pp][modules/people/manifests/jedcn/links.pp]].
+      include brewcask
+      package { 'hammerspoon':
+        provider => 'brewcask',
+        require  => File["/Users/${luser}/.hammerspoon"],
+      }
 
-** Applications
+      package { 'aerial':
+        provider => 'brewcask',
+      }
+    }
+  #+END_SRC
 
-   I'm using Homebrew Cask for applications. The only exception is
-   [[https://github.com/boxen/puppet-chrome][puppet-crome]].
+  See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/applications.pp][modules/people/manifests/jedcn/applications.pp]].
 
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp
-     class people::jedcn::applications {
-       include chrome
-       include chrome::canary
+  Notes:
 
-       include brewcask
-       package { 'hammerspoon':
-         provider => 'brewcask',
-         require  => File["/Users/${luser}/.hammerspoon"],
-       }
+** Screen Saver
 
-       package { 'aerial':
-         provider => 'brewcask',
-       }
-     }
-   #+END_SRC
+  I am using [[https://github.com/JohnCoates/Aerial][Aerial]].
 
-   See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/applications.pp][modules/people/manifests/jedcn/applications.pp]].
-
-   Notes:
+  After a boxen run, you still need to open System Preferences ->
+  Desktop & Screen Saver -> Screen Saver, and select it.
 
-*** Screen Saver
+** Window Management
 
-    I've started using [[https://github.com/JohnCoates/Aerial][Aerial]].
+   I use Hammerspoon for window management.
 
-    After a boxen run, you still need to open System Preferences ->
-    Desktop & Screen Saver -> Screen Saver, and select it.
+   After a boxen run, you still need to launch Hammerspoon and:
 
-*** Window Management
+    + Enable Accessibility
+    + Select Launch Hammerspoon on Login
+    + Deselect Show Dock Icon
+    + Deselect Send Crash Data
 
-    I use Hammerspoon for window management.
+* Homebrew
 
-    After a boxen run, you still need to launch Hammerspoon and:
+  These are the packages I like:
 
-     + Enable Accessibility
-     + Select Launch Hammerspoon on Login
-     + Deselect Show Dock Icon
-     + Deselect Send Crash Data
+  #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/homebrew.pp
+    class people::jedcn::homebrew {
+      $homebrew_packages = [
+                            'ag',
+                            'tmux',
+                            'tree',
+                            'wget',
+                            'zsh',
+                            ]
 
-** Homebrew
+      package { $homebrew_packages: }
 
-   These are the packages I like:
+      package { 'cask':
+        ensure  => present,
+        require => Package['emacs'],
+      }
 
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/homebrew.pp
-     class people::jedcn::homebrew {
-       $homebrew_packages = [
-                             'ag',
-                             'tmux',
-                             'tree',
-                             'wget',
-                             'zsh',
-                             ]
+      package { 'emacs':
+        ensure          => present,
+        install_options => [
+          '--cocoa',
+          '--srgb'
+        ],
+      }
+    }
+  #+END_SRC
 
-       package { $homebrew_packages: }
+  Notes:
 
-       package { 'cask':
-         ensure  => present,
-         require => Package['emacs'],
-       }
+  + I install emacs with options that I learned about in [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/][this post]].
 
-       package { 'emacs':
-         ensure          => present,
-         install_options => [
-           '--cocoa',
-           '--srgb'
-         ],
-       }
-     }
-   #+END_SRC
+  See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/homebrew.pp][modules/people/manifests/jedcn/homebrew.pp]].
 
-   Notes:
-
-   + I install emacs with options that I learned about in [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/][this post]].
-
-   See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/homebrew.pp][modules/people/manifests/jedcn/homebrew.pp]].
-
-** Git Configuration
-
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/git.pp
-     class people::jedcn::git {
-       git::config::global { 'core.editor':
-         value  => '/opt/boxen/homebrew/bin/emacsclient'
-       }
-       git::config::global { 'push.default':
-         value  => 'simple'
-       }
-     }
-   #+END_SRC
-
-   See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/git.pp][modules/people/manifests/jedcn/git.pp]].
-
-** One Concern per File
-
-   Content at =modules/people/manifests/jedcn.pp= will only run if the
-   current user is jedcn.
-
-   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn.pp
-     class people::jedcn {
-       include people::jedcn::applications
-       include people::jedcn::git
-       include people::jedcn::homebrew
-       include people::jedcn::links
-       include people::jedcn::osx_config
-       include people::jedcn::repositories
-     }
-   #+END_SRC
-
-    See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn.pp][modules/people/manifests/jedcn.pp]].
-
-** Bootstrapping
-
-   #+BEGIN_SRC sh
-     xcode-select --install
-     sudo mkdir -p /opt/boxen
-     sudo chown ${USER}:staff /opt/boxen
-     git clone https://github.com/jedcn/mac-config /opt/boxen/repo
-     /opt/boxen/repo/script/boxen
-   #+END_SRC
-
-** Literate Programming
-
-   *This* is an experiment in using [[http://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] to describe
-   how I configure my computer.
-
-   A single file generates much of my boxen configuration and this
-   website.
-
-   It is available here
-   https://github.com/jedcn/mac-config/blob/master/README.org.
-
-   Here are the instructions:
-
-   #+BEGIN_SRC ruby :tangle ./Rakefile
-     def run(c)
-       require 'open3'
-       _stdin, stdout, stderr = Open3.popen3(c)
-       [ stdout.gets, stderr.gets, $?.to_i ]
-     end
-
-     task :emacs_installed do
-       location = `which emacs`
-       raise 'Unable to find emacs' if location.empty?
-     end
-
-     task default: :tangle
-   #+END_SRC
-
-   See [[https://github.com/jedcn/mac-config/blob/master/Rakefile][Rakefile]].
-
-   #+BEGIN_SRC ruby :tangle ./rakelib/tangle.rake
-     def tangle_file_using_emacs(file)
-       args = '--no-init-file --no-site-file --batch'
-       tangle_elisp =
-         %Q|(progn (require 'ob-tangle) (org-babel-tangle-file \\"#{file}\\"))|
-       command = %Q|emacs #{args} --eval "#{tangle_elisp}"|
-       _stdout, stderr, status = run(command)
-       puts stderr unless status == 0
-     end
-
-     desc 'tangle literate source into puppet'
-     task :tangle => :emacs_installed do
-       tangle_file_using_emacs('README.org')
-     end
-   #+END_SRC
-
-   See [[https://github.com/jedcn/mac-config/blob/master/rakelib/tangle.rake][rakelib/tangle.rake]].
-
-   When it comes to the index.html of the website:
-
-   #+BEGIN_SRC html :tangle ./rakelib/index.html.erb
-     <!DOCTYPE html>
-     <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-     <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-     <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-     <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-         <head>
-             <meta charset="utf-8">
-             <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-             <title>Mac Config</title>
-             <meta name="description" content="">
-             <meta name="viewport" content="width=device-width, initial-scale=1">
-
-             <link rel="stylesheet" href="css/bootstrap.min.css">
-             <style>
-                 body {
-                     padding-top: 50px;
-                     padding-bottom: 20px;
-                 }
-             </style>
-             <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-             <link rel="stylesheet" href="css/prism.css">
-             <link rel="stylesheet" href="css/main.css">
-
-             <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-             <script src="js/vendor/prism.js"></script>
-         </head>
-         <body>
-             <!--[if lt IE 7]>
-                 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-             <![endif]-->
-
-         <div class="container">
-
-           <%= content %>
-
-           <hr>
-
-           <footer>
-             <p>
-               <img title=":money_with_wings:" alt=":money_with_wings:"
-                    src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f4b8.png">
-             </p>
-           </footer>
-         </div> <!-- /container -->
-         </body>
-     </html>
-   #+END_SRC
-
-   See [[https://github.com/jedcn/mac-config/blob/master/rakelib/index.html.erb][rakelib/index.html.erb]].
-
-   When it comes to building up a Github Pages site (supporting js,
-   css):
-
-   #+BEGIN_SRC ruby :tangle ./rakelib/ghpages.rake
-     require 'rake/clean'
-
-     desc 'Create Github Pages content'
-     task 'build-gh-pages' => [ 'gh-pages',
-                                'gh-pages-supporting-content',
-                                'gh-pages/index.html' ]
-
-     directory 'gh-pages'
-     directory 'tmp'
-
-     #
-     # Extract supporting content from HTML5BoilerPlate
-     #
-     task 'gh-pages-supporting-content' => [ 'gh-pages/favicon.ico',
-                                             'gh-pages/css/bootstrap.min.css',
-                                             'gh-pages/css/bootstrap-theme.min.css',
-                                             'gh-pages/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' ]
-
-     CLEAN.include('tmp/initializr.zip')
-     CLEAN.include('tmp/initializr')
-
-     file 'tmp/initializr' => [ 'tmp' ] do
-       chdir('tmp') do
-         `wget -O initializr.zip 'http://www.initializr.com/builder?boot-hero&jquerymin&h5bp-iecond&h5bp-chromeframe&h5bp-analytics&h5bp-favicon&h5bp-appletouchicons&modernizrrespond&izr-emptyscript&boot-css&boot-scripts'`
-         `unzip initializr.zip`
-       end
-     end
-
-     #
-     # Setup files from HTML5BoilerPlate
-     #
-     def cp_from_initializr(file, dir=nil)
-       dest =
-         if dir
-           "gh-pages/#{dir}"
-         else
-           'gh-pages'
-         end
-       FileUtils.cp("tmp/initializr/#{file}", dest, verbose: true)
-     end
-
-     directory 'gh-pages/css' => 'gh-pages'
-     directory 'gh-pages/js' => 'gh-pages'
-     directory 'gh-pages/js/vendor' => 'gh-pages/js'
-
-     file 'gh-pages/favicon.ico' => 'tmp/initializr' do
-       cp_from_initializr('favicon.ico')
-     end
-
-     file 'gh-pages/css/bootstrap.min.css' => 'gh-pages/css' do
-       cp_from_initializr('css/bootstrap.min.css', 'css')
-     end
-
-     file 'gh-pages/css/bootstrap-theme.min.css' => 'gh-pages/css' do
-       cp_from_initializr('css/bootstrap-theme.min.css', 'css')
-     end
-
-     file 'gh-pages/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' =>
-          'gh-pages/js/vendor' do
-       cp_from_initializr('js/vendor/modernizr-2.8.3-respond-1.4.2.min.js',
-                          'js/vendor')
-     end
-
-     directory 'gh-pages/css' => 'gh-pages'
-
-     file 'README.html' => :emacs_installed do
-       export_html_using_emacs('README.org')
-     end
-
-     file 'gh-pages/index.html' => [ 'gh-pages', 'README.html' ] do
-
-       require 'erb'
-       require 'ostruct'
-
-       class ContentWrapper < OpenStruct
-         def render(template)
-           ERB.new(template).result(binding)
-         end
-       end
-
-       template = File.read('rakelib/index.html.erb')
-
-       content = File.read('README.html')
-
-       cw = ContentWrapper.new({ content: content })
-       File.open('gh-pages/index.html', 'w') do |file|
-         file.write(cw.render(template))
-       end
-
-       rendered = File.read('gh-pages/index.html')
-       ruby = "<pre>\n<code class='language-ruby'>"
-       rendered = rendered.gsub('<pre class="src src-puppet">', ruby)
-       rendered = rendered.gsub('<pre class="src src-ruby">', ruby)
-
-       html = "<pre>\n<code class='language-markup'>"
-       rendered = rendered.gsub('<pre class="src src-html">', html)
-
-       rendered = rendered.gsub('</pre>', '</code></pre>')
-       File.open('gh-pages/index.html', 'w') do |file|
-         file.write(rendered)
-       end
-       rm 'README.html', verbose: true
-     end
-
-     def export_html_using_emacs(file)
-       args = '--no-init-file --no-site-file --batch'
-       tangle_elisp =
-         %Q|(progn (require 'org) (find-file (expand-file-name \\"#{file}\\" \\"`pwd`\\")) (org-html-export-to-html nil nil nil t))|
-       command = %Q|emacs #{args} --eval "#{tangle_elisp}"|
-       stdout, stderr, _status = run(command)
-       puts stderr
-       puts stdout
-     end
-
-   #+END_SRC
-
-   See [[https://github.com/jedcn/mac-config/blob/master/rakelib/ghpages.rake][rakelib/ghpages.rake]].
+* Git Configuration
+
+  #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/git.pp
+    class people::jedcn::git {
+      git::config::global { 'core.editor':
+        value  => '/opt/boxen/homebrew/bin/emacsclient'
+      }
+      git::config::global { 'push.default':
+        value  => 'simple'
+      }
+    }
+  #+END_SRC
+
+  See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/git.pp][modules/people/manifests/jedcn/git.pp]].
+
+* One Concern per File
+
+  Content at =modules/people/manifests/jedcn.pp= will only run if the
+  current user is jedcn.
+
+  #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn.pp
+    class people::jedcn {
+      include people::jedcn::applications
+      include people::jedcn::git
+      include people::jedcn::homebrew
+      include people::jedcn::links
+      include people::jedcn::osx_config
+      include people::jedcn::repositories
+    }
+  #+END_SRC
+
+  See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn.pp][modules/people/manifests/jedcn.pp]].
+
+* Bootstrapping
+
+  #+BEGIN_SRC sh
+    xcode-select --install
+    sudo mkdir -p /opt/boxen
+    sudo chown ${USER}:staff /opt/boxen
+    git clone https://github.com/jedcn/mac-config /opt/boxen/repo
+    /opt/boxen/repo/script/boxen
+  #+END_SRC
+
+* Literate Programming
+
+  *This* is an experiment in using [[http://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] to describe
+  how I configure my computer.
+
+  A single file generates much of my boxen configuration and this
+  website.
+
+  It is available here
+  https://github.com/jedcn/mac-config/blob/master/README.org.
+
+  Here are the instructions:
+
+  #+BEGIN_SRC ruby :tangle ./Rakefile
+    def run(c)
+      require 'open3'
+      _stdin, stdout, stderr = Open3.popen3(c)
+      [ stdout.gets, stderr.gets, $?.to_i ]
+    end
+
+    task :emacs_installed do
+      location = `which emacs`
+      raise 'Unable to find emacs' if location.empty?
+    end
+
+    task default: :tangle
+  #+END_SRC
+
+  See [[https://github.com/jedcn/mac-config/blob/master/Rakefile][Rakefile]].
+
+  #+BEGIN_SRC ruby :tangle ./rakelib/tangle.rake
+    def tangle_file_using_emacs(file)
+      args = '--no-init-file --no-site-file --batch'
+      tangle_elisp =
+        %Q|(progn (require 'ob-tangle) (org-babel-tangle-file \\"#{file}\\"))|
+      command = %Q|emacs #{args} --eval "#{tangle_elisp}"|
+      _stdout, stderr, status = run(command)
+      puts stderr unless status == 0
+    end
+
+    desc 'tangle literate source into puppet'
+    task :tangle => :emacs_installed do
+      tangle_file_using_emacs('README.org')
+    end
+  #+END_SRC
+
+  See [[https://github.com/jedcn/mac-config/blob/master/rakelib/tangle.rake][rakelib/tangle.rake]].
+
+  When it comes to the index.html of the website:
+
+  #+BEGIN_SRC html :tangle ./rakelib/index.html.erb
+    <!DOCTYPE html>
+    <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+    <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+    <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+    <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+            <title>Mac Config</title>
+            <meta name="description" content="">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+
+            <link rel="stylesheet" href="css/bootstrap.min.css">
+            <style>
+                body {
+                    padding-top: 50px;
+                    padding-bottom: 20px;
+                }
+            </style>
+            <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+            <link rel="stylesheet" href="css/prism.css">
+            <link rel="stylesheet" href="css/main.css">
+
+            <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+            <script src="js/vendor/prism.js"></script>
+        </head>
+        <body>
+            <!--[if lt IE 7]>
+                <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+            <![endif]-->
+
+        <div class="container">
+
+          <%= content %>
+
+          <hr>
+
+          <footer>
+            <p>
+              <img title=":money_with_wings:" alt=":money_with_wings:"
+                   src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f4b8.png">
+            </p>
+          </footer>
+        </div> <!-- /container -->
+        </body>
+    </html>
+  #+END_SRC
+
+  See [[https://github.com/jedcn/mac-config/blob/master/rakelib/index.html.erb][rakelib/index.html.erb]].
+
+  When it comes to building up a Github Pages site (supporting js,
+  css):
+
+  #+BEGIN_SRC ruby :tangle ./rakelib/ghpages.rake
+    require 'rake/clean'
+
+    desc 'Create Github Pages content'
+    task 'build-gh-pages' => [ 'gh-pages',
+                               'gh-pages-supporting-content',
+                               'gh-pages/index.html' ]
+
+    directory 'gh-pages'
+    directory 'tmp'
+
+    #
+    # Extract supporting content from HTML5BoilerPlate
+    #
+    task 'gh-pages-supporting-content' => [ 'gh-pages/favicon.ico',
+                                            'gh-pages/css/bootstrap.min.css',
+                                            'gh-pages/css/bootstrap-theme.min.css',
+                                            'gh-pages/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' ]
+
+    CLEAN.include('tmp/initializr.zip')
+    CLEAN.include('tmp/initializr')
+
+    file 'tmp/initializr' => [ 'tmp' ] do
+      chdir('tmp') do
+        `wget -O initializr.zip 'http://www.initializr.com/builder?boot-hero&jquerymin&h5bp-iecond&h5bp-chromeframe&h5bp-analytics&h5bp-favicon&h5bp-appletouchicons&modernizrrespond&izr-emptyscript&boot-css&boot-scripts'`
+        `unzip initializr.zip`
+      end
+    end
+
+    #
+    # Setup files from HTML5BoilerPlate
+    #
+    def cp_from_initializr(file, dir=nil)
+      dest =
+        if dir
+          "gh-pages/#{dir}"
+        else
+          'gh-pages'
+        end
+      FileUtils.cp("tmp/initializr/#{file}", dest, verbose: true)
+    end
+
+    directory 'gh-pages/css' => 'gh-pages'
+    directory 'gh-pages/js' => 'gh-pages'
+    directory 'gh-pages/js/vendor' => 'gh-pages/js'
+
+    file 'gh-pages/favicon.ico' => 'tmp/initializr' do
+      cp_from_initializr('favicon.ico')
+    end
+
+    file 'gh-pages/css/bootstrap.min.css' => 'gh-pages/css' do
+      cp_from_initializr('css/bootstrap.min.css', 'css')
+    end
+
+    file 'gh-pages/css/bootstrap-theme.min.css' => 'gh-pages/css' do
+      cp_from_initializr('css/bootstrap-theme.min.css', 'css')
+    end
+
+    file 'gh-pages/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' =>
+         'gh-pages/js/vendor' do
+      cp_from_initializr('js/vendor/modernizr-2.8.3-respond-1.4.2.min.js',
+                         'js/vendor')
+    end
+
+    directory 'gh-pages/css' => 'gh-pages'
+
+    file 'README.html' => :emacs_installed do
+      export_html_using_emacs('README.org')
+    end
+
+    file 'gh-pages/index.html' => [ 'gh-pages', 'README.html' ] do
+
+      require 'erb'
+      require 'ostruct'
+
+      class ContentWrapper < OpenStruct
+        def render(template)
+          ERB.new(template).result(binding)
+        end
+      end
+
+      template = File.read('rakelib/index.html.erb')
+
+      content = File.read('README.html')
+
+      cw = ContentWrapper.new({ content: content })
+      File.open('gh-pages/index.html', 'w') do |file|
+        file.write(cw.render(template))
+      end
+
+      rendered = File.read('gh-pages/index.html')
+      ruby = "<pre>\n<code class='language-ruby'>"
+      rendered = rendered.gsub('<pre class="src src-puppet">', ruby)
+      rendered = rendered.gsub('<pre class="src src-ruby">', ruby)
+
+      html = "<pre>\n<code class='language-markup'>"
+      rendered = rendered.gsub('<pre class="src src-html">', html)
+
+      rendered = rendered.gsub('</pre>', '</code></pre>')
+      File.open('gh-pages/index.html', 'w') do |file|
+        file.write(rendered)
+      end
+      rm 'README.html', verbose: true
+    end
+
+    def export_html_using_emacs(file)
+      args = '--no-init-file --no-site-file --batch'
+      tangle_elisp =
+        %Q|(progn (require 'org) (find-file (expand-file-name \\"#{file}\\" \\"`pwd`\\")) (org-html-export-to-html nil nil nil t))|
+      command = %Q|emacs #{args} --eval "#{tangle_elisp}"|
+      stdout, stderr, _status = run(command)
+      puts stderr
+      puts stdout
+    end
+  #+END_SRC
+
+  See [[https://github.com/jedcn/mac-config/blob/master/rakelib/ghpages.rake][rakelib/ghpages.rake]].
