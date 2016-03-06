@@ -299,7 +299,7 @@
 
   Here are the instructions:
 
-  #+BEGIN_SRC ruby :tangle ./Rakefile
+  #+BEGIN_SRC ruby :tangle ../Rakefile
     def run(c)
       require 'open3'
       _stdin, stdout, stderr = Open3.popen3(c)
@@ -316,7 +316,7 @@
 
   See [[https://github.com/jedcn/mac-config/blob/master/Rakefile][Rakefile]].
 
-  #+BEGIN_SRC ruby :tangle ./rakelib/tangle.rake
+  #+BEGIN_SRC ruby :tangle ../rakelib/tangle.rake
     def tangle_file_using_emacs(file)
       args = '--no-init-file --no-site-file --batch'
       tangle_elisp =
@@ -328,7 +328,7 @@
 
     desc 'tangle literate source into puppet'
     task :tangle => :emacs_installed do
-      tangle_file_using_emacs('README.org')
+      tangle_file_using_emacs('literate/README.org')
     end
   #+END_SRC
 
@@ -336,7 +336,7 @@
 
   When it comes to the index.html of the website:
 
-  #+BEGIN_SRC html :tangle ./rakelib/index.html.erb
+  #+BEGIN_SRC html :tangle ../rakelib/index.html.erb
     <!DOCTYPE html>
     <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
     <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -390,7 +390,7 @@
   When it comes to building up a Github Pages site (supporting js,
   css):
 
-  #+BEGIN_SRC ruby :tangle ./rakelib/ghpages.rake
+  #+BEGIN_SRC ruby :tangle ../rakelib/ghpages.rake
     require 'rake/clean'
 
     desc 'Create Github Pages content'

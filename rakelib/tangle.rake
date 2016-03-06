@@ -10,5 +10,5 @@ end
 
 desc 'tangle literate source into puppet'
 task :tangle => :emacs_installed do
-  tangle_file_using_emacs('README.org')
+  tangle_file_using_emacs('literate/README.org')
 end
