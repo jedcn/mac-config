@@ -295,7 +295,7 @@
   website.
 
   It is available here
-  https://github.com/jedcn/mac-config/blob/master/README.org.
+  https://github.com/jedcn/mac-config/blob/master/literate/boxen.org.
 
   Here are the instructions:
 
@@ -328,7 +328,7 @@
 
     desc 'tangle literate source into puppet'
     task :tangle => :emacs_installed do
-      tangle_file_using_emacs('literate/README.org')
+      tangle_file_using_emacs('literate/boxen.org')
     end
   #+END_SRC
 
@@ -457,7 +457,7 @@
     directory 'gh-pages/css' => 'gh-pages'
 
     file 'README.html' => :emacs_installed do
-      export_html_using_emacs('README.org')
+      export_html_using_emacs('literate/boxen.org')
     end
 
     file 'gh-pages/index.html' => [ 'gh-pages', 'README.html' ] do

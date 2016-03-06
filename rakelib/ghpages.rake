@@ -65,7 +65,7 @@ end
 directory 'gh-pages/css' => 'gh-pages'
 
 file 'README.html' => :emacs_installed do
-  export_html_using_emacs('README.org')
+  export_html_using_emacs('literate/boxen.org')
 end
 
 file 'gh-pages/index.html' => [ 'gh-pages', 'README.html' ] do
