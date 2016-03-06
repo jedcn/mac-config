@@ -38,48 +38,21 @@
 <ul>
 <li><a href="#sec-1">1. Mac Config</a>
 <ul>
-<li><a href="#sec-1-1">1.1. Introduction</a>
+<li><a href="#sec-1-1">1.1. Introduction</a></li>
+<li><a href="#sec-1-2">1.2. Overview</a></li>
+<li><a href="#sec-1-3">1.3. OSX Settings</a></li>
+<li><a href="#sec-1-4">1.4. Repositories and Dotfiles</a></li>
+<li><a href="#sec-1-5">1.5. Applications</a>
 <ul>
-<li><a href="#sec-1-1-1">1.1.1. What is <b>this</b>?</a></li>
-<li><a href="#sec-1-1-2">1.1.2. Wait, what's <code>.org</code>?</a></li>
-<li><a href="#sec-1-1-3">1.1.3. Who is this for?</a></li>
-<li><a href="#sec-1-1-4">1.1.4. Who uses this?</a></li>
-<li><a href="#sec-1-1-5">1.1.5. What Next?</a></li>
+<li><a href="#sec-1-5-1">1.5.1. Screen Saver</a></li>
+<li><a href="#sec-1-5-2">1.5.2. Window Management</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-2">1.2. Configuration</a>
-<ul>
-<li><a href="#sec-1-2-1">1.2.1. OSX Settings</a></li>
-<li><a href="#sec-1-2-2">1.2.2. Dotfiles and Repositories</a></li>
-<li><a href="#sec-1-2-3">1.2.3. Applications</a></li>
-<li><a href="#sec-1-2-4">1.2.4. Homebrew</a></li>
-<li><a href="#sec-1-2-5">1.2.5. Git Configuration</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-3">1.3. Boxen Administrativia</a>
-<ul>
-<li><a href="#sec-1-3-1">1.3.1. Puppetry and File Layout</a></li>
-<li><a href="#sec-1-3-2">1.3.2. How to Get Started</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-4">1.4. Literate Administrativia</a>
-<ul>
-<li><a href="#sec-1-4-1">1.4.1. Content Extraction</a></li>
-<li><a href="#sec-1-4-2">1.4.2. </a></li>
-</ul>
-</li>
-<li><a href="#sec-1-5">1.5. Odds and Ends</a>
-<ul>
-<li><a href="#sec-1-5-1">1.5.1. Staying up-to-date with boxen/our-boxen</a></li>
-<li><a href="#sec-1-5-2">1.5.2. Given up on a Module Failed Installations</a></li>
-<li><a href="#sec-1-5-3">1.5.3. What does a module do?</a></li>
-<li><a href="#sec-1-5-4">1.5.4. Where do you find modules?</a></li>
-<li><a href="#sec-1-5-5">1.5.5. Which version do you use for a module?</a></li>
-<li><a href="#sec-1-5-6">1.5.6. Modifying an Existing Module</a></li>
-<li><a href="#sec-1-5-7">1.5.7. Applications I Installed Manually</a></li>
-<li><a href="#sec-1-5-8">1.5.8. Resources</a></li>
-</ul>
-</li>
+<li><a href="#sec-1-6">1.6. Homebrew</a></li>
+<li><a href="#sec-1-7">1.7. Git Configuration</a></li>
+<li><a href="#sec-1-8">1.8. One Concern per File</a></li>
+<li><a href="#sec-1-9">1.9. Bootstrapping</a></li>
+<li><a href="#sec-1-10">1.10. Literate Programming</a></li>
 </ul>
 </li>
 </ul>
@@ -92,364 +65,56 @@
 <h3 id="sec-1-1"><span class="section-number-3">1.1</span> Introduction</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-I care about how my computer is configured.
+This is the config for my Mac.
 </p>
 
 <p>
-I like magnifying any part of my screen so that I can easily show
-things to my daughter.
+I like for certain applications to be installed.
 </p>
 
 <p>
-I like controlling the applications that I am working with. I like
-being able to easily expand, shrink, or dismiss the windows they
-are in.
+I want my dot files to be automatically setup.
 </p>
 
 <p>
-There are certain programs I know how to use, and I would like them
-to automatically installed without any effort on my part.
+There are certain operating system settings I want one way or
+another.
 </p>
-
-<p>
-I've put some time into thinking about how to configure my
-setup. <b>This</b> is what I've come up with.
-</p>
-</div>
-
-<div id="outline-container-sec-1-1-1" class="outline-4">
-<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> What is <b>this</b>?</h4>
-<div class="outline-text-4" id="text-1-1-1">
-<p>
-As I am typing this, I am writing plain text in a single file
-named <code>README.org</code>.
-</p>
-
-<p>
-However, this single file is <b>versatile</b>.
-</p>
-
-<blockquote>
-<p>
-ver•sa•tile (vûrˈsə-təl, -tīlˌ)
-</p>
-
-<p>
-adj. Capable of doing many things competently.
-</p>
-
-<p>
-adj. Having varied uses or serving many functions.
-</p>
-
-<p>
-adj. Variable or inconstant; changeable.
-</p>
-</blockquote>
-
-<p>
-It is part of a larger collection of files at
-<a href="https://github.com/jedcn/mac-config">https://github.com/jedcn/mac-config</a>, and this means a formatted,
-web accessible version of this single file is available here:
-<a href="https://github.com/jedcn/mac-config/blob/master/README.org">https://github.com/jedcn/mac-config/blob/master/README.org</a>.
-</p>
-
-<p>
-This file contains chunks of computer code, and these chunks can
-be programmatically extracted into distinct files. The snippets
-can be split into two categories:
-</p>
-
-<ol class="org-ol">
-<li>Some of files contain configuration in a language called
-<a href="http://puppetlabs.com">puppet</a>. These play a role within a framework named <a href="https://boxen.github.com">boxen</a>, and
-<b>are declarations</b> that can change the configuration of my
-computer.
-</li>
-<li>Some of files contain helper code in a language called <a href="http://en.wikipedia.org/wiki/Ruby_(programming_language)">ruby</a>,
-and these glue things together by extracting code, building up
-the website, etc.
-</li>
-</ol>
-
-<p>
-Finally, this entire file can be converted into HTML and it serves
-as the basis of <a href="http://jedcn.github.io/mac-config">http://jedcn.github.io/mac-config</a>.
-</p>
-</div>
-</div>
-
-<div id="outline-container-sec-1-1-2" class="outline-4">
-<h4 id="sec-1-1-2"><span class="section-number-4">1.1.2</span> Wait, what's <code>.org</code>?</h4>
-<div class="outline-text-4" id="text-1-1-2">
-<p>
-<b>This</b> is a file named <code>README.org</code>. The <code>.org</code> extension means
-that this is a plain text file structured following the
-conventions of <a href="http://en.wikipedia.org/wiki/Org-mode">org-mode</a>. org-mode is a part of <a href="https://www.gnu.org/software/emacs/">emacs</a>.
-</p>
-
-<p>
-A component of org-mode, named <a href="http://orgmode.org/worg/org-contrib/babel/">babel</a>, serves as the basis for
-intertwining chunks of code with text, and allowing these chunks
-to be extracted.
-</p>
-
-<p>
-If this seems strange to you, it probably is. Stepping back,
-<b>this</b> is an experiment in using <a href="http://en.wikipedia.org/wiki/Literate_programming">Literate Programming</a> to describe
-how I configure my computer.
-</p>
-
-<p>
-Why document computer configuration at all? It stems from the
-tension between these ideas:
-</p>
-
-<ol class="org-ol">
-<li>I rarely configure a new computer, and yet I deeply care about
-how my computer is configured.
-</li>
-<li>If I had to get a new computer, it would be important for me to
-quickly get back to how I like having things setup, and yet,
-this happens so infrequently that I would not remember what I
-did to get it into the state I had it.
-</li>
-</ol>
-
-<p>
-That said, why use a Literate System? I am not comfortable with
-boxen or puppet, so I benefit from having a written description of
-my intention near the puppetry. I can also easily include links to
-blogs or applications regarding my motivation.
-</p>
-
-<p>
-It is also motivated by the idea that I am sometimes asked, "How
-did you configure your computer to do such-and-such?" I don't have
-a great memory so I'd benefit from a self-describing
-configuration.
-</p>
-
-<p>
-The neat trick about Literate Source is that it can be dense
-enough to create more than one artifact.
-</p>
-
-<blockquote>
-<p>
-This file <b>is</b> the puppet configuration and it <b>is</b> the website
-and it <b>is</b> the glue code that puts everything together.
-</p>
-</blockquote>
-
-<p>
-So, why not make it so that a single document can help me share
-with people?
-</p>
-</div>
-</div>
-
-<div id="outline-container-sec-1-1-3" class="outline-4">
-<h4 id="sec-1-1-3"><span class="section-number-4">1.1.3</span> Who is this for?</h4>
-<div class="outline-text-4" id="text-1-1-3">
-<p>
-Any prose descriptions behind my motivations should be accessible
-to all mac users.
-</p>
-
-<p>
-When it comes to boxen and puppet, what I have here is functional,
-but I am not an expert by any means.
-</p>
-
-<p>
-If you have never worked with boxen or seen a configuration
-before, this could help you get the general idea.
-</p>
-</div>
-</div>
-
-<div id="outline-container-sec-1-1-4" class="outline-4">
-<h4 id="sec-1-1-4"><span class="section-number-4">1.1.4</span> Who uses this?</h4>
-<div class="outline-text-4" id="text-1-1-4">
-<p>
-I am the only explicit user of this configuration.
-</p>
-
-<p>
-I use it outside of the context of any group or company, and I
-only have a single computer.
-</p>
-
-<p>
-Having worked with boxen for a small bit now, I think it's all
-about <a href="https://en.wikipedia.org/wiki/Metcalfe's_law">Metcalfe's Law</a> in the context of how many users and
-computers you're working with. The more of either one you have the
-more useful boxen will be.
-</p>
-
-<p>
-And so, when it's just me, or just you, <b>I'd think twice about
-using boxen itself.</b> I have spent more time fooling with boxen
-that it would take to take some written notes while directly
-configuring a single computer.
-</p>
-
-<p>
-As I said previously, when it comes to this explicit config, I can
-see how someone could get an idea for what boxen is from it, or
-perhaps copy and paste a few snippets into theirs. <b>However</b>, no
-one should clone or fork this repository. Instead, if you're
-looking to get started with boxen for yourself, then you should
-read the section "How to Get Started" below.
-</p>
-</div>
-</div>
-
-<div id="outline-container-sec-1-1-5" class="outline-4">
-<h4 id="sec-1-1-5"><span class="section-number-4">1.1.5</span> What Next?</h4>
-<div class="outline-text-4" id="text-1-1-5">
-<p>
-Now that we ahve seen a general introduction to this document, and
-we understand how it can be used, let's consider what's left.
-</p>
-
-<p>
-We'll lay things out as follows:
-</p>
-
-<ol class="org-ol">
-<li>General Introduction (this)
-</li>
-<li>OSX Settings
-</li>
-<li>Dotfiles and Repositories
-</li>
-<li>Applications
-</li>
-<li>Command Line Utilities
-</li>
-</ol>
-
-<p>
-As we cover the content above, we will mix prose with puppetry
-(the language of boxen). We will go straight at the puppet
-configuration that enables certain configuration and application
-installation. Once we are doen with that, we will see how the
-pieces fit together within boxen.
-</p>
-
-<p>
-Finally, once we have seen the basic configuration and know how
-boxen works, we will consider some of the Literate aspects of the
-project and supplementary material.
-</p>
-</div>
 </div>
 </div>
 
 <div id="outline-container-sec-1-2" class="outline-3">
-<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Configuration</h3>
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Overview</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
-Let's begin by talking about my actual configuration.
+It is based in <a href="https://github.com/boxen/our-boxen/#our-boxen">Boxen</a>. The configuration can be reified with a
+single command.
 </p>
 
 <p>
-We'll start with prose alongside puppet, and later on I will
-explain how everything comes together in the Boxen Administrativia
-section.
+When it comes to applications this essentially lists <a href="http://brew.sh/">Homebrew</a> and
+<a href="https://caskroom.github.io/">Homebrew Cask</a> packages.
 </p>
 
 <p>
-The code snippets you are about are pieces of functional (as in,
-working) puppetry. They defines "rules" about how my computer
-should be configured, and this includes:
-</p>
-
-<ul class="org-ul">
-<li>Which system settings should be in place
-</li>
-<li>Which repositories should be cloned (say, dotfiles)
-</li>
-<li>Which links should be created (saa, to cloned dotfiles or
-installed applications)
-</li>
-<li>Which applications should be installed
-</li>
-<li>Which homebrew installs should be performed
-</li>
-<li>Which git settings should be configured
-</li>
-</ul>
-
-<p>
-The nature of puppet is that it "makes things match" the rules, and
-so, if there is a rule that says 'Chrome needs to be installed'
-then puppet will check to see if Chrome is present. <b>If Chrome is
-installed</b>, then boxen does nothing. <b>If Chrome is not installed</b>,
-then boxen installs it.
+Some things, like <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a>, are installed by cloning a repository
+and setting up links. Boxen can do that, too. This approach also
+works for setting up dot-files.
 </p>
 
 <p>
-Consequently, the first run of boxen might take 30 or 40 minutes
-while dozens of programs are downloaded and installed, while
-subsequent runs take just a few seconds.
+Boxen can be extended with modules, and an example of such a module
+is one that allows you to control OS settings such as mapping the
+<code>CAPS LOCK</code> key to <code>CONTROL</code>.
 </p>
 </div>
+</div>
 
-<div id="outline-container-sec-1-2-1" class="outline-4">
-<h4 id="sec-1-2-1"><span class="section-number-4">1.2.1</span> OSX Settings</h4>
-<div class="outline-text-4" id="text-1-2-1">
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> OSX Settings</h3>
+<div class="outline-text-3" id="text-1-3">
 <p>
-Configuring OSX settings is normally done through various System
-Preferences screens, but with boxen you can write your
-configuration in a file.
-</p>
-
-<p>
-This is one of the most compelling reasons for using boxen. I can
-imagine using boxen <b>just</b> for the ability to automatically
-configure OSX, and nothing more.
-</p>
-
-<p>
-Boxen itself doesn't know about OSX, but you can use a module
-named <a href="https://github.com/boxen/puppet-osx">puppet-osx</a>, and it provides the ability to do things like:
-</p>
-
-<ol class="org-ol">
-<li>Map CAPS LOCK to CTRL.
-</li>
-<li>Make your key presses repeat very quickly.
-</li>
-<li>Make it so that holding CTRL and scrolling on your trackpad will
-magnify the screen underneath the mouse pointer.
-</li>
-<li>Switch your shell to ZSH.
-</li>
-<li>Automatically hide the dock.
-</li>
-<li>Remove clutter from the dock by making it only contain running
-apps.
-</li>
-<li>Turn on the Developer Tools in Safari
-</li>
-<li>Setup a message on your lock screen to provides your contact
-information if your laptop is found.
-</li>
-</ol>
-
-<p>
-All of these things are tweakable by hand, but using boxen lets
-you get going in a flash, and lets you change things (say, the
-repeat rate) in a controlled manner that gets checked into source
-control.
-</p>
-
-<p>
-I found <a href="https://github.com/boxen/puppet-osx">the main README of the puppet-osx</a> critical to
-understanding the following settings:
+The following settings are made possible via <a href="https://github.com/boxen/puppet-osx">puppet-osx</a>.
 </p>
 
 <div class="org-src-container">
@@ -517,47 +182,16 @@ understanding the following settings:
 </div>
 
 <p>
-The extracted version of this file is available in
-<a href="https://github.com/jedcn/mac-config">jedcn/mac-config</a> at <a href="https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/osx_config.pp">modules/people/manifests/jedcn/osx<sub>config</sub>.pp</a>.
+See <a href="https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/osx_config.pp">modules/people/manifests/jedcn/osx<sub>config</sub>.pp</a>.
 </p>
 </div>
 </div>
 
-<div id="outline-container-sec-1-2-2" class="outline-4">
-<h4 id="sec-1-2-2"><span class="section-number-4">1.2.2</span> Dotfiles and Repositories</h4>
-<div class="outline-text-4" id="text-1-2-2">
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> Repositories and Dotfiles</h3>
+<div class="outline-text-3" id="text-1-4">
 <p>
-You can configure boxen to clone repositories and ensure their
-presence on each run. It doesn't fetch/pull, but it can bring them
-down initially. I pull down repositories that are part of my
-bootstrapping process. In particular:
-</p>
-
-<ul class="org-ul">
-<li>My dotfiles (<a href="https://github.com/jedcn/dot-org-files">jedcn/dot-org-files</a>)
-</li>
-<li><a href="https://github.com/robbyrussell/oh-my-zsh/">oh-my-zsh</a>
-</li>
-<li><a href="https://github.com/cask/cask">cask (for emacs, not brew)</a>
-</li>
-</ul>
-
-<p>
-And I land these near boxen, at <code>/opt/init-src</code>.
-</p>
-
-<p>
-Once these are cloned, I use boxen to create links from where they
-expected to be normally to a file within one of these cloned
-repositories.
-</p>
-
-<p>
-It is worth noting that you don't have to give up on
-whatever-you-were-using-for-creating-links before. They can live
-side-by-side, and you can keep using your former system on
-machines without boxen. I used to use both <a href="https://github.com/andsens/homeshick">homeshick</a> and boxen,
-but have since switched to only boxen.
+Boxen can clone repositories:
 </p>
 
 <div class="org-src-container">
@@ -592,20 +226,11 @@ but have since switched to only boxen.
 </div>
 
 <p>
-The extracted version of this file is available in
-<a href="https://github.com/jedcn/mac-config">jedcn/mac-config</a> at
-<a href="https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/repositories.pp">modules/people/manifests/jedcn/repositories.pp</a>.
+See <a href="https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/repositories.pp">modules/people/manifests/jedcn/repositories.pp</a>.
 </p>
 
 <p>
-And this next puppetry creates several links so that the files
-inside of those repositories appear in places relative to my home
-directory.
-</p>
-
-<p>
-The "require" attributes instruct puppet to make sure the main
-directory and repositories are cloned before the links are created:
+Boxen can setup links to cloned repositories:
 </p>
 
 <div class="org-src-container">
@@ -644,88 +269,17 @@ directory and repositories are cloned before the links are created:
 </div>
 
 <p>
-The extracted version of this file is available in
-<a href="https://github.com/jedcn/mac-config">jedcn/mac-config</a> at <a href="https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/repositories.pp">modules/people/manifests/jedcn/links.pp</a>.
+See <a href="https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/repositories.pp">modules/people/manifests/jedcn/links.pp</a>.
 </p>
 </div>
 </div>
 
-<div id="outline-container-sec-1-2-3" class="outline-4">
-<h4 id="sec-1-2-3"><span class="section-number-4">1.2.3</span> Applications</h4>
-<div class="outline-text-4" id="text-1-2-3">
+<div id="outline-container-sec-1-5" class="outline-3">
+<h3 id="sec-1-5"><span class="section-number-3">1.5</span> Applications</h3>
+<div class="outline-text-3" id="text-1-5">
 <p>
-Next up, after dot-files and repositories have been figured out,
-we figure out applications like Chrome and Hammerspoon.
-</p>
-
-<p>
-You can use boxen to install the applications that you work
-with. In turn, boxen relies on modules to install
-applications. Originally, I used modules like this:
-</p>
-
-<ul class="org-ul">
-<li><a href="https://github.com/boxen/puppet-chrome">puppet-chrome</a>
-</li>
-</ul>
-
-<p>
-But this did not work out well. Modules were hit-or-miss. Some
-were not updated. This hardship caused me to try out brewcask, and
-so far as I can tell, that is the way to go with boxen.
-</p>
-
-<p>
-Whether called out with an explicit puppet module, like
-puppet-chrome, or called out via brewcask, after you declare that
-you want to have an application, say chrome, you run the command
-<code>boxen</code> and the application will "just" appear in your
-Applications folder.
-</p>
-</div>
-
-<ol class="org-ol"><li><a id="sec-1-2-3-1" name="sec-1-2-3-1"></a>Browsers<br  /><div class="outline-text-5" id="text-1-2-3-1">
-<p>
-I use Chrome and Chrome Canary.
-</p>
-</div>
-</li>
-
-<li><a id="sec-1-2-3-2" name="sec-1-2-3-2"></a>Screen Saver<br  /><div class="outline-text-5" id="text-1-2-3-2">
-<p>
-I've started using <a href="https://github.com/JohnCoates/Aerial">Aerial</a>. Boxen will install it, but you still
-need to open System Preferences -&gt; Desktop &amp; Screen Saver -&gt;
-Screen Saver, and select it.
-</p>
-</div>
-</li>
-
-<li><a id="sec-1-2-3-3" name="sec-1-2-3-3"></a>Window Management<br  /><div class="outline-text-5" id="text-1-2-3-3">
-<p>
-I use Hammerspoon for window management, among other things.
-</p>
-
-<p>
-After you run boxen, I still launched Hammerspoon and did the
-following manually:
-</p>
-
-<ul class="org-ul">
-<li>Enabled Accessibility
-</li>
-<li>Select Launch Hammerspoon on Login
-</li>
-<li>Deselect Show Dock Icon
-</li>
-<li>Deselect Send Crash Data
-</li>
-</ul>
-</div>
-</li>
-
-<li><a id="sec-1-2-3-4" name="sec-1-2-3-4"></a>Declarations<br  /><div class="outline-text-5" id="text-1-2-3-4">
-<p>
-Here's the puppetry that handles my applications:
+I'm using Homebrew Cask for applications. The only exception is
+<a href="https://github.com/boxen/puppet-chrome">puppet-crome</a>.
 </p>
 
 <div class="org-src-container">
@@ -749,55 +303,58 @@ Here's the puppetry that handles my applications:
 </div>
 
 <p>
-The extracted version of this file is available in
-<a href="https://github.com/jedcn/mac-config">jedcn/mac-config</a> at
-<a href="https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/applications.pp">modules/people/manifests/jedcn/applications.pp</a>.
+See <a href="https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/applications.pp">modules/people/manifests/jedcn/applications.pp</a>.
+</p>
+
+<p>
+Notes:
 </p>
 </div>
-</li></ol>
+
+<div id="outline-container-sec-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1"><span class="section-number-4">1.5.1</span> Screen Saver</h4>
+<div class="outline-text-4" id="text-1-5-1">
+<p>
+I've started using <a href="https://github.com/JohnCoates/Aerial">Aerial</a>.
+</p>
+
+<p>
+After a boxen run, you still need to open System Preferences -&gt;
+Desktop &amp; Screen Saver -&gt; Screen Saver, and select it.
+</p>
+</div>
 </div>
 
-<div id="outline-container-sec-1-2-4" class="outline-4">
-<h4 id="sec-1-2-4"><span class="section-number-4">1.2.4</span> Homebrew</h4>
-<div class="outline-text-4" id="text-1-2-4">
+<div id="outline-container-sec-1-5-2" class="outline-4">
+<h4 id="sec-1-5-2"><span class="section-number-4">1.5.2</span> Window Management</h4>
+<div class="outline-text-4" id="text-1-5-2">
 <p>
-I get many command line utilities from <a href="http://brew.sh">homebrew</a>.
+I use Hammerspoon for window management.
 </p>
 
 <p>
-Boxen allows me to replace several <code>brew install</code> commands with a
-single boxen run.
-</p>
-
-<p>
-As I scan through what's below, I recognize that the majority of
-packages are simple, standard installs. It's like typing <code>brew
-    install ag</code>, for example.
-</p>
-
-<p>
-However, you can install with options, as I do with emacs. I
-learned about these particular options in this post: <a href="http://emacsredux.com/blog/2013/08/21/color-themes-redux/">Color Themes:
-Redux</a>.
-</p>
-
-<p>
-Two quick notes in regards to puppet:
+After a boxen run, you still need to launch Hammerspoon and:
 </p>
 
 <ul class="org-ul">
-<li>Homebrew is the standard package provider for puppetry within
-boxen. This means that if you declare a <code>package</code> (as seen below)
-then the <code>provider</code> defaults to <code>homebrew</code>.
+<li>Enable Accessibility
 </li>
-<li>If you install <code>cask</code> before you have <code>emacs</code>, then homebrew
-tries to grab <code>emacs</code> (without the options I like). And so&#x2013; you
-can use <code>require</code> attributes to manage dependencies with boxen.
+<li>Select Launch Hammerspoon on Login
+</li>
+<li>Deselect Show Dock Icon
+</li>
+<li>Deselect Send Crash Data
 </li>
 </ul>
+</div>
+</div>
+</div>
 
+<div id="outline-container-sec-1-6" class="outline-3">
+<h3 id="sec-1-6"><span class="section-number-3">1.6</span> Homebrew</h3>
+<div class="outline-text-3" id="text-1-6">
 <p>
-Here are the packages I like:
+These are the packages I like:
 </p>
 
 <div class="org-src-container">
@@ -831,39 +388,23 @@ Here are the packages I like:
 </div>
 
 <p>
-The extracted version of this file is available in
-<a href="https://github.com/jedcn/mac-config">jedcn/mac-config</a> at <a href="https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/homebrew.pp">modules/people/manifests/jedcn/homebrew.pp</a>.
-</p>
-</div>
-</div>
-
-<div id="outline-container-sec-1-2-5" class="outline-4">
-<h4 id="sec-1-2-5"><span class="section-number-4">1.2.5</span> Git Configuration</h4>
-<div class="outline-text-4" id="text-1-2-5">
-<p>
-Boxen uses a package named <a href="https://github.com/boxen/puppet-git">puppet-git</a> to manage git configuration
-options.
-</p>
-
-<p>
-I manually set my <code>user.email</code> and <code>user.name</code> when I first started
-using my computer, and after some bootstrapping, I got to the point
-where I could have boxen set other values.
-</p>
-
-<p>
-So far, I've got:
+Notes:
 </p>
 
 <ul class="org-ul">
-<li><code>core.editor</code> so that I can use emacs (from boxen) for editing
-commit messages and rebasing.
-</li>
-<li><code>push.default</code> so that when I push (without an explicit
-upstream) I end up pushing to a branch of the same name.
+<li>I install emacs with options that I learned about in <a href="http://emacsredux.com/blog/2013/08/21/color-themes-redux/">this post</a>.
 </li>
 </ul>
 
+<p>
+See <a href="https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/homebrew.pp">modules/people/manifests/jedcn/homebrew.pp</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-7" class="outline-3">
+<h3 id="sec-1-7"><span class="section-number-3">1.7</span> Git Configuration</h3>
+<div class="outline-text-3" id="text-1-7">
 <div class="org-src-container">
 
 <pre>
@@ -879,42 +420,17 @@ upstream) I end up pushing to a branch of the same name.
 </div>
 
 <p>
-The extracted version of this file is available in
-<a href="https://github.com/jedcn/mac-config">jedcn/mac-config</a> at <a href="https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/git.pp">modules/people/manifests/jedcn/git.pp</a>.
+See <a href="https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/git.pp">modules/people/manifests/jedcn/git.pp</a>.
 </p>
 </div>
 </div>
-</div>
 
-<div id="outline-container-sec-1-3" class="outline-3">
-<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Boxen Administrativia</h3>
-<div class="outline-text-3" id="text-1-3">
+<div id="outline-container-sec-1-8" class="outline-3">
+<h3 id="sec-1-8"><span class="section-number-3">1.8</span> One Concern per File</h3>
+<div class="outline-text-3" id="text-1-8">
 <p>
-So far we've had the luxury of just looking at puppet configuration
-and presuming that it somehow fits together. In this section, we'll
-now consider where files are placed, how they interact, and how
-boxen is run.
-</p>
-</div>
-
-<div id="outline-container-sec-1-3-1" class="outline-4">
-<h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> Puppetry and File Layout</h4>
-<div class="outline-text-4" id="text-1-3-1">
-<p>
-Boxen pays attention to the puppetry in this project on the basis
-of my user login: <code>jedcn</code>. The system allows for you to call out a
-specific configuration for a user by placing a file at
-<code>modules/people/manifests/$USER.pp</code>.
-</p>
-
-<p>
-And so, I can put content at <code>modules/people/manifests/jedcn.pp</code>
-that will be examined each time I run <code>boxen</code>.
-</p>
-
-<p>
-When I write puppet, I do my best to group declarations into
-distinct files, and so, my entry point only includes other files:
+Content at <code>modules/people/manifests/jedcn.pp</code> will only run if the
+current user is jedcn.
 </p>
 
 <div class="org-src-container">
@@ -932,94 +448,14 @@ distinct files, and so, my entry point only includes other files:
 </div>
 
 <p>
-The extracted version of this file is available in
-<a href="https://github.com/jedcn/mac-config">jedcn/mac-config</a> at <a href="https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn.pp">modules/people/manifests/jedcn.pp</a>.
-</p>
-
-<p>
-These <code>include</code> statements invoke puppetry in other files, at
-locations that match up with the directories if you replace the
-<code>::</code> with <code>/</code>. As an example, you can find
-<code>people::jedcn::applications</code> at
-<code>modules/people/manifests/jedcn/applications.pp</code>.
+See <a href="https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn.pp">modules/people/manifests/jedcn.pp</a>.
 </p>
 </div>
 </div>
 
-<div id="outline-container-sec-1-3-2" class="outline-4">
-<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> How to Get Started</h4>
-<div class="outline-text-4" id="text-1-3-2">
-<p>
-I was confused when I first started using Boxen. I went to the
-website, <a href="https://boxen.github.com/">https://boxen.github.com/</a>, but didn't know what to do
-next.
-</p>
-
-<p>
-I suspect that most boxen users do so within the context of a
-company, and so, someone has already laid down some basic boxen
-infrastructure and then subsequent users get told the first few
-steps to bootstrap themselves by someone at the company.
-</p>
-
-<p>
-If you are like me, and you don't have that luxury, so it may be
-helpful to understand what I did:
-</p>
-
-<p>
-I logged into github.com and forked <a href="https://github.com/boxen/our-boxen">boxen/our-boxen</a>, and now I had
-<a href="https://github.com/jedcn/our-boxen">jedcn/our-boxen</a>. Going forward your fork will contain your
-configuration (or the configuration of your team) and
-boxen/our-boxen can serve as its "upstream". This will allow your
-fork to pull in policy, security, and code changes from the main
-boxen project.
-</p>
-
-<p>
-I changed the name of my fork because I had trouble explaining
-"our-boxen" to my friends. They didn't know what boxen was and
-they didn't understand why I was using the word "our" in a
-scenario where I was only managing <b>my own</b> mac config. I picked
-the name "mac-config", and the new home of my boxen repository is
-<a href="https://github.com/jedcn/mac-config/">jedcn/mac-config</a>.
-</p>
-
-<p>
-At any rate, now that your fork exists, the next step is to get it
-cloned locally and then bootstrap boxen. The first boxen run will
-install the defaults that the main boxen/our-boxen promotes.
-</p>
-</div>
-
-<ol class="org-ol"><li><a id="sec-1-3-2-1" name="sec-1-3-2-1"></a>Bootstrapping<br  /><div class="outline-text-5" id="text-1-3-2-1">
-<p>
-Boxen has just a couple pre-requisites that need to be met:
-</p>
-
-<ul class="org-ul">
-<li>xCode should be installed
-</li>
-<li>Your boxen fork should be cloned to <code>/opt/boxen/repo</code>
-</li>
-</ul>
-
-<p>
-Once you've got these, you can run <code>boxen</code>. If you're down with
-puppet, this is apparently very similar to a masterless scenario
-where you're running <code>puppet apply</code>.
-</p>
-
-<p>
-I'm not down with puppet, so I think of it as effectively
-"reifying" your boxen config.
-</p>
-
-<p>
-The following commands should do the trick re: the
-pre-requisites:
-</p>
-
+<div id="outline-container-sec-1-9" class="outline-3">
+<h3 id="sec-1-9"><span class="section-number-3">1.9</span> Bootstrapping</h3>
+<div class="outline-text-3" id="text-1-9">
 <div class="org-src-container">
 
 <pre class="src src-sh">xcode-select --install
@@ -1029,128 +465,20 @@ git clone https://github.com/jedcn/mac-config /opt/boxen/repo
 /opt/boxen/repo/script/boxen
 </code></pre>
 </div>
-
-<p>
-When the first boxen run completed I didn't have any of the
-configuration that you've seen so far. Instead, I had whatever
-was in my clone, and this matched boxen/our-boxen on the day I
-forked it. So, what does your first boxen run get you?
-</p>
-
-<p>
-The official answer is here: <a href="https://github.com/boxen/our-boxen#what-you-get">boxen/our-boxen#what-you-get</a>. But, I
-suspect this is out of date. Is nodenv the same thing as nvm?
-</p>
-
-<p>
-When it comes to ruby and node, I had several installations via
-<a href="https://github.com/wfarr/nodenv">nodenv</a> and <a href="https://github.com/sstephenson/rbenv">rbenv</a>. These were located at <code>/opt/rubies</code> and
-<code>/opt/boxen/nodenv/versions</code>:
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-sh">$ ls /opt/rubies
-1.9.3      1.9.3-p545 2.0.0      2.0.0-p451 2.1.0      2.1.1      2.1.2
-
-$ ls /opt/boxen/nodenv/versions
-v0.10    v0.10.31 v0.6     v0.6.20  v0.8     v0.8.26
-</code></pre>
-</div>
-
-<p>
-Until now, I always used <code>rvm</code> rather than <code>rbenv</code>, and I have
-never used <code>nodenv</code>. Further&#x2013; when it comes to node&#x2013; I doubt
-I'll ever need any version that's less than 0.10, but I didn't
-sweat this, nor try to change it.
-</p>
-
-<p>
-My thinking here is that what matters is ruby and node, not
-necessarily one tool for getting ruby or node over another.
-Further, I don't mind having a few extra rubies or nodes around.
-</p>
-
-<p>
-Finally&#x2013; even though ruby and node are some of my goto
-programming languages&#x2013; I can still see serious value in using
-boxen to manage OSX Configuration and Applications <b>even if</b> the
-users of a computer <b>never use</b> ruby or node.
-</p>
-</div>
-</li>
-
-<li><a id="sec-1-3-2-2" name="sec-1-3-2-2"></a>Subsequent Runs<br  /><div class="outline-text-5" id="text-1-3-2-2">
-<p>
-This first <code>boxen</code> run took about 25-30 minutes. However, once my
-initial run was done, then you can run boxen at any time by
-typing <code>boxen</code>, and, if there's nothing to do, a run can be
-completed in as little as 10 seconds.
-</p>
-
-<p>
-And then you can get into a flow where you make a change to your
-puppet configuration, run boxen, and see what happens.
-</p>
-</div>
-</li></ol>
 </div>
 </div>
 
-<div id="outline-container-sec-1-4" class="outline-3">
-<h3 id="sec-1-4"><span class="section-number-3">1.4</span> Literate Administrativia</h3>
-<div class="outline-text-3" id="text-1-4">
+<div id="outline-container-sec-1-10" class="outline-3">
+<h3 id="sec-1-10"><span class="section-number-3">1.10</span> Literate Programming</h3>
+<div class="outline-text-3" id="text-1-10">
 <p>
-Earlier on I said,
-</p>
-
-<blockquote>
-<p>
-<b>this</b> is an experiment in using <a href="http://en.wikipedia.org/wiki/Literate_programming">Literate Programming</a> to describe
- how I configure my computer.
-</p>
-</blockquote>
-
-<p>
-And then I said:
-</p>
-
-<blockquote>
-<p>
-The neat trick about Literate Source is that it can be dense
-enough to create more than one artifact. This file <b>is</b> the
-puppet configuration and it <b>is</b> the website and it <b>is</b> the glue
-code that puts everything together.
-</p>
-</blockquote>
-
-<p>
-And then I stopped talking about it.
+<b>This</b> is an experiment in using <a href="http://en.wikipedia.org/wiki/Literate_programming">Literate Programming</a> to describe
+how I configure my computer.
 </p>
 
 <p>
-Let's revisit these ideas now that we've been through the majority
-of the puppet configuration.
-</p>
-
-<p>
-This single document <b>is</b> code.
-</p>
-
-<p>
-And it is English prose.
-</p>
-
-<p>
-It is puppet.
-</p>
-
-<p>
-It is ruby.
-</p>
-
-<p>
-And it is html.
+A single file generates much of my boxen configuration and this
+website.
 </p>
 
 <p>
@@ -1159,81 +487,8 @@ It is available here
 </p>
 
 <p>
-And here: <a href="http://jedcn.github.io/mac-config">http://jedcn.github.io/mac-config</a>.
+Here are the instructions:
 </p>
-
-<p>
-This is possible because snippets of code, spanning any language,
-are embedded into this document. Most of them have associated
-directives that indicate how they should be extracted.
-</p>
-
-<p>
-Let's talk more about that.
-</p>
-</div>
-
-<div id="outline-container-sec-1-4-1" class="outline-4">
-<h4 id="sec-1-4-1"><span class="section-number-4">1.4.1</span> Content Extraction</h4>
-<div class="outline-text-4" id="text-1-4-1">
-<p>
-This single <code>.org</code> file can be extracted into many component
-pieces. What comes out of the file? The pieces are puppetry, web
-files, and ruby:
-</p>
-
-<ul class="org-ul">
-<li>*.pp files (for boxen runs)
-</li>
-<li>HTML files (for building a static, descriptive site)
-</li>
-<li>A <code>Rakefile</code> and supporting <code>./rakelib/*.rake</code> files.
-</li>
-</ul>
-
-<p>
-The extraction process is powered by ruby and emacs, if you have
-this repository cloned, you can type <code>rake tangle</code> and this single
-file will be unpacked.
-</p>
-
-<p>
-How does this work? Whenever you run Rake, you need to start with
-the <code>Rakefile</code>.
-</p>
-</div>
-
-<ol class="org-ol"><li><a id="sec-1-4-1-1" name="sec-1-4-1-1"></a>The Rakefile<br  /><div class="outline-text-5" id="text-1-4-1-1">
-<p>
-The first role played by the <code>Rakefile</code> is its mere
-existence. When you run a <code>rake -W</code> or a <code>rake -T</code> rake comes to
-life and starts looking "up" until it finds a <code>Rakefile</code>.
-</p>
-
-<p>
-From there, it looks down in the <code>./rakelib</code> directory for files
-ending in <code>.rake</code>.
-</p>
-
-<p>
-Additionally, the <code>Rakefile</code>:
-</p>
-
-<ul class="org-ul">
-<li>defines a function named <code>run</code> which enhances standard command
-execution so that you can get access to stdout, stderr, and the
-process' signal.
-</li>
-<li>It defines a task named <code>:emacs_installed</code>. This allows other
-tasks to call it out as a pre-requisite and serves as asserting a
-pre-condition that we "have" emacs installed.
-</li>
-<li>Calls out <code>:tangle</code> (defined elsewhere) as the default
-task. You can invoke the default task by typing <code>rake</code> without
-any other arguments. Tangle is nomenclature from Donald Knuth&#x2013;
-I've been using the term "extract" synonymously.
-</li>
-</ul>
 
 <div class="org-src-container">
 
@@ -1254,33 +509,7 @@ task default: :tangle
 </div>
 
 <p>
-The extracted version of this file is available in
-<a href="https://github.com/jedcn/mac-config">jedcn/mac-config</a> at <a href="https://github.com/jedcn/mac-config/blob/master/Rakefile">Rakefile</a>.
-</p>
-
-<p>
-Which leads to the question, <b>What's :tangle?</b>
-</p>
-</div>
-</li>
-
-<li><a id="sec-1-4-1-2" name="sec-1-4-1-2"></a>Tangling (extracting) README.org into distinct files<br  /><div class="outline-text-5" id="text-1-4-1-2">
-<p>
-A file named <code>./rakelib/tangle.rake</code> defines the <code>:tangle</code> task,
-and this extracts all of the code snippets in <code>README.org</code> to
-various files.
-</p>
-
-<p>
-While emacs is a text editor, it is also a tool that can execute
-<a href="https://en.wikipedia.org/wiki/Emacs_Lisp">elisp</a>. Further, if you run emacs in "batch mode," it does not
-start the text editing user interface it is most commonly
-associated with.
-</p>
-
-<p>
-And so, below, you'll see a ruby function that contains a brief
-bit of elisp which uses org-babel functions to extract the snippets.
+See <a href="https://github.com/jedcn/mac-config/blob/master/Rakefile">Rakefile</a>.
 </p>
 
 <div class="org-src-container">
@@ -1303,78 +532,11 @@ end
 </div>
 
 <p>
-The extracted version of this file is available in
-<a href="https://github.com/jedcn/mac-config">jedcn/mac-config</a> at <a href="https://github.com/jedcn/mac-config/blob/master/rakelib/tangle.rake">rakelib/tangle.rake</a>.
+See <a href="https://github.com/jedcn/mac-config/blob/master/rakelib/tangle.rake">rakelib/tangle.rake</a>.
 </p>
 
 <p>
-And so, that's how all of the puppetry that you've seen above is
-unpacked.
-</p>
-</div>
-</li>
-
-<li><a id="sec-1-4-1-3" name="sec-1-4-1-3"></a>Flow<br  /><div class="outline-text-5" id="text-1-4-1-3">
-<p>
-What this means is that I take the following steps when I want to
-change my computer configuration:
-</p>
-
-<ul class="org-ul">
-<li>I revisit <code>README.org</code> and I look for where the new
-configuration might fit.
-</li>
-<li>I add a prose description of what I am looking to do.
-</li>
-<li>I update a snippet of puppet
-</li>
-<li>I then jump to a terminal and run <code>rake &amp;&amp; boxen</code>
-</li>
-<li>The <code>rake</code> command extracts the contents into the puppet files,
-and the boxen command reifies the puppet config.
-</li>
-</ul>
-
-<p>
-Once I like what I see, I commit both the <code>README.org</code> and the
-associated puppet file. This means generated code is commit to
-source control. The files are small, and they don't get out of
-sync, so I haven't had a problem with it. I briefly considered
-adding the puppet files to a <code>.gitignore</code> and keeping them in
-only one location, but decided I'd rather have everything in
-source even if there's a chance they get out of sync.
-</p>
-</div>
-</li></ol>
-</div>
-
-<div id="outline-container-sec-1-4-2" class="outline-4">
-<h4 id="sec-1-4-2"><span class="section-number-4">1.4.2</span> <a href="http://jedcn.github.io/mac-config">http://jedcn.github.io/mac-config</a></h4>
-<div class="outline-text-4" id="text-1-4-2">
-<p>
-This <code>README.org</code> file can be transformed into HTML using an
-export mechanism that is built into org-mode.
-</p>
-
-<p>
-The content is effectively put into HTML within a <code>&lt;body&gt;&lt;/body&gt;</code>,
-and then it is inserted into a basic template from
-HTML5Boilerplate.
-</p>
-
-<p>
-This is achieved by minimally converting the HTML5Boilerplate HTML
-into ERB and by writing a rake task that can download and unpack
-an HTML5Boilerplate zip.
-</p>
-</div>
-
-<ol class="org-ol"><li><a id="sec-1-4-2-1" name="sec-1-4-2-1"></a><code>rakelib/index.html.erb</code><br  /><div class="outline-text-5" id="text-1-4-2-1">
-<p>
-There are a few versions of <a href="http://html5boilerplate.com/">HTML5BoilerPlate</a>, and the one we see
-below is based on the Bootstrap. I removed the core content and
-replaced it with a single ERB substitution. I also added a link
-to <code>prism.js</code> and <code>prism.css</code>. I manually downloaded these.
+When it comes to the index.html of the website:
 </p>
 
 <div class="org-src-container">
@@ -1430,38 +592,12 @@ to <code>prism.js</code> and <code>prism.css</code>. I manually downloaded these
 </div>
 
 <p>
-The extracted version of this file is available in
-<a href="https://github.com/jedcn/mac-config">jedcn/mac-config</a> at <a href="https://github.com/jedcn/mac-config/blob/master/rakelib/index.html.erb">rakelib/index.html.erb</a>.
-</p>
-</div>
-</li>
-
-<li><a id="sec-1-4-2-2" name="sec-1-4-2-2"></a><code>rakelib/ghpages.rake</code><br  /><div class="outline-text-5" id="text-1-4-2-2">
-<p>
-Next, I wrote up Rake-based instructions for building up static
-web content that serves as a website.
+See <a href="https://github.com/jedcn/mac-config/blob/master/rakelib/index.html.erb">rakelib/index.html.erb</a>.
 </p>
 
 <p>
-This static content will be hosted on Github Pages.
-</p>
-
-<p>
-There's also a part that knows about <a href="http://www.initializr.com">http://www.initializr.com</a>,
-and how to download a copy of HTML5 Boiler Plate. This comes in a
-ZIP. These instructions know how to unpack the ZIP and put parts
-of it in the right places.
-</p>
-
-<p>
-To be consistent, I should've set up something that knows about
-downloading primer.
-</p>
-
-<p>
-Finally there's a part in here that knows how to extract this
-<code>.org</code> file using emacs into HTML and then insert that HTML into
-an ERB enhanced template.
+When it comes to building up a Github Pages site (supporting js,
+css):
 </p>
 
 <div class="org-src-container">
@@ -1584,377 +720,8 @@ end
 </div>
 
 <p>
-The extracted version of this file is available in
-<a href="https://github.com/jedcn/mac-config">jedcn/mac-config</a> at <a href="https://github.com/jedcn/mac-config/blob/master/rakelib/ghpages.rake">rakelib/ghpages.rake</a>.
+See <a href="https://github.com/jedcn/mac-config/blob/master/rakelib/ghpages.rake">rakelib/ghpages.rake</a>.
 </p>
-</div>
-</li></ol>
-</div>
-</div>
-
-<div id="outline-container-sec-1-5" class="outline-3">
-<h3 id="sec-1-5"><span class="section-number-3">1.5</span> Odds and Ends</h3>
-<div class="outline-text-3" id="text-1-5">
-<p>
-The following information, while valuable to me, didn't rightly fit
-in anywhere, and so it landed here until it can be sorted out.
-</p>
-</div>
-
-<div id="outline-container-sec-1-5-1" class="outline-4">
-<h4 id="sec-1-5-1"><span class="section-number-4">1.5.1</span> Staying up-to-date with boxen/our-boxen</h4>
-<div class="outline-text-4" id="text-1-5-1">
-<p>
-This repository is a fork of <a href="https://github.com/boxen/our-boxen">boxen/our-boxen</a>, and so, while I've
-done a bunch of customization, I'd like to stay up-to-date with the
-original repository to get fixes, security patches, etc.
-</p>
-
-<p>
-This is setup by creating a remote named "upstream" that points to
-<a href="https://github.com/boxen/our-boxen">boxen/our-boxen</a>. Then the master branch from this repo is merged in
-like regular.
-</p>
-
-<p>
-The directions are here: <a href="https://help.github.com/articles/syncing-a-fork/">github.com/articles/syncing-a-fork/</a>.
-</p>
-</div>
-</div>
-
-<div id="outline-container-sec-1-5-2" class="outline-4">
-<h4 id="sec-1-5-2"><span class="section-number-4">1.5.2</span> Given up on a Module Failed Installations</h4>
-<div class="outline-text-4" id="text-1-5-2">
-<p>
-Near as I can tell, if you try to get something running with boxen
-and then you give up and remove the puppetry, you'll still have
-whatever-didnt-install-the-way-you-wanted installed, and so, you
-can manually remove that thing but you should also remove
-something called a "receipt" that can be found in the <code>/var/db</code>
-directory, for example:
-</p>
-
-<ul class="org-ul">
-<li><code>sudo rm .puppet_compressed_app_installed_1Password\ 5</code>
-</li>
-<li><code>sudo rm /var/db/.puppet_appdmg_installed_LittleSnitch</code>
-</li>
-</ul>
-
-<p>
-I learned about receipts in the <a href="https://github.com/boxen/our-boxen/blob/master/docs/faq.md">official boxen FAQ</a>.
-</p>
-</div>
-</div>
-
-<div id="outline-container-sec-1-5-3" class="outline-4">
-<h4 id="sec-1-5-3"><span class="section-number-4">1.5.3</span> What does a module do?</h4>
-<div class="outline-text-4" id="text-1-5-3">
-<p>
-If you've found a puppet module that you'd like to check out, the
-first place to look is in the file named <code>manifests/init.pp</code>. I
-believe this is the entry point for all modules. You can usually
-see other files that are included into it or URLs, version
-numbers, and configuration options.
-</p>
-</div>
-</div>
-
-<div id="outline-container-sec-1-5-4" class="outline-4">
-<h4 id="sec-1-5-4"><span class="section-number-4">1.5.4</span> Where do you find modules?</h4>
-<div class="outline-text-4" id="text-1-5-4">
-<p>
-Modules can be defined anywhere, and the most popular ones are
-underneath the Boxen Github repository: <a href="https://github.com/boxen/">https://github.com/boxen/</a>.
-</p>
-
-<p>
-You can search for ones that are formally part of that
-organization by visiting the link above and typing the name of the
-application into to the "Filters."
-</p>
-</div>
-</div>
-
-<div id="outline-container-sec-1-5-5" class="outline-4">
-<h4 id="sec-1-5-5"><span class="section-number-4">1.5.5</span> Which version do you use for a module?</h4>
-<div class="outline-text-4" id="text-1-5-5">
-<p>
-If you've found a module that you'd like to use, such as this one:
-<a href="https://github.com/boxen/puppet-chrome">https://github.com/boxen/puppet-chrome</a>, you can add it to your
-<code>Puppetfile</code>.
-</p>
-
-<p>
-It's not immediately obvious which version to use, and so far, the
-following has worked for me: look at the tags on the repository,
-and pick the largest version.
-</p>
-</div>
-</div>
-
-<div id="outline-container-sec-1-5-6" class="outline-4">
-<h4 id="sec-1-5-6"><span class="section-number-4">1.5.6</span> Modifying an Existing Module</h4>
-<div class="outline-text-4" id="text-1-5-6">
-</div><ol class="org-ol"><li><a id="sec-1-5-6-1" name="sec-1-5-6-1"></a>The Problem<br  /><div class="outline-text-5" id="text-1-5-6-1">
-<p>
-What if you find a module underneath <a href="https://github.com/boxen">https://github.com/boxen</a>, but
-that module is out of date?
-</p>
-
-<p>
-For example, as of the time of this writing, the <a href="https://github.com/boxen/puppet-virtualbox">puppet-virtualbox</a>
-will install a virtualbox version that's 6 or so months old, and
-is 4 releases behind what's presently available.
-</p>
-
-<p>
-Further&#x2013; other people have shown up, done the work to grab a new
-version, and opened up a pull request that has gone unanswered.
-Here's a pull request that is just that: it is over 5 months old,
-works just fine, but hasn't been merged or commented on by the
-maintainers: <a href="https://github.com/boxen/puppet-virtualbox/pull/30">puppet-virtualbox/pull/30</a>.
-</p>
-
-<p>
-And even if the maintainer was responding, it's possible that he
-or she will say, "Actually, this module is created and used by XYZ
-Group, and XYZ Group is not ready to upgrade beyond this version."
-And that is there prerogative, but what do you do if you don't
-want to install the now-out-of-date version?
-</p>
-</div>
-</li>
-
-<li><a id="sec-1-5-6-2" name="sec-1-5-6-2"></a>Building The Solution<br  /><div class="outline-text-5" id="text-1-5-6-2">
-<p>
-The good news is that all the hardwork was probably done by the
-original package creator, and all you need to do is swap out a
-couple strings.
-</p>
-
-<p>
-But, what, exactly, should happen?
-</p>
-
-<p>
-Here's what worked for me with puppet-virtualbox:
-</p>
-
-<ul class="org-ul">
-<li>I started by looking at the core <a href="https://github.com/boxen/puppet-virtualbox/blob/master/manifests/init.pp">manifests/init.pp</a> file, and saw
-that the version strings were obviously present.
-</li>
-<li>I then <a href="https://github.com/boxen/puppet-virtualbox/search?utf8=%E2%9C%93&q=4.3.14">searched across the repo</a> for the status quo version
-string, and saw that it was in the specs, too.
-</li>
-<li>I forked the repo: <a href="https://github.com/jedcn/puppet-virtualbox/">jedcn/puppet-virtualbox</a>.
-</li>
-<li>I cloned the repo to <code>/projects/puppet-virtualbox</code>
-</li>
-<li>I ran the specs with <code>rspec</code> (I happened to be using ruby
-2.1.2p95 provided by boxen), and they passed (albeit, with warnings).
-</li>
-<li>I found the URL for downloading the new(er) version on the
-virtualbox site:
-<a href="http://download.virtualbox.org/virtualbox/4.3.20/VirtualBox-4.3.20-96996-OSX.dmg">http://download.virtualbox.org/virtualbox/4.3.20/VirtualBox-4.3.20-96996-OSX.dmg</a>
-</li>
-<li>I modified the source in <code>spec/classes/virtualbox_spec.rb</code> to
-match this URL.
-</li>
-<li>I ran <code>rspec</code>, saw that things failed.
-</li>
-<li>I modified the code in manifests/init.pp with the new version
-and patch, and saw that it passed.
-</li>
-</ul>
-
-<p>
-And then I was ready to try it out.
-</p>
-</div>
-</li>
-
-<li><a id="sec-1-5-6-3" name="sec-1-5-6-3"></a>Trying the Solution Locally<br  /><div class="outline-text-5" id="text-1-5-6-3">
-<p>
-Commit the changes to <code>/projects/puppet-virtualbox</code>. This looked
-like <a href="https://github.com/jedcn/puppet-virtualbox/commit/afaa6b376bbe31cd0422c9fec1edee511e969933">afaa6b</a> for me.
-</p>
-
-<p>
-Then change over to your boxen repo, create branch named
-<code>virtualbox</code>, and modify the <code>Puppetfile</code> to reference your local
-copy of puppet-virtualbox. Next, somewhere in your manifests add
-the proper <code>include virtualbox</code>. This looked like <a href="https://github.com/jedcn/mac-config/commit/6d00ae4d6beaddf827f05997212143b880306b7d">6d00ae</a> for me.
-</p>
-
-<p>
-Run boxen, and if all goes well, the most recent version of
-virtual box will be installed.
-</p>
-</div>
-</li>
-
-<li><a id="sec-1-5-6-4" name="sec-1-5-6-4"></a>Make the Solution Globally Available<br  /><div class="outline-text-5" id="text-1-5-6-4">
-<p>
-Now you know that the changes in your local <code>puppet-virtualbox</code>
-are good, so push them back up to your fork, tag them, and then
-modify your <code>Puppetfile</code> to reference the tagged version. Then
-run boxen again&#x2013; it should capture some config files, say, in
-<code>vendor/puppet/cache/jedcn-puppet-virtualbox-1.0.14.tar.gz</code>, but
-be a no-op for installing a new application. Here's what it
-looked like: <a href="https://github.com/jedcn/mac-config/commit/497361a7bed84062de4dd97b50cb4c3e4fddbd8d">497361</a>.
-</p>
-</div>
-</li>
-
-<li><a id="sec-1-5-6-5" name="sec-1-5-6-5"></a>Share your Work<br  /><div class="outline-text-5" id="text-1-5-6-5">
-<p>
-And finally, open a pull request against the original package. If
-the maintainer wants to take it, great. If not, leave a note
-showing other people how to access what you've done:
-<a href="https://github.com/boxen/puppet-virtualbox/pull/33">puppet-virtualbox/pull/33</a>.
-</p>
-</div>
-</li></ol>
-</div>
-
-<div id="outline-container-sec-1-5-7" class="outline-4">
-<h4 id="sec-1-5-7"><span class="section-number-4">1.5.7</span> Applications I Installed Manually</h4>
-<div class="outline-text-4" id="text-1-5-7">
-<p>
-I installed the following Software manually:
-</p>
-</div>
-
-<ol class="org-ol"><li><a id="sec-1-5-7-1" name="sec-1-5-7-1"></a>1Password<br  /><div class="outline-text-5" id="text-1-5-7-1">
-<p>
-I tried getting onepassword here (with <a href="https://github.com/boxen/puppet-onepassword">puppet-onepassword</a>), but I
-couldn't figure out the licensing. Specifically, after a boxen
-run it was in trial mode and looking for a license file. But, I
-didn't have a license because I bought 1Password through the
-AppStore.
-</p>
-
-<p>
-After 15 minutes of mucking around, I installed through the
-AppStore, and things worked just fine.
-</p>
-</div>
-</li>
-
-<li><a id="sec-1-5-7-2" name="sec-1-5-7-2"></a>Little Snitch<br  /><div class="outline-text-5" id="text-1-5-7-2">
-<p>
-I tried installing this via puppet. I tried a provider of <code>appdmg</code>
-and <code>pkgdmg</code>, and neither did I was expected. I started with
-<code>appdmg</code>, and this put both the Installer and Uninstaller in my
-Applications&#x2013; but that's not what I want. I want to run the
-Installer <b>once</b> and then have "Little Snitch Configuration" be
-the only thing that's in my Applications.
-</p>
-
-<p>
-Anyway&#x2013; I gave up and I downloaded it from this URL and
-double-clicked to the install:
-</p>
-
-<p>
-<a href="http://www.obdev.at/downloads/littlesnitch/LittleSnitch-3.5.1.dmg">http://www.obdev.at/downloads/littlesnitch/LittleSnitch-3.5.1.dmg</a>
-</p>
-
-<p>
-The install required a reboot, and after that, it immediately
-started going.
-</p>
-
-<p>
-I then right-click on the Little Snitch icon in the menu bar and
-turned it off. There is a key binding to turn it on:
-CTRL+ALT+CMD+M.
-</p>
-</div>
-</li>
-
-<li><a id="sec-1-5-7-3" name="sec-1-5-7-3"></a>ScreenFlow 4<br  /><div class="outline-text-5" id="text-1-5-7-3">
-<p>
-I use ScreenFlow for creating screencasts. It's not available
-through the AppStore, but instead you can find it on the
-<a href="http://telestream.com">http://telestream.com</a> website. Getting it took a bit of fooling
-around: I found it by going to <a href="http://dynamic.telestream.net/downloads/login.asp?prodid=screenflow&message=login">this login page</a>, logging in, and
-then downloading it. Once I had the <code>.dmg</code>, it was a standard
-install. I provided my license number once I was in.
-</p>
-</div>
-</li>
-
-<li><a id="sec-1-5-7-4" name="sec-1-5-7-4"></a>Mac Bartender<br  /><div class="outline-text-5" id="text-1-5-7-4">
-<p>
-I use MacBartender to clean up the icons in my menu bar. This
-initially started so that my screencasts didn't "leak" info, but
-I've come to enjoy the lack of distraction.
-</p>
-
-<p>
-I found the installer here:
-<a href="http://www.macbartender.com/Demo/Bartender.zip">http://www.macbartender.com/Demo/Bartender.zip</a>. I double-clicked
-to open it, I then double-click MacBartender, and it prompted me
-to move it to the Applications folder, and then another prompt to
-"Continue."
-</p>
-
-<p>
-At this point, it was a "&#x2026;" appearing in my menu bar.
-</p>
-
-<p>
-I then pressed CMD-SPACE and started Bartender, and I:
-</p>
-
-<ul class="org-ul">
-<li>General &gt; Start &gt; [x] Launch Bartender at Login
-</li>
-<li>General &gt; Start &gt; Bartender Menu Bar Icon: Star
-</li>
-</ul>
-
-<p>
-I then clicked on the Star and licensed it.
-</p>
-
-<p>
-I then went through the preferences and each item (System Items +
-Active Menu Items), and picked "Show in Bartender Bar, not in
-Menu Bar." This reduced all of my menu bar items down to the
-single Star.
-</p>
-</div>
-</li></ol>
-</div>
-
-<div id="outline-container-sec-1-5-8" class="outline-4">
-<h4 id="sec-1-5-8"><span class="section-number-4">1.5.8</span> Resources</h4>
-<div class="outline-text-4" id="text-1-5-8">
-<p>
-My main resource was Gary Larizza's article called "<a href="http://garylarizza.com/blog/2013/02/15/puppet-plus-github-equals-laptop-love/">Puppet + Github
-= Laptop &lt;3</a>" and <a href="https://github.com/glarizza/my-boxen/">glarizza/my-boxen</a>.
-</p>
-
-<p>
-Other resources included:
-</p>
-
-<ul class="org-ul">
-<li>The official boxen homepage: <a href="https://boxen.github.com">https://boxen.github.com</a>
-</li>
-<li><a href="https://github.com/boxen/our-boxen">boxen/our-boxen</a>
-</li>
-<li>Visiting <a href="https://github.com/boxen/">https://github.com/boxen/</a> and then filtering through all
-of the puppet-* projects.
-</li>
-<li><a href="http://jjasghar.github.io/blog/2014/01/01/customizing-boxen/">http://jjasghar.github.io/blog/2014/01/01/customizing-boxen/</a>
-</li>
-</ul>
-</div>
 </div>
 </div>
 </div>
