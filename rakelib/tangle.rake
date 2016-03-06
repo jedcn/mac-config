@@ -10,5 +10,7 @@ end
 
 desc 'tangle literate source into puppet'
 task :tangle => :emacs_installed do
+  tangle_file_using_emacs('literate/tools.org')
   tangle_file_using_emacs('literate/boxen.org')
+  tangle_file_using_emacs('literate/website.org')
 end

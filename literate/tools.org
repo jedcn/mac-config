@@ -1,0 +1,50 @@
+* Tools
+
+* Rakefile
+
+  Common functions and tasks. Remaining =rake= code is available
+  because it exists, by convention, in =rakelib/=.
+
+  #+BEGIN_SRC ruby :tangle ../Rakefile
+    def run(c)
+      require 'open3'
+      _stdin, stdout, stderr = Open3.popen3(c)
+      [ stdout.gets, stderr.gets, $?.to_i ]
+    end
+
+    task :emacs_installed do
+      location = `which emacs`
+      raise 'Unable to find emacs' if location.empty?
+    end
+
+    task default: :tangle
+  #+END_SRC
+
+  See [[https://github.com/jedcn/mac-config/blob/master/Rakefile][Rakefile]].
+
+* tangle.rake
+
+  Ruby code for transforming a =.org= file into something else.
+
+  Code blocks in the =.org= files must explicitly call out =:tangle
+  <location>=. They will be extracted into that location.
+
+  #+BEGIN_SRC ruby :tangle ../rakelib/tangle.rake
+    def tangle_file_using_emacs(file)
+      args = '--no-init-file --no-site-file --batch'
+      tangle_elisp =
+        %Q|(progn (require 'ob-tangle) (org-babel-tangle-file \\"#{file}\\"))|
+      command = %Q|emacs #{args} --eval "#{tangle_elisp}"|
+      _stdout, stderr, status = run(command)
+      puts stderr unless status == 0
+    end
+
+    desc 'tangle literate source into puppet'
+    task :tangle => :emacs_installed do
+      tangle_file_using_emacs('literate/tools.org')
+      tangle_file_using_emacs('literate/boxen.org')
+      tangle_file_using_emacs('literate/website.org')
+    end
+  #+END_SRC
+
+  See [[https://github.com/jedcn/mac-config/blob/master/rakelib/tangle.rake][rakelib/tangle.rake]].
