@@ -2,1271 +2,511 @@
 
 ** Introduction
 
-   I care about how my computer is configured.
+   This is the config for my Mac.
 
-   I like magnifying any part of my screen so that I can easily show
-   things to my daughter.
+   I like for certain applications to be installed.
 
-   I like controlling the applications that I am working with. I like
-   being able to easily expand, shrink, or dismiss the windows they
-   are in.
+   I want my dot files to be automatically setup.
+
+   There are certain operating system settings I want one way or
+   another.
 
-   There are certain programs I know how to use, and I would like them
-   to automatically installed without any effort on my part.
+** Overview
+
+   It is based in [[https://github.com/boxen/our-boxen/#our-boxen][Boxen]]. The configuration can be reified with a
+   single command.
+
+   When it comes to applications this essentially lists [[http://brew.sh/][Homebrew]] and
+   [[https://caskroom.github.io/][Homebrew Cask]] packages.
 
-   I've put some time into thinking about how to configure my
-   setup. *This* is what I've come up with.
+   Some things, like [[https://github.com/robbyrussell/oh-my-zsh][oh-my-zsh]], are installed by cloning a repository
+   and setting up links. Boxen can do that, too. This approach also
+   works for setting up dot-files.
+
+   Boxen can be extended with modules, and an example of such a module
+   is one that allows you to control OS settings such as mapping the
+   =CAPS LOCK= key to =CONTROL=.
 
-*** What is *this*?
+** OSX Settings
 
-    As I am typing this, I am writing plain text in a single file
-    named =README.org=.
+   The following settings are made possible via [[https://github.com/boxen/puppet-osx][puppet-osx]].
 
-    However, this single file is *versatile*.
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/osx_config.pp
+     class people::jedcn::osx_config {
 
-    #+BEGIN_QUOTE
-      ver•sa•tile (vûrˈsə-təl, -tīlˌ)
+       # ZSH
+       osx_chsh { $::luser:
+         shell   => '/opt/boxen/homebrew/bin/zsh',
+         require => Package['zsh'],
+       }
 
-      adj. Capable of doing many things competently.
+       file_line { 'add zsh to /etc/shells':
+         path    => '/etc/shells',
+         line    => "${boxen::config::homebrewdir}/bin/zsh",
+         require => Package['zsh'],
+       }
 
-      adj. Having varied uses or serving many functions.
+       # Dock Settings
+       include osx::dock::autohide
+       include osx::dock::clear_dock
 
-      adj. Variable or inconstant; changeable.
-    #+END_QUOTE
+       # Screen Zoom
+       include osx::universal_access::ctrl_mod_zoom
+       include osx::universal_access::enable_scrollwheel_zoom
+
+       # Key Repeat
+       class { 'osx::global::key_repeat_delay':
+         delay => 10
+       }
+       include osx::global::key_repeat_rate
+
+       # Capslock becomes Control
+       include osx::keyboard::capslock_to_control
+
+       # Hot Corners
+       osx::dock::hot_corner { 'Show the desktop':
+         position => 'Bottom Right',
+         action => 'Desktop'
+       }
+       osx::dock::hot_corner { 'Put Display to Sleep':
+         position => 'Bottom Left',
+         action => 'Put Display to Sleep'
+       }
+       osx::dock::hot_corner { 'Start Screen Saver':
+         position => 'Top Left',
+         action => 'Start Screen Saver'
+       }
+       osx::dock::hot_corner { 'Mission Control':
+         position => 'Top Right',
+         action => 'Mission Control'
+       }
+
+       # Make Developer Tools available in Safari (ie: right-click and see
+       # Inspect Element)
+       include osx::safari::enable_developer_mode
+
+       # Recovery Message
+       $recovery_owner = "This computer belongs to Jed Northridge."
+       $recovery_contact = "If found, please contact jedcn@jedcn.com or 305-985-3326."
+       osx::recovery_message { "${recovery_owner} ${recovery_contact}": }
+     }
+   #+END_SRC
+
+   See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/osx_config.pp][modules/people/manifests/jedcn/osx_config.pp]].
 
-    It is part of a larger collection of files at
-    https://github.com/jedcn/mac-config, and this means a formatted,
-    web accessible version of this single file is available here:
-    https://github.com/jedcn/mac-config/blob/master/README.org.
+**  Repositories and Dotfiles
 
-    This file contains chunks of computer code, and these chunks can
-    be programmatically extracted into distinct files. The snippets
-    can be split into two categories:
+   Boxen can clone repositories:
 
-    1. Some of files contain configuration in a language called
-       [[http://puppetlabs.com][puppet]]. These play a role within a framework named [[https://boxen.github.com][boxen]], and
-       *are declarations* that can change the configuration of my
-       computer.
-    2. Some of files contain helper code in a language called [[http://en.wikipedia.org/wiki/Ruby_(programming_language)][ruby]],
-       and these glue things together by extracting code, building up
-       the website, etc.
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/repositories.pp
+     class people::jedcn::repositories {
 
-    Finally, this entire file can be converted into HTML and it serves
-    as the basis of http://jedcn.github.io/mac-config.
+       $my_init_src = '/opt/init-src'
 
-*** Wait, what's =.org=?
+       file { $my_init_src:
+         ensure => directory,
+         mode   => 0644,
+       }
 
-    *This* is a file named =README.org=. The =.org= extension means
-    that this is a plain text file structured following the
-    conventions of [[http://en.wikipedia.org/wiki/Org-mode][org-mode]]. org-mode is a part of [[https://www.gnu.org/software/emacs/][emacs]].
+       repository { "${my_init_src}/dot-org-files":
+         source  => 'jedcn/dot-org-files',
+         require => File[$my_init_src]
+       }
 
-    A component of org-mode, named [[http://orgmode.org/worg/org-contrib/babel/][babel]], serves as the basis for
-    intertwining chunks of code with text, and allowing these chunks
-    to be extracted.
+       repository { "${my_init_src}/oh-my-zsh":
+         source  => 'robbyrussell/oh-my-zsh',
+         require => File[$my_init_src]
+       }
 
-    If this seems strange to you, it probably is. Stepping back,
-    *this* is an experiment in using [[http://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] to describe
-    how I configure my computer.
+       repository { "${my_init_src}/cask":
+         source  => 'cask/cask',
+         require => File[$my_init_src]
+       }
 
-    Why document computer configuration at all? It stems from the
-    tension between these ideas:
+     }
+   #+END_SRC
 
-    1. I rarely configure a new computer, and yet I deeply care about
-       how my computer is configured.
-    2. If I had to get a new computer, it would be important for me to
-       quickly get back to how I like having things setup, and yet,
-       this happens so infrequently that I would not remember what I
-       did to get it into the state I had it.
+   See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/repositories.pp][modules/people/manifests/jedcn/repositories.pp]].
 
-    That said, why use a Literate System? I am not comfortable with
-    boxen or puppet, so I benefit from having a written description of
-    my intention near the puppetry. I can also easily include links to
-    blogs or applications regarding my motivation.
+   Boxen can setup links to cloned repositories:
 
-    It is also motivated by the idea that I am sometimes asked, "How
-    did you configure your computer to do such-and-such?" I don't have
-    a great memory so I'd benefit from a self-describing
-    configuration.
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/links.pp
+     class people::jedcn::links {
 
-    The neat trick about Literate Source is that it can be dense
-    enough to create more than one artifact.
+       $my_init_src = '/opt/init-src'
 
-    #+BEGIN_QUOTE
-      This file *is* the puppet configuration and it *is* the website
-      and it *is* the glue code that puts everything together.
-    #+END_QUOTE
+       file { "/Users/${luser}/.zshrc":
+         ensure  => link,
+         mode    => '0644',
+         target  => "${my_init_src}/dot-org-files/home/.zshrc",
+         require => Repository["${my_init_src}/dot-org-files"],
+       }
 
-    So, why not make it so that a single document can help me share
-    with people?
+       file { "/Users/${luser}/.oh-my-zsh":
+         ensure  => link,
+         target  => "${my_init_src}/oh-my-zsh",
+         require => Repository["${my_init_src}/oh-my-zsh"],
+       }
 
-*** Who is this for?
+       file { "/Users/${luser}/.cask":
+         ensure  => link,
+         target  => "${my_init_src}/cask",
+         require => Repository["${my_init_src}/cask"],
+       }
 
-    Any prose descriptions behind my motivations should be accessible
-    to all mac users.
+       file { "/Users/${luser}/.hammerspoon":
+         ensure  => link,
+         target  => "${my_init_src}/dot-org-files/home/.hammerspoon",
+         require => Repository["${my_init_src}/dot-org-files"],
+       }
+     }
+   #+END_SRC
 
-    When it comes to boxen and puppet, what I have here is functional,
-    but I am not an expert by any means.
+   See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/repositories.pp][modules/people/manifests/jedcn/links.pp]].
 
-    If you have never worked with boxen or seen a configuration
-    before, this could help you get the general idea.
-
-*** Who uses this?
-
-    I am the only explicit user of this configuration.
-
-    I use it outside of the context of any group or company, and I
-    only have a single computer.
-
-    Having worked with boxen for a small bit now, I think it's all
-    about [[https://en.wikipedia.org/wiki/Metcalfe's_law][Metcalfe's Law]] in the context of how many users and
-    computers you're working with. The more of either one you have the
-    more useful boxen will be.
-
-    And so, when it's just me, or just you, *I'd think twice about
-    using boxen itself.* I have spent more time fooling with boxen
-    that it would take to take some written notes while directly
-    configuring a single computer.
-
-    As I said previously, when it comes to this explicit config, I can
-    see how someone could get an idea for what boxen is from it, or
-    perhaps copy and paste a few snippets into theirs. *However*, no
-    one should clone or fork this repository. Instead, if you're
-    looking to get started with boxen for yourself, then you should
-    read the section "How to Get Started" below.
-
-*** What Next?
-
-    Now that we ahve seen a general introduction to this document, and
-    we understand how it can be used, let's consider what's left.
-
-    We'll lay things out as follows:
-
-    1. General Introduction (this)
-    2. OSX Settings
-    3. Dotfiles and Repositories
-    4. Applications
-    5. Command Line Utilities
-
-    As we cover the content above, we will mix prose with puppetry
-    (the language of boxen). We will go straight at the puppet
-    configuration that enables certain configuration and application
-    installation. Once we are doen with that, we will see how the
-    pieces fit together within boxen.
-
-    Finally, once we have seen the basic configuration and know how
-    boxen works, we will consider some of the Literate aspects of the
-    project and supplementary material.
-
-** Configuration
-
-   Let's begin by talking about my actual configuration.
-
-   We'll start with prose alongside puppet, and later on I will
-   explain how everything comes together in the Boxen Administrativia
-   section.
-
-   The code snippets you are about are pieces of functional (as in,
-   working) puppetry. They defines "rules" about how my computer
-   should be configured, and this includes:
-
-   + Which system settings should be in place
-   + Which repositories should be cloned (say, dotfiles)
-   + Which links should be created (saa, to cloned dotfiles or
-     installed applications)
-   + Which applications should be installed
-   + Which homebrew installs should be performed
-   + Which git settings should be configured
-
-   The nature of puppet is that it "makes things match" the rules, and
-   so, if there is a rule that says 'Chrome needs to be installed'
-   then puppet will check to see if Chrome is present. *If Chrome is
-   installed*, then boxen does nothing. *If Chrome is not installed*,
-   then boxen installs it.
-
-   Consequently, the first run of boxen might take 30 or 40 minutes
-   while dozens of programs are downloaded and installed, while
-   subsequent runs take just a few seconds.
-
-*** OSX Settings
-
-    Configuring OSX settings is normally done through various System
-    Preferences screens, but with boxen you can write your
-    configuration in a file.
-
-    This is one of the most compelling reasons for using boxen. I can
-    imagine using boxen *just* for the ability to automatically
-    configure OSX, and nothing more.
-
-    Boxen itself doesn't know about OSX, but you can use a module
-    named [[https://github.com/boxen/puppet-osx][puppet-osx]], and it provides the ability to do things like:
-
-    1. Map CAPS LOCK to CTRL.
-    2. Make your key presses repeat very quickly.
-    3. Make it so that holding CTRL and scrolling on your trackpad will
-       magnify the screen underneath the mouse pointer.
-    4. Switch your shell to ZSH.
-    5. Automatically hide the dock.
-    6. Remove clutter from the dock by making it only contain running
-       apps.
-    7. Turn on the Developer Tools in Safari
-    8. Setup a message on your lock screen to provides your contact
-       information if your laptop is found.
-
-    All of these things are tweakable by hand, but using boxen lets
-    you get going in a flash, and lets you change things (say, the
-    repeat rate) in a controlled manner that gets checked into source
-    control.
-
-    I found [[https://github.com/boxen/puppet-osx][the main README of the puppet-osx]] critical to
-    understanding the following settings:
-
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/osx_config.pp
-      class people::jedcn::osx_config {
-
-        # ZSH
-        osx_chsh { $::luser:
-          shell   => '/opt/boxen/homebrew/bin/zsh',
-          require => Package['zsh'],
-        }
-
-        file_line { 'add zsh to /etc/shells':
-          path    => '/etc/shells',
-          line    => "${boxen::config::homebrewdir}/bin/zsh",
-          require => Package['zsh'],
-        }
-
-        # Dock Settings
-        include osx::dock::autohide
-        include osx::dock::clear_dock
-
-        # Screen Zoom
-        include osx::universal_access::ctrl_mod_zoom
-        include osx::universal_access::enable_scrollwheel_zoom
-
-        # Key Repeat
-        class { 'osx::global::key_repeat_delay':
-          delay => 10
-        }
-        include osx::global::key_repeat_rate
-
-        # Capslock becomes Control
-        include osx::keyboard::capslock_to_control
-
-        # Hot Corners
-        osx::dock::hot_corner { 'Show the desktop':
-          position => 'Bottom Right',
-          action => 'Desktop'
-        }
-        osx::dock::hot_corner { 'Put Display to Sleep':
-          position => 'Bottom Left',
-          action => 'Put Display to Sleep'
-        }
-        osx::dock::hot_corner { 'Start Screen Saver':
-          position => 'Top Left',
-          action => 'Start Screen Saver'
-        }
-        osx::dock::hot_corner { 'Mission Control':
-          position => 'Top Right',
-          action => 'Mission Control'
-        }
-
-        # Make Developer Tools available in Safari (ie: right-click and see
-        # Inspect Element)
-        include osx::safari::enable_developer_mode
-
-        # Recovery Message
-        $recovery_owner = "This computer belongs to Jed Northridge."
-        $recovery_contact = "If found, please contact jedcn@jedcn.com or 305-985-3326."
-        osx::recovery_message { "${recovery_owner} ${recovery_contact}": }
-      }
-    #+END_SRC
-
-    The extracted version of this file is available in
-    [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/osx_config.pp][modules/people/manifests/jedcn/osx_config.pp]].
-
-*** Dotfiles and Repositories
-
-    You can configure boxen to clone repositories and ensure their
-    presence on each run. It doesn't fetch/pull, but it can bring them
-    down initially. I pull down repositories that are part of my
-    bootstrapping process. In particular:
-
-    + My dotfiles ([[https://github.com/jedcn/dot-org-files][jedcn/dot-org-files]])
-    + [[https://github.com/robbyrussell/oh-my-zsh/][oh-my-zsh]]
-    + [[https://github.com/cask/cask][cask (for emacs, not brew)]]
-
-    And I land these near boxen, at =/opt/init-src=.
-
-    Once these are cloned, I use boxen to create links from where they
-    expected to be normally to a file within one of these cloned
-    repositories.
-
-    It is worth noting that you don't have to give up on
-    whatever-you-were-using-for-creating-links before. They can live
-    side-by-side, and you can keep using your former system on
-    machines without boxen. I used to use both [[https://github.com/andsens/homeshick][homeshick]] and boxen,
-    but have since switched to only boxen.
-
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/repositories.pp
-      class people::jedcn::repositories {
-
-        $my_init_src = '/opt/init-src'
-
-        file { $my_init_src:
-          ensure => directory,
-          mode   => 0644,
-        }
-
-        repository { "${my_init_src}/dot-org-files":
-          source  => 'jedcn/dot-org-files',
-          require => File[$my_init_src]
-        }
-
-        repository { "${my_init_src}/oh-my-zsh":
-          source  => 'robbyrussell/oh-my-zsh',
-          require => File[$my_init_src]
-        }
-
-        repository { "${my_init_src}/cask":
-          source  => 'cask/cask',
-          require => File[$my_init_src]
-        }
-
-      }
-    #+END_SRC
-
-    The extracted version of this file is available in
-    [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at
-    [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/repositories.pp][modules/people/manifests/jedcn/repositories.pp]].
-
-    And this next puppetry creates several links so that the files
-    inside of those repositories appear in places relative to my home
-    directory.
-
-    The "require" attributes instruct puppet to make sure the main
-    directory and repositories are cloned before the links are created:
-
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/links.pp
-      class people::jedcn::links {
-
-        $my_init_src = '/opt/init-src'
-
-        file { "/Users/${luser}/.zshrc":
-          ensure  => link,
-          mode    => '0644',
-          target  => "${my_init_src}/dot-org-files/home/.zshrc",
-          require => Repository["${my_init_src}/dot-org-files"],
-        }
-
-        file { "/Users/${luser}/.oh-my-zsh":
-          ensure  => link,
-          target  => "${my_init_src}/oh-my-zsh",
-          require => Repository["${my_init_src}/oh-my-zsh"],
-        }
-
-        file { "/Users/${luser}/.cask":
-          ensure  => link,
-          target  => "${my_init_src}/cask",
-          require => Repository["${my_init_src}/cask"],
-        }
-
-        file { "/Users/${luser}/.hammerspoon":
-          ensure  => link,
-          target  => "${my_init_src}/dot-org-files/home/.hammerspoon",
-          require => Repository["${my_init_src}/dot-org-files"],
-        }
-      }
-    #+END_SRC
-
-    The extracted version of this file is available in
-    [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/repositories.pp][modules/people/manifests/jedcn/links.pp]].
-
-*** Applications
-
-    Next up, after dot-files and repositories have been figured out,
-    we figure out applications like Chrome and Hammerspoon.
-
-    You can use boxen to install the applications that you work
-    with. In turn, boxen relies on modules to install
-    applications. Originally, I used modules like this:
-
-    * [[https://github.com/boxen/puppet-chrome][puppet-chrome]]
-
-    But this did not work out well. Modules were hit-or-miss. Some
-    were not updated. This hardship caused me to try out brewcask, and
-    so far as I can tell, that is the way to go with boxen.
-
-    Whether called out with an explicit puppet module, like
-    puppet-chrome, or called out via brewcask, after you declare that
-    you want to have an application, say chrome, you run the command
-    =boxen= and the application will "just" appear in your
-    Applications folder.
-
-**** Browsers
-
-     I use Chrome and Chrome Canary.
-
-**** Screen Saver
-
-     I've started using [[https://github.com/JohnCoates/Aerial][Aerial]]. Boxen will install it, but you still
-     need to open System Preferences -> Desktop & Screen Saver ->
-     Screen Saver, and select it.
-
-**** Window Management
-
-     I use Hammerspoon for window management, among other things.
-
-     After you run boxen, I still launched Hammerspoon and did the
-     following manually:
-
-     + Enabled Accessibility
+** Applications
+
+   I'm using Homebrew Cask for applications. The only exception is
+   [[https://github.com/boxen/puppet-chrome][puppet-crome]].
+
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp
+     class people::jedcn::applications {
+       include chrome
+       include chrome::canary
+
+       include brewcask
+       package { 'hammerspoon':
+         provider => 'brewcask',
+         require  => File["/Users/${luser}/.hammerspoon"],
+       }
+
+       package { 'aerial':
+         provider => 'brewcask',
+       }
+     }
+   #+END_SRC
+
+   See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/applications.pp][modules/people/manifests/jedcn/applications.pp]].
+
+   Notes:
+
+*** Screen Saver
+
+    I've started using [[https://github.com/JohnCoates/Aerial][Aerial]].
+
+    After a boxen run, you still need to open System Preferences ->
+    Desktop & Screen Saver -> Screen Saver, and select it.
+
+*** Window Management
+
+    I use Hammerspoon for window management.
+
+    After a boxen run, you still need to launch Hammerspoon and:
+
+     + Enable Accessibility
      + Select Launch Hammerspoon on Login
      + Deselect Show Dock Icon
      + Deselect Send Crash Data
 
-**** Declarations
+** Homebrew
 
-     Here's the puppetry that handles my applications:
+   These are the packages I like:
 
-     #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/applications.pp
-       class people::jedcn::applications {
-         include chrome
-         include chrome::canary
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/homebrew.pp
+     class people::jedcn::homebrew {
+       $homebrew_packages = [
+                             'ag',
+                             'tmux',
+                             'tree',
+                             'wget',
+                             'zsh',
+                             ]
 
-         include brewcask
-         package { 'hammerspoon':
-           provider => 'brewcask',
-           require  => File["/Users/${luser}/.hammerspoon"],
-         }
+       package { $homebrew_packages: }
 
-         package { 'aerial':
-           provider => 'brewcask',
-         }
+       package { 'cask':
+         ensure  => present,
+         require => Package['emacs'],
        }
-     #+END_SRC
 
-     The extracted version of this file is available in
-     [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at
-     [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/applications.pp][modules/people/manifests/jedcn/applications.pp]].
-
-*** Homebrew
-
-    I get many command line utilities from [[http://brew.sh][homebrew]].
-
-    Boxen allows me to replace several =brew install= commands with a
-    single boxen run.
-
-    As I scan through what's below, I recognize that the majority of
-    packages are simple, standard installs. It's like typing =brew
-    install ag=, for example.
-
-    However, you can install with options, as I do with emacs. I
-    learned about these particular options in this post: [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/][Color Themes:
-    Redux]].
-
-    Two quick notes in regards to puppet:
-
-    + Homebrew is the standard package provider for puppetry within
-      boxen. This means that if you declare a =package= (as seen below)
-      then the =provider= defaults to =homebrew=.
-    + If you install =cask= before you have =emacs=, then homebrew
-      tries to grab =emacs= (without the options I like). And so-- you
-      can use =require= attributes to manage dependencies with boxen.
-
-    Here are the packages I like:
-
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/homebrew.pp
-      class people::jedcn::homebrew {
-        $homebrew_packages = [
-                              'ag',
-                              'tmux',
-                              'tree',
-                              'wget',
-                              'zsh',
-                              ]
-
-        package { $homebrew_packages: }
-
-        package { 'cask':
-          ensure  => present,
-          require => Package['emacs'],
-        }
-
-        package { 'emacs':
-          ensure          => present,
-          install_options => [
-            '--cocoa',
-            '--srgb'
-          ],
-        }
-      }
-    #+END_SRC
-
-    The extracted version of this file is available in
-    [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/homebrew.pp][modules/people/manifests/jedcn/homebrew.pp]].
-
-*** Git Configuration
-
-    Boxen uses a package named [[https://github.com/boxen/puppet-git][puppet-git]] to manage git configuration
-    options.
-
-    I manually set my =user.email= and =user.name= when I first started
-    using my computer, and after some bootstrapping, I got to the point
-    where I could have boxen set other values.
-
-    So far, I've got:
-
-    + =core.editor= so that I can use emacs (from boxen) for editing
-      commit messages and rebasing.
-    + =push.default= so that when I push (without an explicit
-      upstream) I end up pushing to a branch of the same name.
-
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/git.pp
-      class people::jedcn::git {
-        git::config::global { 'core.editor':
-          value  => '/opt/boxen/homebrew/bin/emacsclient'
-        }
-        git::config::global { 'push.default':
-          value  => 'simple'
-        }
-      }
-    #+END_SRC
-
-    The extracted version of this file is available in
-    [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/git.pp][modules/people/manifests/jedcn/git.pp]].
-
-** Boxen Administrativia
-
-   So far we've had the luxury of just looking at puppet configuration
-   and presuming that it somehow fits together. In this section, we'll
-   now consider where files are placed, how they interact, and how
-   boxen is run.
-
-*** Puppetry and File Layout
-
-    Boxen pays attention to the puppetry in this project on the basis
-    of my user login: =jedcn=. The system allows for you to call out a
-    specific configuration for a user by placing a file at
-    =modules/people/manifests/$USER.pp=.
-
-    And so, I can put content at =modules/people/manifests/jedcn.pp=
-    that will be examined each time I run =boxen=.
-
-    When I write puppet, I do my best to group declarations into
-    distinct files, and so, my entry point only includes other files:
-
-    #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn.pp
-       class people::jedcn {
-         include people::jedcn::applications
-         include people::jedcn::git
-         include people::jedcn::homebrew
-         include people::jedcn::links
-         include people::jedcn::osx_config
-         include people::jedcn::repositories
+       package { 'emacs':
+         ensure          => present,
+         install_options => [
+           '--cocoa',
+           '--srgb'
+         ],
        }
-    #+END_SRC
+     }
+   #+END_SRC
 
-    The extracted version of this file is available in
-    [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn.pp][modules/people/manifests/jedcn.pp]].
+   Notes:
 
-    These =include= statements invoke puppetry in other files, at
-    locations that match up with the directories if you replace the
-    =::= with =/=. As an example, you can find
-    =people::jedcn::applications= at
-    =modules/people/manifests/jedcn/applications.pp=.
+   + I install emacs with options that I learned about in [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/][this post]].
 
-*** How to Get Started
+   See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/homebrew.pp][modules/people/manifests/jedcn/homebrew.pp]].
 
-    I was confused when I first started using Boxen. I went to the
-    website, https://boxen.github.com/, but didn't know what to do
-    next.
+** Git Configuration
 
-    I suspect that most boxen users do so within the context of a
-    company, and so, someone has already laid down some basic boxen
-    infrastructure and then subsequent users get told the first few
-    steps to bootstrap themselves by someone at the company.
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn/git.pp
+     class people::jedcn::git {
+       git::config::global { 'core.editor':
+         value  => '/opt/boxen/homebrew/bin/emacsclient'
+       }
+       git::config::global { 'push.default':
+         value  => 'simple'
+       }
+     }
+   #+END_SRC
 
-    If you are like me, and you don't have that luxury, so it may be
-    helpful to understand what I did:
+   See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn/git.pp][modules/people/manifests/jedcn/git.pp]].
 
-    I logged into github.com and forked [[https://github.com/boxen/our-boxen][boxen/our-boxen]], and now I had
-    [[https://github.com/jedcn/our-boxen][jedcn/our-boxen]]. Going forward your fork will contain your
-    configuration (or the configuration of your team) and
-    boxen/our-boxen can serve as its "upstream". This will allow your
-    fork to pull in policy, security, and code changes from the main
-    boxen project.
+** One Concern per File
 
-    I changed the name of my fork because I had trouble explaining
-    "our-boxen" to my friends. They didn't know what boxen was and
-    they didn't understand why I was using the word "our" in a
-    scenario where I was only managing *my own* mac config. I picked
-    the name "mac-config", and the new home of my boxen repository is
-    [[https://github.com/jedcn/mac-config/][jedcn/mac-config]].
+   Content at =modules/people/manifests/jedcn.pp= will only run if the
+   current user is jedcn.
 
-    At any rate, now that your fork exists, the next step is to get it
-    cloned locally and then bootstrap boxen. The first boxen run will
-    install the defaults that the main boxen/our-boxen promotes.
+   #+BEGIN_SRC puppet :tangle ./modules/people/manifests/jedcn.pp
+     class people::jedcn {
+       include people::jedcn::applications
+       include people::jedcn::git
+       include people::jedcn::homebrew
+       include people::jedcn::links
+       include people::jedcn::osx_config
+       include people::jedcn::repositories
+     }
+   #+END_SRC
 
-**** Bootstrapping
+    See [[https://github.com/jedcn/mac-config/blob/master/modules/people/manifests/jedcn.pp][modules/people/manifests/jedcn.pp]].
 
-     Boxen has just a couple pre-requisites that need to be met:
+** Bootstrapping
 
-     + xCode should be installed
-     + Your boxen fork should be cloned to =/opt/boxen/repo=
+   #+BEGIN_SRC sh
+     xcode-select --install
+     sudo mkdir -p /opt/boxen
+     sudo chown ${USER}:staff /opt/boxen
+     git clone https://github.com/jedcn/mac-config /opt/boxen/repo
+     /opt/boxen/repo/script/boxen
+   #+END_SRC
 
-     Once you've got these, you can run =boxen=. If you're down with
-     puppet, this is apparently very similar to a masterless scenario
-     where you're running =puppet apply=.
+** Literate Programming
 
-     I'm not down with puppet, so I think of it as effectively
-     "reifying" your boxen config.
+   *This* is an experiment in using [[http://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] to describe
+   how I configure my computer.
 
-     The following commands should do the trick re: the
-     pre-requisites:
-
-     #+BEGIN_SRC sh
-       xcode-select --install
-       sudo mkdir -p /opt/boxen
-       sudo chown ${USER}:staff /opt/boxen
-       git clone https://github.com/jedcn/mac-config /opt/boxen/repo
-       /opt/boxen/repo/script/boxen
-     #+END_SRC
-
-     When the first boxen run completed I didn't have any of the
-     configuration that you've seen so far. Instead, I had whatever
-     was in my clone, and this matched boxen/our-boxen on the day I
-     forked it. So, what does your first boxen run get you?
-
-     The official answer is here: [[https://github.com/boxen/our-boxen#what-you-get][boxen/our-boxen#what-you-get]]. But, I
-     suspect this is out of date. Is nodenv the same thing as nvm?
-
-     When it comes to ruby and node, I had several installations via
-     [[https://github.com/wfarr/nodenv][nodenv]] and [[https://github.com/sstephenson/rbenv][rbenv]]. These were located at =/opt/rubies= and
-     =/opt/boxen/nodenv/versions=:
-
-     #+BEGIN_SRC sh
-       $ ls /opt/rubies
-       1.9.3      1.9.3-p545 2.0.0      2.0.0-p451 2.1.0      2.1.1      2.1.2
-
-       $ ls /opt/boxen/nodenv/versions
-       v0.10    v0.10.31 v0.6     v0.6.20  v0.8     v0.8.26
-     #+END_SRC
-
-     Until now, I always used =rvm= rather than =rbenv=, and I have
-     never used =nodenv=. Further-- when it comes to node-- I doubt
-     I'll ever need any version that's less than 0.10, but I didn't
-     sweat this, nor try to change it.
-
-     My thinking here is that what matters is ruby and node, not
-     necessarily one tool for getting ruby or node over another.
-     Further, I don't mind having a few extra rubies or nodes around.
-
-     Finally-- even though ruby and node are some of my goto
-     programming languages-- I can still see serious value in using
-     boxen to manage OSX Configuration and Applications *even if* the
-     users of a computer *never use* ruby or node.
-
-**** Subsequent Runs
-
-     This first =boxen= run took about 25-30 minutes. However, once my
-     initial run was done, then you can run boxen at any time by
-     typing =boxen=, and, if there's nothing to do, a run can be
-     completed in as little as 10 seconds.
-
-     And then you can get into a flow where you make a change to your
-     puppet configuration, run boxen, and see what happens.
-
-** Literate Administrativia
-
-   Earlier on I said,
-
-   #+BEGIN_QUOTE
-     *this* is an experiment in using [[http://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] to describe
-      how I configure my computer.
-   #+END_QUOTE
-
-   And then I said:
-
-   #+BEGIN_QUOTE
-     The neat trick about Literate Source is that it can be dense
-     enough to create more than one artifact. This file *is* the
-     puppet configuration and it *is* the website and it *is* the glue
-     code that puts everything together.
-   #+END_QUOTE
-
-   And then I stopped talking about it.
-
-   Let's revisit these ideas now that we've been through the majority
-   of the puppet configuration.
-
-   This single document *is* code.
-
-   And it is English prose.
-
-   It is puppet.
-
-   It is ruby.
-
-   And it is html.
+   A single file generates much of my boxen configuration and this
+   website.
 
    It is available here
    https://github.com/jedcn/mac-config/blob/master/README.org.
 
-   And here: http://jedcn.github.io/mac-config.
+   Here are the instructions:
 
-   This is possible because snippets of code, spanning any language,
-   are embedded into this document. Most of them have associated
-   directives that indicate how they should be extracted.
+   #+BEGIN_SRC ruby :tangle ./Rakefile
+     def run(c)
+       require 'open3'
+       _stdin, stdout, stderr = Open3.popen3(c)
+       [ stdout.gets, stderr.gets, $?.to_i ]
+     end
 
-   Let's talk more about that.
+     task :emacs_installed do
+       location = `which emacs`
+       raise 'Unable to find emacs' if location.empty?
+     end
 
-*** Content Extraction
+     task default: :tangle
+   #+END_SRC
 
-    This single =.org= file can be extracted into many component
-    pieces. What comes out of the file? The pieces are puppetry, web
-    files, and ruby:
+   See [[https://github.com/jedcn/mac-config/blob/master/Rakefile][Rakefile]].
 
-    + *.pp files (for boxen runs)
-    + HTML files (for building a static, descriptive site)
-    + A =Rakefile= and supporting =./rakelib/*.rake= files.
+   #+BEGIN_SRC ruby :tangle ./rakelib/tangle.rake
+     def tangle_file_using_emacs(file)
+       args = '--no-init-file --no-site-file --batch'
+       tangle_elisp =
+         %Q|(progn (require 'ob-tangle) (org-babel-tangle-file \\"#{file}\\"))|
+       command = %Q|emacs #{args} --eval "#{tangle_elisp}"|
+       _stdout, stderr, status = run(command)
+       puts stderr unless status == 0
+     end
 
-    The extraction process is powered by ruby and emacs, if you have
-    this repository cloned, you can type =rake tangle= and this single
-    file will be unpacked.
+     desc 'tangle literate source into puppet'
+     task :tangle => :emacs_installed do
+       tangle_file_using_emacs('README.org')
+     end
+   #+END_SRC
 
-    How does this work? Whenever you run Rake, you need to start with
-    the =Rakefile=.
+   See [[https://github.com/jedcn/mac-config/blob/master/rakelib/tangle.rake][rakelib/tangle.rake]].
 
-**** The Rakefile
+   When it comes to the index.html of the website:
 
-     The first role played by the =Rakefile= is its mere
-     existence. When you run a =rake -W= or a =rake -T= rake comes to
-     life and starts looking "up" until it finds a =Rakefile=.
+   #+BEGIN_SRC html :tangle ./rakelib/index.html.erb
+     <!DOCTYPE html>
+     <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+     <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+     <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+     <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+         <head>
+             <meta charset="utf-8">
+             <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+             <title>Mac Config</title>
+             <meta name="description" content="">
+             <meta name="viewport" content="width=device-width, initial-scale=1">
 
-     From there, it looks down in the =./rakelib= directory for files
-     ending in =.rake=.
+             <link rel="stylesheet" href="css/bootstrap.min.css">
+             <style>
+                 body {
+                     padding-top: 50px;
+                     padding-bottom: 20px;
+                 }
+             </style>
+             <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+             <link rel="stylesheet" href="css/prism.css">
+             <link rel="stylesheet" href="css/main.css">
 
-     Additionally, the =Rakefile=:
+             <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+             <script src="js/vendor/prism.js"></script>
+         </head>
+         <body>
+             <!--[if lt IE 7]>
+                 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+             <![endif]-->
 
-     + defines a function named =run= which enhances standard command
-       execution so that you can get access to stdout, stderr, and the
-       process' signal.
-     + It defines a task named =:emacs_installed=. This allows other
-       tasks to call it out as a pre-requisite and serves as asserting a
-       pre-condition that we "have" emacs installed.
-     + Calls out =:tangle= (defined elsewhere) as the default
-       task. You can invoke the default task by typing =rake= without
-       any other arguments. Tangle is nomenclature from Donald Knuth--
-       I've been using the term "extract" synonymously.
+         <div class="container">
 
-     #+BEGIN_SRC ruby :tangle ./Rakefile
-       def run(c)
-         require 'open3'
-         _stdin, stdout, stderr = Open3.popen3(c)
-         [ stdout.gets, stderr.gets, $?.to_i ]
+           <%= content %>
+
+           <hr>
+
+           <footer>
+             <p>
+               <img title=":money_with_wings:" alt=":money_with_wings:"
+                    src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f4b8.png">
+             </p>
+           </footer>
+         </div> <!-- /container -->
+         </body>
+     </html>
+   #+END_SRC
+
+   See [[https://github.com/jedcn/mac-config/blob/master/rakelib/index.html.erb][rakelib/index.html.erb]].
+
+   When it comes to building up a Github Pages site (supporting js,
+   css):
+
+   #+BEGIN_SRC ruby :tangle ./rakelib/ghpages.rake
+     require 'rake/clean'
+
+     desc 'Create Github Pages content'
+     task 'build-gh-pages' => [ 'gh-pages',
+                                'gh-pages-supporting-content',
+                                'gh-pages/index.html' ]
+
+     directory 'gh-pages'
+     directory 'tmp'
+
+     #
+     # Extract supporting content from HTML5BoilerPlate
+     #
+     task 'gh-pages-supporting-content' => [ 'gh-pages/favicon.ico',
+                                             'gh-pages/css/bootstrap.min.css',
+                                             'gh-pages/css/bootstrap-theme.min.css',
+                                             'gh-pages/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' ]
+
+     CLEAN.include('tmp/initializr.zip')
+     CLEAN.include('tmp/initializr')
+
+     file 'tmp/initializr' => [ 'tmp' ] do
+       chdir('tmp') do
+         `wget -O initializr.zip 'http://www.initializr.com/builder?boot-hero&jquerymin&h5bp-iecond&h5bp-chromeframe&h5bp-analytics&h5bp-favicon&h5bp-appletouchicons&modernizrrespond&izr-emptyscript&boot-css&boot-scripts'`
+         `unzip initializr.zip`
        end
+     end
 
-       task :emacs_installed do
-         location = `which emacs`
-         raise 'Unable to find emacs' if location.empty?
-       end
+     #
+     # Setup files from HTML5BoilerPlate
+     #
+     def cp_from_initializr(file, dir=nil)
+       dest =
+         if dir
+           "gh-pages/#{dir}"
+         else
+           'gh-pages'
+         end
+       FileUtils.cp("tmp/initializr/#{file}", dest, verbose: true)
+     end
 
-       task default: :tangle
-     #+END_SRC
+     directory 'gh-pages/css' => 'gh-pages'
+     directory 'gh-pages/js' => 'gh-pages'
+     directory 'gh-pages/js/vendor' => 'gh-pages/js'
 
-     The extracted version of this file is available in
-     [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/Rakefile][Rakefile]].
+     file 'gh-pages/favicon.ico' => 'tmp/initializr' do
+       cp_from_initializr('favicon.ico')
+     end
 
-     Which leads to the question, *What's :tangle?*
+     file 'gh-pages/css/bootstrap.min.css' => 'gh-pages/css' do
+       cp_from_initializr('css/bootstrap.min.css', 'css')
+     end
 
-**** Tangling (extracting) README.org into distinct files
+     file 'gh-pages/css/bootstrap-theme.min.css' => 'gh-pages/css' do
+       cp_from_initializr('css/bootstrap-theme.min.css', 'css')
+     end
 
-     A file named =./rakelib/tangle.rake= defines the =:tangle= task,
-     and this extracts all of the code snippets in =README.org= to
-     various files.
+     file 'gh-pages/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' =>
+          'gh-pages/js/vendor' do
+       cp_from_initializr('js/vendor/modernizr-2.8.3-respond-1.4.2.min.js',
+                          'js/vendor')
+     end
 
-     While emacs is a text editor, it is also a tool that can execute
-     [[https://en.wikipedia.org/wiki/Emacs_Lisp][elisp]]. Further, if you run emacs in "batch mode," it does not
-     start the text editing user interface it is most commonly
-     associated with.
+     directory 'gh-pages/css' => 'gh-pages'
 
-     And so, below, you'll see a ruby function that contains a brief
-     bit of elisp which uses org-babel functions to extract the snippets.
+     file 'README.html' => :emacs_installed do
+       export_html_using_emacs('README.org')
+     end
 
-     #+BEGIN_SRC ruby :tangle ./rakelib/tangle.rake
-       def tangle_file_using_emacs(file)
-         args = '--no-init-file --no-site-file --batch'
-         tangle_elisp =
-           %Q|(progn (require 'ob-tangle) (org-babel-tangle-file \\"#{file}\\"))|
-         command = %Q|emacs #{args} --eval "#{tangle_elisp}"|
-         _stdout, stderr, status = run(command)
-         puts stderr unless status == 0
-       end
+     file 'gh-pages/index.html' => [ 'gh-pages', 'README.html' ] do
 
-       desc 'tangle literate source into puppet'
-       task :tangle => :emacs_installed do
-         tangle_file_using_emacs('README.org')
-       end
-     #+END_SRC
+       require 'erb'
+       require 'ostruct'
 
-     The extracted version of this file is available in
-     [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/rakelib/tangle.rake][rakelib/tangle.rake]].
-
-     And so, that's how all of the puppetry that you've seen above is
-     unpacked.
-
-**** Flow
-
-     What this means is that I take the following steps when I want to
-     change my computer configuration:
-
-     + I revisit =README.org= and I look for where the new
-       configuration might fit.
-     + I add a prose description of what I am looking to do.
-     + I update a snippet of puppet
-     + I then jump to a terminal and run =rake && boxen=
-     + The =rake= command extracts the contents into the puppet files,
-       and the boxen command reifies the puppet config.
-
-     Once I like what I see, I commit both the =README.org= and the
-     associated puppet file. This means generated code is commit to
-     source control. The files are small, and they don't get out of
-     sync, so I haven't had a problem with it. I briefly considered
-     adding the puppet files to a =.gitignore= and keeping them in
-     only one location, but decided I'd rather have everything in
-     source even if there's a chance they get out of sync.
-
-*** http://jedcn.github.io/mac-config
-
-    This =README.org= file can be transformed into HTML using an
-    export mechanism that is built into org-mode.
-
-    The content is effectively put into HTML within a =<body></body>=,
-    and then it is inserted into a basic template from
-    HTML5Boilerplate.
-
-    This is achieved by minimally converting the HTML5Boilerplate HTML
-    into ERB and by writing a rake task that can download and unpack
-    an HTML5Boilerplate zip.
-
-**** =rakelib/index.html.erb=
-
-     There are a few versions of [[http://html5boilerplate.com/][HTML5BoilerPlate]], and the one we see
-     below is based on the Bootstrap. I removed the core content and
-     replaced it with a single ERB substitution. I also added a link
-     to =prism.js= and =prism.css=. I manually downloaded these.
-
-     #+BEGIN_SRC html :tangle ./rakelib/index.html.erb
-       <!DOCTYPE html>
-       <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-       <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-       <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-       <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-           <head>
-               <meta charset="utf-8">
-               <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-               <title>Mac Config</title>
-               <meta name="description" content="">
-               <meta name="viewport" content="width=device-width, initial-scale=1">
-
-               <link rel="stylesheet" href="css/bootstrap.min.css">
-               <style>
-                   body {
-                       padding-top: 50px;
-                       padding-bottom: 20px;
-                   }
-               </style>
-               <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-               <link rel="stylesheet" href="css/prism.css">
-               <link rel="stylesheet" href="css/main.css">
-
-               <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-               <script src="js/vendor/prism.js"></script>
-           </head>
-           <body>
-               <!--[if lt IE 7]>
-                   <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-               <![endif]-->
-
-           <div class="container">
-
-             <%= content %>
-
-             <hr>
-
-             <footer>
-               <p>
-                 <img title=":money_with_wings:" alt=":money_with_wings:"
-                      src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f4b8.png">
-               </p>
-             </footer>
-           </div> <!-- /container -->
-           </body>
-       </html>
-     #+END_SRC
-
-     The extracted version of this file is available in
-     [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/rakelib/index.html.erb][rakelib/index.html.erb]].
-
-**** =rakelib/ghpages.rake=
-
-     Next, I wrote up Rake-based instructions for building up static
-     web content that serves as a website.
-
-     This static content will be hosted on Github Pages.
-
-     There's also a part that knows about http://www.initializr.com,
-     and how to download a copy of HTML5 Boiler Plate. This comes in a
-     ZIP. These instructions know how to unpack the ZIP and put parts
-     of it in the right places.
-
-     To be consistent, I should've set up something that knows about
-     downloading primer.
-
-     Finally there's a part in here that knows how to extract this
-     =.org= file using emacs into HTML and then insert that HTML into
-     an ERB enhanced template.
-
-     #+BEGIN_SRC ruby :tangle ./rakelib/ghpages.rake
-       require 'rake/clean'
-
-       desc 'Create Github Pages content'
-       task 'build-gh-pages' => [ 'gh-pages',
-                                  'gh-pages-supporting-content',
-                                  'gh-pages/index.html' ]
-
-       directory 'gh-pages'
-       directory 'tmp'
-
-       #
-       # Extract supporting content from HTML5BoilerPlate
-       #
-       task 'gh-pages-supporting-content' => [ 'gh-pages/favicon.ico',
-                                               'gh-pages/css/bootstrap.min.css',
-                                               'gh-pages/css/bootstrap-theme.min.css',
-                                               'gh-pages/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' ]
-
-       CLEAN.include('tmp/initializr.zip')
-       CLEAN.include('tmp/initializr')
-
-       file 'tmp/initializr' => [ 'tmp' ] do
-         chdir('tmp') do
-           `wget -O initializr.zip 'http://www.initializr.com/builder?boot-hero&jquerymin&h5bp-iecond&h5bp-chromeframe&h5bp-analytics&h5bp-favicon&h5bp-appletouchicons&modernizrrespond&izr-emptyscript&boot-css&boot-scripts'`
-           `unzip initializr.zip`
+       class ContentWrapper < OpenStruct
+         def render(template)
+           ERB.new(template).result(binding)
          end
        end
 
-       #
-       # Setup files from HTML5BoilerPlate
-       #
-       def cp_from_initializr(file, dir=nil)
-         dest =
-           if dir
-             "gh-pages/#{dir}"
-           else
-             'gh-pages'
-           end
-         FileUtils.cp("tmp/initializr/#{file}", dest, verbose: true)
+       template = File.read('rakelib/index.html.erb')
+
+       content = File.read('README.html')
+
+       cw = ContentWrapper.new({ content: content })
+       File.open('gh-pages/index.html', 'w') do |file|
+         file.write(cw.render(template))
        end
 
-       directory 'gh-pages/css' => 'gh-pages'
-       directory 'gh-pages/js' => 'gh-pages'
-       directory 'gh-pages/js/vendor' => 'gh-pages/js'
+       rendered = File.read('gh-pages/index.html')
+       ruby = "<pre>\n<code class='language-ruby'>"
+       rendered = rendered.gsub('<pre class="src src-puppet">', ruby)
+       rendered = rendered.gsub('<pre class="src src-ruby">', ruby)
 
-       file 'gh-pages/favicon.ico' => 'tmp/initializr' do
-         cp_from_initializr('favicon.ico')
+       html = "<pre>\n<code class='language-markup'>"
+       rendered = rendered.gsub('<pre class="src src-html">', html)
+
+       rendered = rendered.gsub('</pre>', '</code></pre>')
+       File.open('gh-pages/index.html', 'w') do |file|
+         file.write(rendered)
        end
-
-       file 'gh-pages/css/bootstrap.min.css' => 'gh-pages/css' do
-         cp_from_initializr('css/bootstrap.min.css', 'css')
-       end
-
-       file 'gh-pages/css/bootstrap-theme.min.css' => 'gh-pages/css' do
-         cp_from_initializr('css/bootstrap-theme.min.css', 'css')
-       end
-
-       file 'gh-pages/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' =>
-            'gh-pages/js/vendor' do
-         cp_from_initializr('js/vendor/modernizr-2.8.3-respond-1.4.2.min.js',
-                            'js/vendor')
-       end
-
-       directory 'gh-pages/css' => 'gh-pages'
-
-       file 'README.html' => :emacs_installed do
-         export_html_using_emacs('README.org')
-       end
-
-       file 'gh-pages/index.html' => [ 'gh-pages', 'README.html' ] do
-
-         require 'erb'
-         require 'ostruct'
-
-         class ContentWrapper < OpenStruct
-           def render(template)
-             ERB.new(template).result(binding)
-           end
-         end
-
-         template = File.read('rakelib/index.html.erb')
-
-         content = File.read('README.html')
-
-         cw = ContentWrapper.new({ content: content })
-         File.open('gh-pages/index.html', 'w') do |file|
-           file.write(cw.render(template))
-         end
-
-         rendered = File.read('gh-pages/index.html')
-         ruby = "<pre>\n<code class='language-ruby'>"
-         rendered = rendered.gsub('<pre class="src src-puppet">', ruby)
-         rendered = rendered.gsub('<pre class="src src-ruby">', ruby)
-
-         html = "<pre>\n<code class='language-markup'>"
-         rendered = rendered.gsub('<pre class="src src-html">', html)
-
-         rendered = rendered.gsub('</pre>', '</code></pre>')
-         File.open('gh-pages/index.html', 'w') do |file|
-           file.write(rendered)
-         end
-         rm 'README.html', verbose: true
-       end
-
-       def export_html_using_emacs(file)
-         args = '--no-init-file --no-site-file --batch'
-         tangle_elisp =
-           %Q|(progn (require 'org) (find-file (expand-file-name \\"#{file}\\" \\"`pwd`\\")) (org-html-export-to-html nil nil nil t))|
-         command = %Q|emacs #{args} --eval "#{tangle_elisp}"|
-         stdout, stderr, _status = run(command)
-         puts stderr
-         puts stdout
-       end
-
-     #+END_SRC
-
-     The extracted version of this file is available in
-     [[https://github.com/jedcn/mac-config][jedcn/mac-config]] at [[https://github.com/jedcn/mac-config/blob/master/rakelib/ghpages.rake][rakelib/ghpages.rake]].
-
-** Odds and Ends
-
-   The following information, while valuable to me, didn't rightly fit
-   in anywhere, and so it landed here until it can be sorted out.
-
-*** Staying up-to-date with boxen/our-boxen
-
-    This repository is a fork of [[https://github.com/boxen/our-boxen][boxen/our-boxen]], and so, while I've
-    done a bunch of customization, I'd like to stay up-to-date with the
-    original repository to get fixes, security patches, etc.
-
-    This is setup by creating a remote named "upstream" that points to
-    [[https://github.com/boxen/our-boxen][boxen/our-boxen]]. Then the master branch from this repo is merged in
-    like regular.
-
-    The directions are here: [[https://help.github.com/articles/syncing-a-fork/][github.com/articles/syncing-a-fork/]].
-
-*** Given up on a Module Failed Installations
-
-    Near as I can tell, if you try to get something running with boxen
-    and then you give up and remove the puppetry, you'll still have
-    whatever-didnt-install-the-way-you-wanted installed, and so, you
-    can manually remove that thing but you should also remove
-    something called a "receipt" that can be found in the =/var/db=
-    directory, for example:
-
-    + =sudo rm .puppet_compressed_app_installed_1Password\ 5=
-    + =sudo rm /var/db/.puppet_appdmg_installed_LittleSnitch=
-
-    I learned about receipts in the [[https://github.com/boxen/our-boxen/blob/master/docs/faq.md][official boxen FAQ]].
-
-*** What does a module do?
-
-    If you've found a puppet module that you'd like to check out, the
-    first place to look is in the file named =manifests/init.pp=. I
-    believe this is the entry point for all modules. You can usually
-    see other files that are included into it or URLs, version
-    numbers, and configuration options.
-
-*** Where do you find modules?
-
-    Modules can be defined anywhere, and the most popular ones are
-    underneath the Boxen Github repository: https://github.com/boxen/.
-
-    You can search for ones that are formally part of that
-    organization by visiting the link above and typing the name of the
-    application into to the "Filters."
-
-*** Which version do you use for a module?
-
-    If you've found a module that you'd like to use, such as this one:
-    https://github.com/boxen/puppet-chrome, you can add it to your
-    =Puppetfile=.
-
-    It's not immediately obvious which version to use, and so far, the
-    following has worked for me: look at the tags on the repository,
-    and pick the largest version.
-
-*** Modifying an Existing Module
-
-**** The Problem
-
-    What if you find a module underneath https://github.com/boxen, but
-    that module is out of date?
-
-    For example, as of the time of this writing, the [[https://github.com/boxen/puppet-virtualbox][puppet-virtualbox]]
-    will install a virtualbox version that's 6 or so months old, and
-    is 4 releases behind what's presently available.
-
-    Further-- other people have shown up, done the work to grab a new
-    version, and opened up a pull request that has gone unanswered.
-    Here's a pull request that is just that: it is over 5 months old,
-    works just fine, but hasn't been merged or commented on by the
-    maintainers: [[https://github.com/boxen/puppet-virtualbox/pull/30][puppet-virtualbox/pull/30]].
-
-    And even if the maintainer was responding, it's possible that he
-    or she will say, "Actually, this module is created and used by XYZ
-    Group, and XYZ Group is not ready to upgrade beyond this version."
-    And that is there prerogative, but what do you do if you don't
-    want to install the now-out-of-date version?
-
-**** Building The Solution
-
-     The good news is that all the hardwork was probably done by the
-     original package creator, and all you need to do is swap out a
-     couple strings.
-
-     But, what, exactly, should happen?
-
-     Here's what worked for me with puppet-virtualbox:
-
-     + I started by looking at the core [[https://github.com/boxen/puppet-virtualbox/blob/master/manifests/init.pp][manifests/init.pp]] file, and saw
-       that the version strings were obviously present.
-     + I then [[https://github.com/boxen/puppet-virtualbox/search?utf8=✓&q=4.3.14][searched across the repo]] for the status quo version
-       string, and saw that it was in the specs, too.
-     + I forked the repo: [[https://github.com/jedcn/puppet-virtualbox/][jedcn/puppet-virtualbox]].
-     + I cloned the repo to =/projects/puppet-virtualbox=
-     + I ran the specs with =rspec= (I happened to be using ruby
-       2.1.2p95 provided by boxen), and they passed (albeit, with warnings).
-     + I found the URL for downloading the new(er) version on the
-       virtualbox site:
-       http://download.virtualbox.org/virtualbox/4.3.20/VirtualBox-4.3.20-96996-OSX.dmg
-     + I modified the source in =spec/classes/virtualbox_spec.rb= to
-       match this URL.
-     + I ran =rspec=, saw that things failed.
-     + I modified the code in manifests/init.pp with the new version
-       and patch, and saw that it passed.
-
-     And then I was ready to try it out.
-
-**** Trying the Solution Locally
-
-     Commit the changes to =/projects/puppet-virtualbox=. This looked
-     like [[https://github.com/jedcn/puppet-virtualbox/commit/afaa6b376bbe31cd0422c9fec1edee511e969933][afaa6b]] for me.
-
-     Then change over to your boxen repo, create branch named
-     =virtualbox=, and modify the =Puppetfile= to reference your local
-     copy of puppet-virtualbox. Next, somewhere in your manifests add
-     the proper =include virtualbox=. This looked like [[https://github.com/jedcn/mac-config/commit/6d00ae4d6beaddf827f05997212143b880306b7d][6d00ae]] for me.
-
-     Run boxen, and if all goes well, the most recent version of
-     virtual box will be installed.
-
-**** Make the Solution Globally Available
-
-     Now you know that the changes in your local =puppet-virtualbox=
-     are good, so push them back up to your fork, tag them, and then
-     modify your =Puppetfile= to reference the tagged version. Then
-     run boxen again-- it should capture some config files, say, in
-     =vendor/puppet/cache/jedcn-puppet-virtualbox-1.0.14.tar.gz=, but
-     be a no-op for installing a new application. Here's what it
-     looked like: [[https://github.com/jedcn/mac-config/commit/497361a7bed84062de4dd97b50cb4c3e4fddbd8d][497361]].
-
-**** Share your Work
-
-     And finally, open a pull request against the original package. If
-     the maintainer wants to take it, great. If not, leave a note
-     showing other people how to access what you've done:
-     [[https://github.com/boxen/puppet-virtualbox/pull/33][puppet-virtualbox/pull/33]].
-
-*** Applications I Installed Manually
-
-    I installed the following Software manually:
-
-**** 1Password
-
-     I tried getting onepassword here (with [[https://github.com/boxen/puppet-onepassword][puppet-onepassword]]), but I
-     couldn't figure out the licensing. Specifically, after a boxen
-     run it was in trial mode and looking for a license file. But, I
-     didn't have a license because I bought 1Password through the
-     AppStore.
-
-     After 15 minutes of mucking around, I installed through the
-     AppStore, and things worked just fine.
-
-**** Little Snitch
-
-     I tried installing this via puppet. I tried a provider of =appdmg=
-     and =pkgdmg=, and neither did I was expected. I started with
-     =appdmg=, and this put both the Installer and Uninstaller in my
-     Applications-- but that's not what I want. I want to run the
-     Installer *once* and then have "Little Snitch Configuration" be
-     the only thing that's in my Applications.
-
-     Anyway-- I gave up and I downloaded it from this URL and
-     double-clicked to the install:
-
-     http://www.obdev.at/downloads/littlesnitch/LittleSnitch-3.5.1.dmg
-
-     The install required a reboot, and after that, it immediately
-     started going.
-
-     I then right-click on the Little Snitch icon in the menu bar and
-     turned it off. There is a key binding to turn it on:
-     CTRL+ALT+CMD+M.
-
-**** ScreenFlow 4
-
-     I use ScreenFlow for creating screencasts. It's not available
-     through the AppStore, but instead you can find it on the
-     http://telestream.com website. Getting it took a bit of fooling
-     around: I found it by going to [[http://dynamic.telestream.net/downloads/login.asp?prodid=screenflow&message=login][this login page]], logging in, and
-     then downloading it. Once I had the =.dmg=, it was a standard
-     install. I provided my license number once I was in.
-
-**** Mac Bartender
-
-     I use MacBartender to clean up the icons in my menu bar. This
-     initially started so that my screencasts didn't "leak" info, but
-     I've come to enjoy the lack of distraction.
-
-     I found the installer here:
-     http://www.macbartender.com/Demo/Bartender.zip. I double-clicked
-     to open it, I then double-click MacBartender, and it prompted me
-     to move it to the Applications folder, and then another prompt to
-     "Continue."
-
-     At this point, it was a "..." appearing in my menu bar.
-
-     I then pressed CMD-SPACE and started Bartender, and I:
-
-     + General > Start > [x] Launch Bartender at Login
-     + General > Start > Bartender Menu Bar Icon: Star
-
-     I then clicked on the Star and licensed it.
-
-     I then went through the preferences and each item (System Items +
-     Active Menu Items), and picked "Show in Bartender Bar, not in
-     Menu Bar." This reduced all of my menu bar items down to the
-     single Star.
-
-*** Resources
-
-    My main resource was Gary Larizza's article called "[[http://garylarizza.com/blog/2013/02/15/puppet-plus-github-equals-laptop-love/][Puppet + Github
-    = Laptop <3]]" and [[https://github.com/glarizza/my-boxen/][glarizza/my-boxen]].
-
-    Other resources included:
-
-    + The official boxen homepage: https://boxen.github.com
-    + [[https://github.com/boxen/our-boxen][boxen/our-boxen]]
-    + Visiting https://github.com/boxen/ and then filtering through all
-      of the puppet-* projects.
-    + http://jjasghar.github.io/blog/2014/01/01/customizing-boxen/
+       rm 'README.html', verbose: true
+     end
+
+     def export_html_using_emacs(file)
+       args = '--no-init-file --no-site-file --batch'
+       tangle_elisp =
+         %Q|(progn (require 'org) (find-file (expand-file-name \\"#{file}\\" \\"`pwd`\\")) (org-html-export-to-html nil nil nil t))|
+       command = %Q|emacs #{args} --eval "#{tangle_elisp}"|
+       stdout, stderr, _status = run(command)
+       puts stderr
+       puts stdout
+     end
+
+   #+END_SRC
+
+   See [[https://github.com/jedcn/mac-config/blob/master/rakelib/ghpages.rake][rakelib/ghpages.rake]].
