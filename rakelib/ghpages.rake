@@ -64,11 +64,11 @@ end
 
 directory 'gh-pages/css' => 'gh-pages'
 
-file 'README.html' => :emacs_installed do
+file 'literate/boxen.html' => :emacs_installed do
   export_html_using_emacs('literate/boxen.org')
 end
 
-file 'gh-pages/index.html' => [ 'gh-pages', 'README.html' ] do
+file 'gh-pages/index.html' => [ 'gh-pages', 'literate/boxen.html' ] do
 
   require 'erb'
   require 'ostruct'
@@ -81,7 +81,7 @@ file 'gh-pages/index.html' => [ 'gh-pages', 'README.html' ] do
 
   template = File.read('rakelib/index.html.erb')
 
-  content = File.read('README.html')
+  content = File.read('literate/boxen.html')
 
   cw = ContentWrapper.new({ content: content })
   File.open('gh-pages/index.html', 'w') do |file|
@@ -100,7 +100,7 @@ file 'gh-pages/index.html' => [ 'gh-pages', 'README.html' ] do
   File.open('gh-pages/index.html', 'w') do |file|
     file.write(rendered)
   end
-  rm 'README.html', verbose: true
+  rm 'literate/boxen.html', verbose: true
 end
 
 def export_html_using_emacs(file)
