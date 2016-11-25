@@ -1,8 +1,20 @@
 ---
-"nodejs::build::ensure": "204fe3f2c312e45288e63ce3abaf2b99298cf6c5"
-"nodejs::nodenv::ensure": "v0.3.0"
+
+# To switch to a new version of nodenv/node-build, go to
+# this page https://github.com/nodenv/node-build/tags and look for
+# a tag associated with a release or a SHA if you want to use
+# something that's not yet released.
+#
+"nodejs::build::ensure": "v2.4.0"
+
+#
+# Same idea as nodejs::build::ensure value, but look on this page:
+# https://github.com/nodenv/nodenv/tags
+#
+"nodejs::nodenv::ensure": "v1.0.0"
 
 "nodejs::version::alias":
   "0.10": "0.10.40"
   "0.12": "0.12.7"
   "4.1": "4.1.1"
+  "6.9": "6.9.1"
