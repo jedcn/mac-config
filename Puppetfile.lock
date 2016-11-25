@@ -56,7 +56,7 @@ GITHUBTARBALL
 GITHUBTARBALL
   remote: boxen/puppet-nodejs
   specs:
-    nodejs (5.0.8)
+    nodejs (5.0.9)
 
 GITHUBTARBALL
   remote: boxen/puppet-openssl
@@ -127,7 +127,7 @@ DEPENDENCIES
   inifile (= 1.4.1)
   module_data (= 0.0.4)
   nginx (= 1.7.0)
-  nodejs (= 5.0.8)
+  nodejs (= 5.0.9)
   openssl (= 1.0.0)
   osx (= 2.8.0)
   phantomjs (= 3.0.0)
@@ -137,3 +137,4 @@ DEPENDENCIES
   stdlib (= 4.7.0)
   sudo (= 1.0.0)
   xquartz (= 1.2.1)
+
