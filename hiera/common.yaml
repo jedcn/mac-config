@@ -1,17 +1,14 @@
 ---
 
-# If you want to switch to a new version of nodenv/node-build, go to
-# this page https://github.com/nodenv/node-build/releases and look for
-# the SHA associated with a release.
+# To switch to a new version of nodenv/node-build, go to
+# this page https://github.com/nodenv/node-build/tags and look for
+# a tag associated with a release or a SHA if you want to use
+# something that's not yet released.
 #
-# As an example the following SHA maps to release v2.4.0:
-#
-# 628bfb754b2e49fad2bbb1eb4fec9f0ab9c388cb
-#
-"nodejs::build::ensure": "628bfb754b2e49fad2bbb1eb4fec9f0ab9c388cb"
+"nodejs::build::ensure": "v2.4.0"
 
 #
-# This value needs to be a legitimate tag named found on this page:
+# Same idea as nodejs::build::ensure value, but look on this page:
 # https://github.com/nodenv/nodenv/tags
 #
 "nodejs::nodenv::ensure": "v1.0.0"
