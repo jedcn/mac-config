@@ -18,3 +18,10 @@
   "0.12": "0.12.7"
   "4.1": "4.1.1"
   "6.9": "6.9.1"
+
+# To switch to a new version of nodenv/ruby-build, go to
+# this page https://github.com/rbenv/ruby-build/tags and look for
+# a tag associated with a release or a SHA if you want to use
+# something that's not yet released.
+#
+"ruby::build::ensure": "v20161225"
