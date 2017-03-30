@@ -12,4 +12,13 @@ class people::jedcn::applications {
   package { 'aerial':
     provider => 'brewcask',
   }
+
+  package { 'emacs-mac':
+    provider => 'brewcask'
+  }
+
+  package { 'cask':
+    ensure  => present,
+    require => Package['emacs-mac'],
+  }
 }

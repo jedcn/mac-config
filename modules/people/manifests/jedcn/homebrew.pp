@@ -10,16 +10,4 @@ class people::jedcn::homebrew {
 
   package { $homebrew_packages: }
 
-  package { 'cask':
-    ensure  => present,
-    require => Package['emacs'],
-  }
-
-  package { 'emacs':
-    ensure          => present,
-    install_options => [
-      '--cocoa',
-      '--srgb'
-    ],
-  }
 }
